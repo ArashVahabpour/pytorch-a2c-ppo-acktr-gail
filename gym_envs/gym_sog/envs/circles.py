@@ -190,7 +190,7 @@ class CirclesEnv(gym.Env):
                     )
                 self.steps_beyond_done += 1
 
-        return np.array(self.state), None, done, {}
+        return np.array(self.state), 0, done, {}
 
     def reset(self):
         self._init_circle()
