@@ -170,3 +170,28 @@ python enjoy.py --load-dir trained_models/ppo --env-name "Reacher-v2"
 ![QbertNoFrameskip-v4](imgs/acktr_qbert.png)
 
 ![beamriderNoFrameskip-v4](imgs/acktr_beamrider.png)
+
+---
+### Running GAIL on Circles-v0 environment
+Update PyTorch to latest version from website
+
+```shell
+conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
+``` 
+
+Copy expert trajectories to the repository directory
+
+```shell
+cp /home/shared/datasets/gail_experts/trajs_circles.pt ./gail_experts```
+```
+Install Circles-v0
+
+```shell
+cd ./gym_envs
+pip install -e .
+```
+
+Run GAIL training
+```shell
+python main.py --env-name "Circles-v0" --algo ppo --use-gae --log-interval 1 --num-steps 2048 --num-processes 1 --lr 3e-4 --entropy-coef 0 --value-loss-coef 0.5 --ppo-epoch 10 --num-mini-batch 32 --gamma 0.99 --gae-lambda 0.95 --num-env-steps 10000000 --use-linear-lr-decay --use-proper-time-limits --gail
+```
