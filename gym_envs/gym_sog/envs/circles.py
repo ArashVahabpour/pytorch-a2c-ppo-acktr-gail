@@ -1,6 +1,6 @@
 import gym
 from gym import spaces
-from gym.envs.classic_control import rendering
+# from gym.envs.classic_control import rendering
 
 import numpy as np
 import random
@@ -110,87 +110,87 @@ class CirclesEnv(gym.Env):
         """
         self.loc_history = np.zeros([self.state_len, 2])
 
-    def render(self, mode='human'):
-        scale = 10  # scale for mapping actual coordinates to pixels
-        screen_width = scale * 2 * self.x_threshold
-        screen_height = scale * 2 * self.y_threshold
+#     def render(self, mode='human'):
+#         scale = 10  # scale for mapping actual coordinates to pixels
+#         screen_width = scale * 2 * self.x_threshold
+#         screen_height = scale * 2 * self.y_threshold
 
-        if self.viewer is None:
-            self.viewer = rendering.Viewer(screen_width, screen_height)
+#         if self.viewer is None:
+#             self.viewer = rendering.Viewer(screen_width, screen_height)
 
-            coordinate_offset = np.array((screen_width / 2, screen_height / 2))
-            coordinate_trans = rendering.Transform(translation=coordinate_offset)
+#             coordinate_offset = np.array((screen_width / 2, screen_height / 2))
+#             coordinate_trans = rendering.Transform(translation=coordinate_offset)
 
-            x_axis = rendering.Line((0, screen_height / 2), (screen_width, screen_height / 2))
-            y_axis = rendering.Line((screen_width / 2, 0), (screen_width / 2, screen_height))
-            x_axis.set_color(0.66, 0.66, 0.66)
-            y_axis.set_color(0.66, 0.66, 0.66)
-            self.viewer.add_geom(x_axis)
-            self.viewer.add_geom(y_axis)
+#             x_axis = rendering.Line((0, screen_height / 2), (screen_width, screen_height / 2))
+#             y_axis = rendering.Line((screen_width / 2, 0), (screen_width / 2, screen_height))
+#             x_axis.set_color(0.66, 0.66, 0.66)
+#             y_axis.set_color(0.66, 0.66, 0.66)
+#             self.viewer.add_geom(x_axis)
+#             self.viewer.add_geom(y_axis)
 
-            circles = []
-            for radius in self.radii:
-                radius_scaled = radius * scale
-                circle_offset = (0, radius_scaled)
-                circle_trans = rendering.Transform(translation=circle_offset)
-                circle = rendering.make_circle(radius_scaled, res=int(screen_width), filled=False)
-                circle.add_attr(coordinate_trans)
-                circle.add_attr(circle_trans)
-                circle.set_color(0.9, 0.9, 0.9)
-                self.viewer.add_geom(circle)
-                circles.append(circle)
+#             circles = []
+#             for radius in self.radii:
+#                 radius_scaled = radius * scale
+#                 circle_offset = (0, radius_scaled)
+#                 circle_trans = rendering.Transform(translation=circle_offset)
+#                 circle = rendering.make_circle(radius_scaled, res=int(screen_width), filled=False)
+#                 circle.add_attr(coordinate_trans)
+#                 circle.add_attr(circle_trans)
+#                 circle.set_color(0.9, 0.9, 0.9)
+#                 self.viewer.add_geom(circle)
+#                 circles.append(circle)
 
-            self._viewer_geom['circles'] = circles
+#             self._viewer_geom['circles'] = circles
 
-            loc_history_scaled = self.loc_history * scale
-            traj = rendering.PolyLine(loc_history_scaled, close=False)
-            traj.add_attr(coordinate_trans)
-            traj.set_color(1., 0., 0.)
-            self.viewer.add_geom(traj)
+#             loc_history_scaled = self.loc_history * scale
+#             traj = rendering.PolyLine(loc_history_scaled, close=False)
+#             traj.add_attr(coordinate_trans)
+#             traj.set_color(1., 0., 0.)
+#             self.viewer.add_geom(traj)
 
-            self._viewer_geom['traj'] = traj
+#             self._viewer_geom['traj'] = traj
 
-        # Edit the trajectory vertices + highlight selected circle
-        self._viewer_geom['traj'].v = self.loc_history * scale
-        for i, radius in enumerate(self.radii):
-            circle = self._viewer_geom['circles'][i]
-            if radius == self.radius:
-                circle.set_color(0., 0., 1.)
-            else:
-                circle.set_color(0.9, 0.9, 0.9)
+#         # Edit the trajectory vertices + highlight selected circle
+#         self._viewer_geom['traj'].v = self.loc_history * scale
+#         for i, radius in enumerate(self.radii):
+#             circle = self._viewer_geom['circles'][i]
+#             if radius == self.radius:
+#                 circle.set_color(0., 0., 1.)
+#             else:
+#                 circle.set_color(0.9, 0.9, 0.9)
 
-        return self.viewer.render(return_rgb_array=mode == 'rgb_array')
+#         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
-    def step(self, action):
-        loc = self.loc_history[-1]
-        vel = action  # 2D instantaneous velocity
-        new_loc = loc + vel
-        self.loc_history = np.vstack([self.loc_history, new_loc])
+#     def step(self, action):
+#         loc = self.loc_history[-1]
+#         vel = action  # 2D instantaneous velocity
+#         new_loc = loc + vel
+#         self.loc_history = np.vstack([self.loc_history, new_loc])
 
-        x, y = new_loc
-        done = bool(
-            x < -self.x_threshold
-            or x > self.x_threshold
-            or y < -self.y_threshold
-            or y > self.y_threshold
-            or len(self.loc_history) > self.max_steps
-        )
+#         x, y = new_loc
+#         done = bool(
+#             x < -self.x_threshold
+#             or x > self.x_threshold
+#             or y < -self.y_threshold
+#             or y > self.y_threshold
+#             or len(self.loc_history) > self.max_steps
+#         )
 
-        if done:
-            if self.steps_beyond_done is None:
-                # Agent just out of boundary!
-                self.steps_beyond_done = 0
-            else:
-                if self.steps_beyond_done == 0:
-                    gym.logger.warn(
-                        "You are calling 'step()' even though this "
-                        "environment has already returned done = True. You "
-                        "should always call 'reset()' once you receive 'done = "
-                        "True' -- any further steps are undefined behavior."
-                    )
-                self.steps_beyond_done += 1
+#         if done:
+#             if self.steps_beyond_done is None:
+#                 # Agent just out of boundary!
+#                 self.steps_beyond_done = 0
+#             else:
+#                 if self.steps_beyond_done == 0:
+#                     gym.logger.warn(
+#                         "You are calling 'step()' even though this "
+#                         "environment has already returned done = True. You "
+#                         "should always call 'reset()' once you receive 'done = "
+#                         "True' -- any further steps are undefined behavior."
+#                     )
+#                 self.steps_beyond_done += 1
 
-        return np.array(self.state), None, done, {}
+#         return np.array(self.state), None, done, {}
 
     def reset(self):
         self._init_circle()
