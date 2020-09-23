@@ -1,9 +1,6 @@
 import gym
 from gym import spaces
-# from gym.envs.classic_control import rendering
-
 import numpy as np
-import random
 
 gym.logger.set_level(40)
 
@@ -59,7 +56,7 @@ class CirclesEnv(gym.Env):
         'video.frames_per_second': 50
     }
 
-    def __init__(self, radii, state_len=5):
+    def __init__(self, radii, no_render=False, state_len=5):
         """
         Args:
             radii: a list of all radii to be uniformly at random sampled. Put a negative sign if the circle is to be
@@ -91,6 +88,8 @@ class CirclesEnv(gym.Env):
         self.radii = radii
         self.radius = None
 
+        self.no_render = no_render
+
         self._init_circle()
         self.loc_history = None  # 2D array of (x, y) locations visited so far in the episode.
         self._init_loc()
@@ -110,56 +109,61 @@ class CirclesEnv(gym.Env):
         """
         self.loc_history = np.zeros([self.state_len, 2])
 
-#     def render(self, mode='human'):
-#         scale = 10  # scale for mapping actual coordinates to pixels
-#         screen_width = scale * 2 * self.x_threshold
-#         screen_height = scale * 2 * self.y_threshold
+    def render(self, mode='human'):
+        if self.no_render:
+            return
 
-#         if self.viewer is None:
-#             self.viewer = rendering.Viewer(screen_width, screen_height)
+        from gym.envs.classic_control import rendering
 
-#             coordinate_offset = np.array((screen_width / 2, screen_height / 2))
-#             coordinate_trans = rendering.Transform(translation=coordinate_offset)
+        scale = 10  # scale for mapping actual coordinates to pixels
+        screen_width = scale * 2 * self.x_threshold
+        screen_height = scale * 2 * self.y_threshold
 
-#             x_axis = rendering.Line((0, screen_height / 2), (screen_width, screen_height / 2))
-#             y_axis = rendering.Line((screen_width / 2, 0), (screen_width / 2, screen_height))
-#             x_axis.set_color(0.66, 0.66, 0.66)
-#             y_axis.set_color(0.66, 0.66, 0.66)
-#             self.viewer.add_geom(x_axis)
-#             self.viewer.add_geom(y_axis)
+        if self.viewer is None:
+            self.viewer = rendering.Viewer(screen_width, screen_height)
 
-#             circles = []
-#             for radius in self.radii:
-#                 radius_scaled = radius * scale
-#                 circle_offset = (0, radius_scaled)
-#                 circle_trans = rendering.Transform(translation=circle_offset)
-#                 circle = rendering.make_circle(radius_scaled, res=int(screen_width), filled=False)
-#                 circle.add_attr(coordinate_trans)
-#                 circle.add_attr(circle_trans)
-#                 circle.set_color(0.9, 0.9, 0.9)
-#                 self.viewer.add_geom(circle)
-#                 circles.append(circle)
+            coordinate_offset = np.array((screen_width / 2, screen_height / 2))
+            coordinate_trans = rendering.Transform(translation=coordinate_offset)
 
-#             self._viewer_geom['circles'] = circles
+            x_axis = rendering.Line((0, screen_height / 2), (screen_width, screen_height / 2))
+            y_axis = rendering.Line((screen_width / 2, 0), (screen_width / 2, screen_height))
+            x_axis.set_color(0.66, 0.66, 0.66)
+            y_axis.set_color(0.66, 0.66, 0.66)
+            self.viewer.add_geom(x_axis)
+            self.viewer.add_geom(y_axis)
 
-#             loc_history_scaled = self.loc_history * scale
-#             traj = rendering.PolyLine(loc_history_scaled, close=False)
-#             traj.add_attr(coordinate_trans)
-#             traj.set_color(1., 0., 0.)
-#             self.viewer.add_geom(traj)
+            circles = []
+            for radius in self.radii:
+                radius_scaled = radius * scale
+                circle_offset = (0, radius_scaled)
+                circle_trans = rendering.Transform(translation=circle_offset)
+                circle = rendering.make_circle(radius_scaled, res=int(screen_width), filled=False)
+                circle.add_attr(coordinate_trans)
+                circle.add_attr(circle_trans)
+                circle.set_color(0.9, 0.9, 0.9)
+                self.viewer.add_geom(circle)
+                circles.append(circle)
 
-#             self._viewer_geom['traj'] = traj
+            self._viewer_geom['circles'] = circles
 
-#         # Edit the trajectory vertices + highlight selected circle
-#         self._viewer_geom['traj'].v = self.loc_history * scale
-#         for i, radius in enumerate(self.radii):
-#             circle = self._viewer_geom['circles'][i]
-#             if radius == self.radius:
-#                 circle.set_color(0., 0., 1.)
-#             else:
-#                 circle.set_color(0.9, 0.9, 0.9)
+            loc_history_scaled = self.loc_history * scale
+            traj = rendering.PolyLine(loc_history_scaled, close=False)
+            traj.add_attr(coordinate_trans)
+            traj.set_color(1., 0., 0.)
+            self.viewer.add_geom(traj)
 
-#         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
+            self._viewer_geom['traj'] = traj
+
+        # Edit the trajectory vertices + highlight selected circle
+        self._viewer_geom['traj'].v = self.loc_history * scale
+        for i, radius in enumerate(self.radii):
+            circle = self._viewer_geom['circles'][i]
+            if radius == self.radius:
+                circle.set_color(0., 0., 1.)
+            else:
+                circle.set_color(0.9, 0.9, 0.9)
+
+        return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
     def step(self, action):
         loc = self.loc_history[-1]

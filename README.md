@@ -182,7 +182,7 @@ conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
 Copy expert trajectories to the repository directory
 
 ```shell
-cp /home/shared/datasets/gail_experts/trajs_circles.pt ./gail_experts```
+cp /home/shared/datasets/gail_experts/trajs_circles.pt ./gail_experts
 ```
 Install Circles-v0
 

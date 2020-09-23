@@ -6,6 +6,7 @@ from collections import deque
 
 import gym
 import gym_sog
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -41,8 +42,6 @@ def main():
 
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
                          args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
-
-    # env = gym.make("Circles-v0", radii=[10, 5, -5])
 
     actor_critic = Policy(
         env.observation_space.shape,
