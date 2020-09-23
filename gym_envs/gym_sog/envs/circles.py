@@ -99,7 +99,7 @@ class CirclesEnv(gym.Env):
 
     @property
     def state(self):
-        return self.loc_history[-self.state_len:]
+        return self.loc_history[-self.state_len:].ravel()
 
     def _init_circle(self):
         self.radius = np.random.choice(self.radii)
