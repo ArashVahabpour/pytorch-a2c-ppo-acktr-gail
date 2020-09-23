@@ -9,7 +9,7 @@ from a2c_ppo_acktr.envs import VecNormalize
 
 # Get a render function
 def get_render_func(venv):
-    if hasattr(venv, 'envs'):
+    if hasattr(venv, 'gym_envs'):
         return venv.envs[0].render
     elif hasattr(venv, 'venv'):
         return get_render_func(venv.venv)

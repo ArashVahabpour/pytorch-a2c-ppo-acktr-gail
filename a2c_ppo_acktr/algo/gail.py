@@ -155,8 +155,7 @@ class ExpertDataset(torch.utils.data.Dataset):
             self.get_idx.append((traj_idx, i))
 
             i += 1
-            
-            
+
     def __len__(self):
         return self.length
 

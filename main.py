@@ -5,6 +5,7 @@ import time
 from collections import deque
 
 import gym
+import gym_sog
 import numpy as np
 import torch
 import torch.nn as nn
@@ -38,12 +39,14 @@ def main():
     torch.set_num_threads(1)
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
-    envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                         args.gamma, args.log_dir, device, False)
+    env = make_vec_envs(args.env_name, args.seed, args.num_processes,
+                         args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
+
+    # env = gym.make("Circles-v0", radii=[10, 5, -5])
 
     actor_critic = Policy(
-        envs.observation_space.shape,
-        envs.action_space,
+        env.observation_space.shape,
+        env.action_space,
         base_kwargs={'recurrent': args.recurrent_policy})
     actor_critic.to(device)
 
@@ -72,9 +75,9 @@ def main():
             actor_critic, args.value_loss_coef, args.entropy_coef, acktr=True)
 
     if args.gail:
-        assert len(envs.observation_space.shape) == 1
+        assert len(env.observation_space.shape) == 1
         discr = gail.Discriminator(
-            envs.observation_space.shape[0] + envs.action_space.shape[0], 100,
+            env.observation_space.shape[0] + env.action_space.shape[0], 100,
             device)
         file_name = os.path.join(
             args.gail_experts_dir, "trajs_{}.pt".format(
@@ -90,10 +93,10 @@ def main():
             drop_last=drop_last)
 
     rollouts = RolloutStorage(args.num_steps, args.num_processes,
-                              envs.observation_space.shape, envs.action_space,
+                              env.observation_space.shape, env.action_space,
                               actor_critic.recurrent_hidden_state_size)
 
-    obs = envs.reset()
+    obs = env.reset()
     rollouts.obs[0].copy_(obs)
     rollouts.to(device)
 
@@ -118,7 +121,7 @@ def main():
                     rollouts.masks[step])
 
             # Obser reward and next obs
-            obs, reward, done, infos = envs.step(action)
+            obs, reward, done, infos = env.step(action)
 
             for info in infos:
                 if 'episode' in info.keys():
@@ -140,14 +143,14 @@ def main():
 
         if args.gail:
             if j >= 10:
-                envs.venv.eval()
+                env.venv.eval()
 
             gail_epoch = args.gail_epoch
             if j < 10:
                 gail_epoch = 100  # Warm up
             for _ in range(gail_epoch):
                 discr.update(gail_train_loader, rollouts,
-                             utils.get_vec_normalize(envs)._obfilt)
+                             utils.get_vec_normalize(env)._obfilt)
 
             for step in range(args.num_steps):
                 rollouts.rewards[step] = discr.predict_reward(
@@ -172,7 +175,7 @@ def main():
 
             torch.save([
                 actor_critic,
-                getattr(utils.get_vec_normalize(envs), 'ob_rms', None)
+                getattr(utils.get_vec_normalize(env), 'ob_rms', None)
             ], os.path.join(save_path, args.env_name + ".pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
@@ -189,7 +192,7 @@ def main():
 
         if (args.eval_interval is not None and len(episode_rewards) > 1
                 and j % args.eval_interval == 0):
-            ob_rms = utils.get_vec_normalize(envs).ob_rms
+            ob_rms = utils.get_vec_normalize(env).ob_rms
             evaluate(actor_critic, ob_rms, args.env_name, args.seed,
                      args.num_processes, eval_log_dir, device)
 
