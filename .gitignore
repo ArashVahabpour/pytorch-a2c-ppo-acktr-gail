@@ -110,3 +110,6 @@ trained_models/
 
 baselines-repo
 .vscode
+*.h5
+*.pt
+checkpoints

@@ -148,6 +148,7 @@ class ExpertDataset(torch.utils.data.Dataset):
         
         for j in range(self.length):
             
+            # when `i` grows beyond one of the trajectories, increment the `traj_idx` and accordingly set back `i`
             while self.trajectories['lengths'][traj_idx].item() <= i:
                 i -= self.trajectories['lengths'][traj_idx].item()
                 traj_idx += 1

@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import torch.utils.data
 from torch import optim
 
-from baselines.common.running_mean_std import RunningMeanStd
+# from baselines.common.running_mean_std import RunningMeanStd
 
 import argparse
 import tempfile
@@ -16,7 +16,7 @@ import os.path as osp
 import gym
 from tqdm.auto import tqdm
 
-from utilities import normal_log_density, set_random_seed, to_tensor, save_checkpoint, load_pickle, onehot, load_data
+from utilities import normal_log_density, set_random_seed, to_tensor, save_checkpoint, load_pickle, onehot, get_logger
 from abc import ABC, abstractmethod
 from typing import List
 # import tensorflow as tf
@@ -25,7 +25,7 @@ from typing import List
 # from baselines.gail import mlp_policy
 from baselines import bench
 # TODO: migrate ffjord's logger to here (and suppress the logging of full source code (or at least suppress the output of that part))
-from baselines import logger
+# from baselines import logger
 import logging
 # from baselines.common import set_global_seeds, tf_util as U
 from baselines.common.misc_util import boolean_flag
@@ -90,7 +90,12 @@ class TrajectoryDataset(TensorDataset):
         X = self.transform(X)
         self.X = torch.as_tensor(X, device=device)  # state
         self.y = torch.as_tensor(y, device=device)  # action
-        self.c = torch.as_tensor(c, device=device)  # code
+        c = torch.as_tensor(c, device=device, dtype=torch.int64).reshape(-1, 1)
+        print(X.shape)
+        print(y.shape)
+        print(c.shape)
+        self.c = torch.zeros(X.shape[0], torch.max(
+            c), device=device).scatter_(1, c-1, 1)  # one-hot code
         super(TrajectoryDataset, self).__init__(X, y, c)
 
     # def __getitem__(self, index):
@@ -131,14 +136,14 @@ def train(epoch, net, dataloader, optimizer, criterion, device, writer):
 
 
 class BC():
-    def __init__(self, epochs=300, lr=0.0001, eps=1e-5, device="cpu",
+    def __init__(self, epochs=300, lr=0.0001, eps=1e-5, device="cpu", policy_activation=F.relu,
                  tb_writer=None, validate_freq=1, checkpoint_dir="."):
         self.epochs = epochs
+        self.device = device
         self.policy = MlpPolicyNet(
-            state_dim=10, inputc_dim=3, ft_dim=128, activation=F.relu)
+            state_dim=10, code_dim=None, ft_dim=128, activation=policy_activation).to(device)
         self.optimizer = optim.Adam(self.policy.parameters(), lr=lr, eps=eps)
         self.criterion = nn.MSELoss()
-        self.device = device
         self.writer = tb_writer
         self.validate_freq = validate_freq
         self.checkpoint_dir = checkpoint_dir
@@ -179,10 +184,10 @@ def validate(epoch, net, val_loader, criterion, device, best_loss, writer, check
             if writer is not None:
                 writer.add_scalars("Loss/BC_val", {"val_loss": valid_loss/(
                     (batch_idx+1))}, batch_idx + number_batches * (epoch-1))
+    checkpoint_path = osp.join(checkpoint_dir, 'checkpoints/bestbc_model_new_everywhere.pth')
     if avg_valid_loss <= best_loss:
         best_loss = avg_valid_loss
         print('Best epoch: ' + str(epoch))
-        checkpoint_path = osp.join(checkpoint_dir, 'checkpoints/bestbc_model_new_everywhere.pth')
         save_checkpoint({'epoch': epoch,
                          'avg_loss': avg_valid_loss,
                          'state_dict': net.state_dict(),
@@ -190,62 +195,52 @@ def validate(epoch, net, val_loader, criterion, device, best_loss, writer, check
     return best_loss, checkpoint_path
 
 
-def create_dataloader(batch_size=4):
-    #train_data_f = "three_modes_traj.pkl"
-    train_data_f = "three_modes_traj_train_everywhere.pkl"
-    val_data_f = "three_modes_traj_val.pkl"
-    X_train, y_train, c_train, fake_c_train = load_data(train_data_f)
-    X_val, y_val, c_val, fake_c_val = load_data(val_data_f)
+def load_data(data_file):
+    # TODO: remove the radii selection lines
+    """For Arash's format
+    """
+    data_dict = torch.load(data_file)
 
-    train_dataset = TrajectoryDataset(X_train, y_train, fake_c_train)
-    val_dataset = TrajectoryDataset(X_val, y_val, fake_c_val)
+    X_all = data_dict["states"]
+    X_all = X_all[data_dict["radii"] == 10]
+    num_traj, traj_len, dim_state = X_all.shape
+    X_all = X_all.reshape(-1, dim_state)
+
+    y_all = data_dict["actions"]
+    y_all = y_all[data_dict["radii"] == 10]
+    num_traj, traj_len, dim_action = y_all.shape
+    y_all = y_all.reshape(-1, dim_action)
+
+    c = data_dict["radii"][data_dict["radii"] == 10]
+    # change to scalar encoding here in case it's useful
+    c_all = torch.zeros(num_traj, traj_len, dtype=torch.int64)
+    c_all[c == 10, :] = 1
+    c_all[c == 20, :] = 2
+    c_all[c == -10, :] = 3
+    c_all = c_all.flatten()
+
+    return X_all, y_all, c_all
+
+
+def create_dataloader(train_data_path, val_data_path=None, batch_size=4):
+    #train_data_f = "three_modes_traj.pkl"
+    # train_data_path = "three_modes_traj_train_everywhere.pkl"
+    # val_data_path = "three_modes_traj_val.pkl"
+    from sklearn.model_selection import train_test_split
+    X, y, c = load_data(train_data_path)
+    if val_data_path is None:
+        X_train, X_val, y_train, y_val, c_train, c_val = train_test_split(X, y, c, test_size=0.2)
+    else:
+        X_train, y_train, c_train = X, y, c
+        X_val, y_val, c_val = load_data(val_data_path)
+
+    train_dataset = TrajectoryDataset(X_train, y_train, c_train)
+    val_dataset = TrajectoryDataset(X_val, y_val, c_val)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size,
                                   shuffle=True, num_workers=0)
     val_dataloader = DataLoader(val_dataset, batch_size=batch_size,
                                 shuffle=True, num_workers=0)
     return train_dataloader, val_dataloader
-
-
-# def train_bc(writer):
-#     parser = {
-#         'data_dir': './selfdrivingcar-data/',
-#         'nb_epoch': 50,
-#         'info': "train 500 traj per mode, 3 modes, val 50 traj per mode",
-#         'learning_rate': 0.0001,
-#         'samples_per_epoch': 64,
-#         'batch_size': 36,
-#         'cuda': True,
-#         'seed': 7
-#     }
-#     args = argparse.Namespace(**parser)
-
-#     use_cuda = torch.cuda.is_available() and args.use_cuda
-#     print("Random Seed: {}".format(args.seed))
-#     set_random_seed(seed=random_seed, using_cuda=use_cuda)
-#     # Setup GPU optimization if CUDA is supported
-#     if use_cuda:
-#         computing_device = torch.device("cuda:0")
-#         torch.cuda.empty_cache()
-#         extras = {"num_workers": 1, "pin_memory": True}
-#         print("CUDA is supported")
-#     else:  # Otherwise, train on the CPU
-#         computing_device = torch.device("cpu")
-#         extras = False
-#         print("CUDA NOT supported")
-
-#     batch_size = 128
-#     model = MlpPolicyNet(inputs_dim=10, inputc_dim=3,
-#                          ft_dim=128).to(computing_device)
-#     optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
-#     criterion = nn.MSELoss().to(computing_device)
-#     train_loader, valid_loader = create_dataloader(batch_size)
-#     best_loss = 1000
-#     for epoch in tqdm(range(300)):
-#         print('\nEpoch: %d' % epoch)
-#         train(epoch, model, train_loader, optimizer,
-#               criterion, args.cuda, writer)
-#         valid(epoch, model, valid_loader, criterion,
-#               args.cuda, best_loss, writer)
 
 
 def get_task_name(args):
@@ -270,12 +265,14 @@ class PolicyNet(ABC, nn.Module):
 
 
 class MlpPolicyNet(PolicyNet):
-    def __init__(self, state_dim=10, inputc_dim=3, ft_dim=128, activation=F.relu):
+    def __init__(self, state_dim=10, code_dim=3, ft_dim=128, activation=F.relu):
         super(MlpPolicyNet, self).__init__()
         self.activation = activation
         self.fc_s1 = nn.Linear(state_dim, ft_dim)
         self.fc_s2 = nn.Linear(ft_dim, ft_dim)
-        self.fc_c1 = nn.Linear(inputc_dim, ft_dim)
+        self.code_dim = code_dim
+        if code_dim is not None:
+            self.fc_c1 = nn.Linear(code_dim, ft_dim)
         self.fc_sum = nn.Linear(ft_dim, 2)
         self.action_logstds = torch.log(
             torch.from_numpy(np.array([2, 2])).clone().float())
@@ -284,10 +281,10 @@ class MlpPolicyNet(PolicyNet):
         self.optimizer = torch.optim.Adam(self.parameters())
 
     def forward(self, state, latent_code):
-        output_s = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
-        ouput_a = self.fc_c1(latent_code)
-        final_out = self.fc_sum(self.activation(
-            ouput_a + output_s, inplace=True))
+        output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
+        if self.code_dim is not None:
+            output += self.fc_c1(latent_code)
+        final_out = self.fc_sum(self.activation(output, inplace=True))
         return final_out
 
     def get_log_prob(self, state, latent_code, actions):
@@ -366,6 +363,12 @@ def argsparser():
 #                               reuse=True)
 
 
-# if __name__ == '__main__':
-#     args = argsparser()
-#     main(args)
+if __name__ == '__main__':
+    #     args = argsparser()
+    #     main(args)
+    # train_data_path = "three_modes_traj_train_everywhere.pkl"
+    # val_data_path = "three_modes_traj_val.pkl"
+    train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
+    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0")
+    train_loader, val_loader = create_dataloader(train_data_path, batch_size=400)
+    bc.train(train_loader, val_loader)
