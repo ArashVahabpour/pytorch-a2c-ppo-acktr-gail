@@ -5,7 +5,7 @@ import time
 from collections import deque
 
 import gym
-import gym_sog
+from gym_envs import gym_sog
 import numpy as np
 import torch
 import torch.nn as nn
@@ -40,7 +40,7 @@ def main():
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                         args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
+                        args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
 
     # env = gym.make("Circles-v0", radii=[10, 5, -5])
 
@@ -73,6 +73,13 @@ def main():
     elif args.algo == 'acktr':
         agent = algo.A2C_ACKTR(
             actor_critic, args.value_loss_coef, args.entropy_coef, acktr=True)
+    elif args.algo == 'bc':
+        agent = algo.BC(
+            epochs=args.bc_epoch,
+            lr=args.lr,
+            eps=args.eps,
+            device=device,
+        )
 
     if args.gail:
         assert len(env.observation_space.shape) == 1
@@ -82,7 +89,7 @@ def main():
         file_name = os.path.join(
             args.gail_experts_dir, "trajs_{}.pt".format(
                 args.env_name.split('-')[0].lower()))
-        
+
         expert_dataset = gail.ExpertDataset(
             file_name, num_trajectories=4, subsample_frequency=20)
         drop_last = len(expert_dataset) > args.gail_batch_size
@@ -103,8 +110,7 @@ def main():
     episode_rewards = deque(maxlen=10)
 
     start = time.time()
-    num_updates = int(
-        args.num_env_steps) // args.num_steps // args.num_processes
+    num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
     for j in range(num_updates):
 
         if args.use_linear_lr_decay:
@@ -182,14 +188,11 @@ def main():
             total_num_steps = (j + 1) * args.num_processes * args.num_steps
             end = time.time()
             print(
-                "Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}\n"
-                .format(j, total_num_steps,
-                        int(total_num_steps / (end - start)),
-                        len(episode_rewards), np.mean(episode_rewards),
-                        np.median(episode_rewards), np.min(episode_rewards),
-                        np.max(episode_rewards), dist_entropy, value_loss,
-                        action_loss))
-
+                f"""Updates {j}, num timesteps {total_num_steps}, FPS {int(total_num_steps / (end - start))}
+Last {len(episode_rewards)} training episodes: mean/median reward {np.mean(episode_rewards):.1f}/{np.median(episode_rewards):.1f}, min/max reward {np.min(episode_rewards):.1f}/{np.max(episode_rewards):.1f}
+dist_entropy: {dist_entropy:.3f}, value_loss: {value_loss:.3f}, action_loss: {action_loss:.3f}
+"""
+            )
         if (args.eval_interval is not None and len(episode_rewards) > 1
                 and j % args.eval_interval == 0):
             ob_rms = utils.get_vec_normalize(env).ob_rms
