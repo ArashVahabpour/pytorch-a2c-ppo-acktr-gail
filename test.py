@@ -41,13 +41,16 @@ def main():
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                         args.gamma, args.log_dir, device, False, radii=[-10, 10, 20], no_render=True)
+                         args.gamma, args.log_dir, device, False, radii=[-10, 10, 20], no_render=False)
 
-    actor_critic = Policy(
-        env.observation_space.shape,
-        env.action_space,
-        base_kwargs={'recurrent': args.recurrent_policy})
-    actor_critic.to(device)
+    # actor_critic = Policy(
+    #     env.observation_space.shape,
+    #     env.action_space,
+    #     base_kwargs={'recurrent': args.recurrent_policy})
+    # actor_critic.to(device)
+
+    save_path = os.path.join(args.save_dir, args.algo)
+    actor_critic = torch.load(os.path.join(save_path, args.env_name + ".pt"), map_location=torch.device('cpu'))[0].to(device)
 
     if args.algo == 'a2c':
         agent = algo.A2C_ACKTR(
@@ -106,11 +109,11 @@ def main():
         args.num_env_steps) // args.num_steps // args.num_processes
     for j in range(num_updates):
 
-        if args.use_linear_lr_decay:
-            # decrease learning rate linearly
-            utils.update_linear_schedule(
-                agent.optimizer, j, num_updates,
-                agent.optimizer.lr if args.algo == "acktr" else args.lr)
+        # if args.use_linear_lr_decay:
+        #     # decrease learning rate linearly
+        #     utils.update_linear_schedule(
+        #         agent.optimizer, j, num_updates,
+        #         agent.optimizer.lr if args.algo == "acktr" else args.lr)
 
         for step in range(args.num_steps):
             # Sample actions
@@ -121,6 +124,7 @@ def main():
 
             # Obser reward and next obs
             obs, reward, done, infos = env.step(action)
+            env.render()
 
             for info in infos:
                 if 'episode' in info.keys():
@@ -144,17 +148,17 @@ def main():
             if j >= 10:
                 env.venv.eval()
 
-            gail_epoch = args.gail_epoch
-            if j < 10:
-                gail_epoch = 100  # Warm up
-            for _ in range(gail_epoch):
-                discr.update(gail_train_loader, rollouts,
-                             utils.get_vec_normalize(env)._obfilt)
+            # gail_epoch = args.gail_epoch
+            # if j < 10:
+            #     gail_epoch = 100  # Warm up
+            # for _ in range(gail_epoch):
+            #     discr.update(gail_train_loader, rollouts,
+            #                  utils.get_vec_normalize(env)._obfilt)
 
-            for step in range(args.num_steps):
-                rollouts.rewards[step] = discr.predict_reward(
-                    rollouts.obs[step], rollouts.actions[step], args.gamma,
-                    rollouts.masks[step])
+            # for step in range(args.num_steps):
+            #     rollouts.rewards[step] = discr.predict_reward(
+            #         rollouts.obs[step], rollouts.actions[step], args.gamma,
+            #         rollouts.masks[step])
 
         rollouts.compute_returns(next_value, args.use_gae, args.gamma,
                                  args.gae_lambda, args.use_proper_time_limits)
@@ -163,19 +167,19 @@ def main():
 
         rollouts.after_update()
 
-        # save for every interval-th episode or for the last epoch
-        if (j % args.save_interval == 0
-                or j == num_updates - 1) and args.save_dir != "":
-            save_path = os.path.join(args.save_dir, args.algo)
-            try:
-                os.makedirs(save_path)
-            except OSError:
-                pass
-
-            torch.save([
-                actor_critic,
-                getattr(utils.get_vec_normalize(env), 'ob_rms', None)
-            ], os.path.join(save_path, args.env_name + ".pt"))
+        # # save for every interval-th episode or for the last epoch
+        # if (j % args.save_interval == 0
+        #         or j == num_updates - 1) and args.save_dir != "":
+        #     # save_path = os.path.join(args.save_dir, args.algo)
+        #     try:
+        #         os.makedirs(save_path)
+        #     except OSError:
+        #         pass
+        #
+        #     torch.save([
+        #         actor_critic,
+        #         getattr(utils.get_vec_normalize(env), 'ob_rms', None)
+        #     ], os.path.join(save_path, args.env_name + ".pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             total_num_steps = (j + 1) * args.num_processes * args.num_steps
