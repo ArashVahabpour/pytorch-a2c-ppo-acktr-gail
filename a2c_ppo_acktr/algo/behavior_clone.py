@@ -91,19 +91,8 @@ class TrajectoryDataset(TensorDataset):
         X = self.transform(X)
         self.X = torch.as_tensor(X, device=device)  # state
         self.y = torch.as_tensor(y, device=device)  # action
-        c = torch.as_tensor(c, device=device, dtype=torch.int64).reshape(-1, 1)
-        self.c = torch.zeros(X.shape[0], torch.max(
-            c), device=device).scatter_(1, c-1, 1)  # one-hot code
+        self.c = torch.as_tensor(c, device=device)
         super(TrajectoryDataset, self).__init__(X, y, c)
-
-    # def __getitem__(self, index):
-    #     if self.transform is not None:
-    #         tmp = self.X[index]
-    #         return self.transform(tmp), self.y[index], self.c[index]
-    #     return self.X[index], self.y[index], self.c[index]
-
-    # def __len__(self):
-    #     return self.X.shape[0]
 
 
 def train(epoch, net, dataloader, optimizer, criterion, device, writer):
@@ -193,8 +182,9 @@ def validate(epoch, net, val_loader, criterion, device, best_loss, writer, check
     return best_loss, checkpoint_path
 
 
-def load_data(data_file):
+def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map = None):
     # TODO: remove the radii selection lines
+    # TODO: Currently the one-hot encoding is done in memory all at once. Potentially it needs to be moved to a custom DataLoader like ExpertTrajectory above
     """For Arash's format
     """
     data_dict = torch.load(data_file)
@@ -209,24 +199,53 @@ def load_data(data_file):
     num_traj, traj_len, dim_action = y_all.shape
     y_all = y_all.reshape(-1, dim_action)
 
-    c = data_dict["radii"][data_dict["radii"] == 10]
+    c = data_dict["radii"]
+    c = [data_dict["radii"] == 10]
+
+    lengths = data_dict["lengths"]
+    lengths = lengths[data_dict["radii"] == 10]
+
     # change to scalar encoding here in case it's useful
-    c_all = torch.zeros(num_traj, traj_len, dtype=torch.int64)
-    c_all[c == 10, :] = 1
-    c_all[c == 20, :] = 2
-    c_all[c == -10, :] = 3
-    c_all = c_all.flatten()
+    unique_c, inv = np.unique(c, return_inverse=True)
+    dim = len(unique_c)
+    if code_map is None:
+        codes = np.arange(dim)
+        code_map = dict(zip(unique_c, codes))
+        # c, fake_c = codes[inv], np.random.choice(codes, size=len(c))
+        # c_all, fake_c_all = np.repeat(c, lengths), np.repeat(fake_c, lengths)
+        c = codes[inv]
+        c_all, fake_c_all = np.repeat(c, lengths), np.random.randint(dim, size=np.sum(lengths))
+    else:
+        c = np.array([code_map[c_] for c_ in unique_c])[inv]
 
-    return X_all, y_all, c_all
+    if one_hot_dim >= dim:
+        dim = one_hot_dim
+    else:
+        raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the number of unique values in c ({dim})")
 
-def create_dataset(train_data_path, val_data_path=None):
+    if one_hot:
+        c_all, fake_c_all = onehot(c_all, dim=dim), onehot(fake_c_all, dim=dim)
+
+    # c_all = torch.zeros(num_traj, traj_len, dtype=torch.int64)
+    # c_all[c == 10, :] = 1
+    # c_all[c == 20, :] = 2
+    # c_all[c == -10, :] = 3
+    # c_all = c_all.flatten()
+
+    return X_all, y_all, c_all, fake_c_all, code_map
+
+def create_dataset(train_data_path, val_data_path=None, fake=True, one_hot=True, one_hot_dim=None):
     from sklearn.model_selection import train_test_split
-    X, y, c = load_data(train_data_path)
+    X, y, c, fake_c, code_map = load_data(train_data_path, one_hot=one_hot, one_hot_dim=one_hot_dim)
+    if fake:
+        c = fake_c
     if val_data_path is None:
         X_train, X_val, y_train, y_val, c_train, c_val = train_test_split(X, y, c, test_size=0.2)
     else:
         X_train, y_train, c_train = X, y, c
-        X_val, y_val, c_val = load_data(val_data_path)
+        X_val, y_val, c_val, fake_c_val, code_map = load_data(val_data_path, one_hot=one_hot, code_map=code_map)
+        if fake:
+            c_val = fake_c_val
 
     train_dataset = TrajectoryDataset(X_train, y_train, c_train)
     val_dataset = TrajectoryDataset(X_val, y_val, c_val)
