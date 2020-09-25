@@ -15,6 +15,9 @@ import tempfile
 import os.path as osp
 import gym
 from tqdm.auto import tqdm
+import sys
+file_dir = osp.dirname(__file__)
+sys.path.append(file_dir)
 
 from utilities import normal_log_density, set_random_seed, to_tensor, save_checkpoint, load_pickle, onehot, get_logger
 from abc import ABC, abstractmethod
@@ -277,6 +280,7 @@ class MlpPolicyNet(PolicyNet):
         self.action_logstds = torch.log(
             torch.from_numpy(np.array([2, 2])).clone().float())
         self.action_std = torch.from_numpy(np.array([2, 2])).clone().float()
+        
 
     def forward(self, state, latent_code):
         output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))

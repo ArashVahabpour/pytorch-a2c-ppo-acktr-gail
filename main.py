@@ -54,7 +54,8 @@ def main():
     actor_critic = CirclePolicy(
         env.observation_space.shape,
         env.action_space,
-        base_kwargs={'recurrent': args.recurrent_policy})
+        base_kwargs={})
+        #base_kwargs={'recurrent': args.recurrent_policy})
     actor_critic.to(device)
 
     if args.algo == 'a2c':
@@ -91,7 +92,7 @@ def main():
                 args.env_name.split('-')[0].lower()))
         
         expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=500, subsample_frequency=20)
+            file_name, num_trajectories=5, subsample_frequency=20)
         drop_last = len(expert_dataset) > args.gail_batch_size
         gail_train_loader = torch.utils.data.DataLoader(
             dataset=expert_dataset,
@@ -119,11 +120,20 @@ def main():
                 agent.optimizer, j, num_updates,
                 agent.optimizer.lr if args.algo == "acktr" else args.lr)
 
+        ### generate one set of random latent codes
+        fake_z0 = np.random.randint(3, size=args.num_steps)
+        latent_code = np.zeros((args.num_steps, 3))
+        latent_code[np.arange(args.num_steps), fake_z0] = 1
+        latent_code = torch.FloatTensor(latent_code.copy()).to(device)
+    
         for step in range(args.num_steps):
             # Sample actions
             with torch.no_grad():
-                value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(
-                    rollouts.obs[step], rollouts.recurrent_hidden_states[step],
+                # value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(
+                #     rollouts.obs[step], rollouts.recurrent_hidden_states[step],
+                #     rollouts.masks[step])
+                value, action, action_log_prob, step_latent_code = actor_critic.act(
+                    rollouts.obs[step], latent_code[step],
                     rollouts.masks[step])
 
             # Obser reward and next obs
@@ -139,12 +149,13 @@ def main():
             bad_masks = torch.FloatTensor(
                 [[0.0] if 'bad_transition' in info.keys() else [1.0]
                  for info in infos])
-            rollouts.insert(obs, recurrent_hidden_states, action,
+            ## Note this is next state, current latent code and current action
+            rollouts.insert(obs, step_latent_code, action,
                             action_log_prob, value, reward, masks, bad_masks)
 
         with torch.no_grad():
             next_value = actor_critic.get_value(
-                rollouts.obs[-1], rollouts.recurrent_hidden_states[-1],
+                rollouts.obs[-1], step_latent_code,
                 rollouts.masks[-1]).detach()
 
         if args.gail:
@@ -171,7 +182,9 @@ def main():
         rollouts.after_update()
 
         # save for every interval-th episode or for the last epoch
-        if (j % args.save_interval == 0
+        ## hard set 
+        #if (j % args.save_interval == 0
+        if (j % 20 == 0
                 or j == num_updates - 1) and args.save_dir != "":
             save_path = os.path.join(args.save_dir, args.algo)
             try:
@@ -182,7 +195,7 @@ def main():
             torch.save([
                 actor_critic,
                 getattr(utils.get_vec_normalize(env), 'ob_rms', None)
-            ], os.path.join(save_path, args.env_name + ".pt"))
+            ], os.path.join(save_path, args.env_name + f"mlp_{j}.pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             total_num_steps = (j + 1) * args.num_processes * args.num_steps
