@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from a2c_ppo_acktr.distributions import Bernoulli, Categorical, DiagGaussian
 from a2c_ppo_acktr.utils import init
 
+from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -227,3 +228,64 @@ class MLPBase(NNBase):
         hidden_actor = self.actor(x)
 
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
+
+class CirclePolicy(nn.Module):
+    def __init__(self, obs_shape, action_space, base=None, base_kwargs=None):
+        super(CirclePolicy, self).__init__()
+        # if base_kwargs is None:
+        #     base_kwargs = {}
+        # if base is None:
+        #     if len(obs_shape) == 3:
+        #         base = CNNBase
+        #     elif len(obs_shape) == 1:
+        #         base = MLPBase
+        #     else:
+        #         raise NotImplementedError
+
+        self.base = MlpPolicyNet()
+
+        # if action_space.__class__.__name__ == "Discrete":
+        #     num_outputs = action_space.n
+        #     self.dist = Categorical(self.base.output_size, num_outputs)
+        # elif action_space.__class__.__name__ == "Box":
+        #     num_outputs = action_space.shape[0]
+        #     self.dist = DiagGaussian(self.base.output_size, num_outputs)
+        # elif action_space.__class__.__name__ == "MultiBinary":
+        #     num_outputs = action_space.shape[0]
+        #     self.dist = Bernoulli(self.base.output_size, num_outputs)
+        # else:
+        #     raise NotImplementedError
+
+    @property
+    def is_recurrent(self):
+        return False
+
+    @property
+    def recurrent_hidden_state_size(self):
+        """Size of rnn_hx."""
+        return 1
+
+    def forward(self, inputs, rnn_hxs, masks):
+        raise NotImplementedError
+
+    def act(self, inputs, rnn_hxs, masks, deterministic=False):
+        # value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
+        rnn_hxs = None
+
+        action = self.base.select_action(inputs, latent_code)
+        action_log_probs = ...
+
+        return value, action, action_log_probs, rnn_hxs
+
+    def get_value(self, inputs, rnn_hxs, masks):
+        value, _, _ = self.base(inputs, rnn_hxs, masks)
+        return value
+
+    def evaluate_actions(self, inputs, rnn_hxs, masks, action):
+        value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
+        dist = self.dist(actor_features)
+
+        action_log_probs = dist.log_probs(action)
+        dist_entropy = dist.entropy().mean()
+
+        return value, action_log_probs, dist_entropy, rnn_hxs

@@ -113,3 +113,4 @@ baselines-repo
 *.h5
 *.pt
 checkpoints
+imgs

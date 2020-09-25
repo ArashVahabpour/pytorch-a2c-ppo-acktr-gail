@@ -117,8 +117,9 @@ def save_checkpoint(state, save_path='models/checkpoint.pth.tar'):
     torch.save(state, save_path)
 
 
-def onehot(data):
-    fake_z = np.zeros((data.shape[0],3))
+def onehot(data, dim: int):
+    # return torch.zeros(*data.shape[:-1], dim).scatter_(-1, data, 1)
+    fake_z = np.zeros((data.shape[0],dim))
     row = np.arange(data.shape[0])
     fake_z[row, data] = 1
     return fake_z
@@ -137,18 +138,17 @@ def visualize_pts_tb(writer, locations, latent_code, fig_key, iter=0):
     plt.title(f"iter:{iter}")
     writer.add_figure(fig_key, fig)
 
-def step(state, action, mode="Flat"):
-    ### batch based
-    if mode=="step":
-        cur_loc = state[:, :,-1] 
+def step(state, action, mode="flat"):
+    if mode == "nested":
+        cur_loc = state[:, -1, :] 
         next_loc = cur_loc + action
-        #print(state[:,1:].shape, next_loc.reshape(-1,1).shape)
-        new_state = torch.cat([state[:, :, 1:], next_loc.reshape(-1,2,1)],axis=2)
-    else:
+        new_state = torch.cat([state[:, 1:, :], next_loc.reshape(-1,1,2)], axis=1)
+    elif mode == "flat":
         cur_loc = state[:, -2:] 
         next_loc = cur_loc + action
-        #print(state[:,1:].shape, next_loc.reshape(-1,1).shape)
-        new_state = torch.cat([state[:,2:], next_loc.reshape(-1,2)],axis=1)
+        new_state = torch.cat([state[:, 2:], next_loc.reshape(-1,2)], axis=1)
+    else:
+        raise ValueError(f"Unknown mode: {mode}")
     return new_state
 
 def to_tensor(target, device):
@@ -207,7 +207,7 @@ def load_data(data_f):
     fake_z0 = np.random.randint(3, size=num_traj *3)
     fake_z0 = np.repeat(fake_z0, traj_len)
     print(fake_z0.shape)
-    fake_z = onehot(fake_z0)
+    fake_z = onehot(fake_z0, 3)
     print(fake_z.shape, fake_z[0], fake_z0[0])
 
     y_all = np.concatenate(y_all).squeeze().reshape(-1, 2)

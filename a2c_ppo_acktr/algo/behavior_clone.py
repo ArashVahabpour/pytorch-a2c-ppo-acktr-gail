@@ -20,6 +20,7 @@ from utilities import normal_log_density, set_random_seed, to_tensor, save_check
 from abc import ABC, abstractmethod
 from typing import List
 # import tensorflow as tf
+from inference import get_start_state, model_infer_vis
 
 
 # from baselines.gail import mlp_policy
@@ -71,7 +72,7 @@ class ExpertTrajectory:
 
         new_z = np.repeat(fake_z0, traj_fre)
         #print("end t after latent code sampling:", time() -  start_t)
-        fake_z = onehot(new_z)
+        fake_z = onehot(new_z, 3)
 
         state = self.expert_states[indexes]
         action = self.expert_actions[indexes]
@@ -91,9 +92,6 @@ class TrajectoryDataset(TensorDataset):
         self.X = torch.as_tensor(X, device=device)  # state
         self.y = torch.as_tensor(y, device=device)  # action
         c = torch.as_tensor(c, device=device, dtype=torch.int64).reshape(-1, 1)
-        print(X.shape)
-        print(y.shape)
-        print(c.shape)
         self.c = torch.zeros(X.shape[0], torch.max(
             c), device=device).scatter_(1, c-1, 1)  # one-hot code
         super(TrajectoryDataset, self).__init__(X, y, c)
@@ -221,11 +219,7 @@ def load_data(data_file):
 
     return X_all, y_all, c_all
 
-
-def create_dataloader(train_data_path, val_data_path=None, batch_size=4):
-    #train_data_f = "three_modes_traj.pkl"
-    # train_data_path = "three_modes_traj_train_everywhere.pkl"
-    # val_data_path = "three_modes_traj_val.pkl"
+def create_dataset(train_data_path, val_data_path=None):
     from sklearn.model_selection import train_test_split
     X, y, c = load_data(train_data_path)
     if val_data_path is None:
@@ -236,6 +230,10 @@ def create_dataloader(train_data_path, val_data_path=None, batch_size=4):
 
     train_dataset = TrajectoryDataset(X_train, y_train, c_train)
     val_dataset = TrajectoryDataset(X_val, y_val, c_val)
+    return train_dataset, val_dataset
+
+
+def create_dataloader(train_dataset, val_dataset, batch_size=4):
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size,
                                   shuffle=True, num_workers=0)
     val_dataloader = DataLoader(val_dataset, batch_size=batch_size,
@@ -277,8 +275,6 @@ class MlpPolicyNet(PolicyNet):
         self.action_logstds = torch.log(
             torch.from_numpy(np.array([2, 2])).clone().float())
         self.action_std = torch.from_numpy(np.array([2, 2])).clone().float()
-
-        self.optimizer = torch.optim.Adam(self.parameters())
 
     def forward(self, state, latent_code):
         output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
@@ -368,7 +364,18 @@ if __name__ == '__main__':
     #     main(args)
     # train_data_path = "three_modes_traj_train_everywhere.pkl"
     # val_data_path = "three_modes_traj_val.pkl"
+    # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0")
     train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0")
-    train_loader, val_loader = create_dataloader(train_data_path, batch_size=400)
-    bc.train(train_loader, val_loader)
+    train_dataset, val_dataset = create_dataset(train_data_path)
+    train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
+    # bc.train(train_loader, val_loader)
+
+    model = MlpPolicyNet(code_dim=None)
+    checkpoint = torch.load("checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
+    model.load_state_dict(checkpoint)
+    num_trajs = 20
+    start_state = get_start_state(num_trajs, mode="sample_data", dataset=val_dataset)
+    print(start_state.shape)
+    fake_code = None
+    traj_len = 1000
+    model_infer_vis(model, start_state, fake_code, traj_len)

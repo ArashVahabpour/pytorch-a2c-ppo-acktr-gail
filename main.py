@@ -21,35 +21,7 @@ from a2c_ppo_acktr.storage import RolloutStorage
 from evaluation import evaluate
 
 
-def main():
-    args = get_args()
-
-    torch.manual_seed(args.seed)
-    torch.cuda.manual_seed_all(args.seed)
-
-    if args.cuda and torch.cuda.is_available() and args.cuda_deterministic:
-        torch.backends.cudnn.benchmark = False
-        torch.backends.cudnn.deterministic = True
-
-    log_dir = os.path.expanduser(args.log_dir)
-    eval_log_dir = log_dir + "_eval"
-    utils.cleanup_log_dir(log_dir)
-    utils.cleanup_log_dir(eval_log_dir)
-
-    torch.set_num_threads(1)
-    device = torch.device("cuda:0" if args.cuda else "cpu")
-
-    env = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                        args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
-
-    # env = gym.make("Circles-v0", radii=[10, 5, -5])
-
-    actor_critic = Policy(
-        env.observation_space.shape,
-        env.action_space,
-        base_kwargs={'recurrent': args.recurrent_policy})
-    actor_critic.to(device)
-
+def prepare_agent(actor_critic, args, device):
     if args.algo == 'a2c':
         agent = algo.A2C_ACKTR(
             actor_critic,
@@ -80,6 +52,38 @@ def main():
             eps=args.eps,
             device=device,
         )
+    return agent
+
+def main():
+    args = get_args()
+
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
+
+    if args.cuda and torch.cuda.is_available() and args.cuda_deterministic:
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+
+    log_dir = os.path.expanduser(args.log_dir)
+    eval_log_dir = log_dir + "_eval"
+    utils.cleanup_log_dir(log_dir)
+    utils.cleanup_log_dir(eval_log_dir)
+
+    torch.set_num_threads(1)
+    device = torch.device("cuda:0" if args.cuda else "cpu")
+
+    env = make_vec_envs(args.env_name, args.seed, args.num_processes,
+                        args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
+
+    # env = gym.make("Circles-v0", radii=[10, 5, -5])
+
+    actor_critic = Policy(
+        env.observation_space.shape,
+        env.action_space,
+        base_kwargs={'recurrent': args.recurrent_policy})
+    actor_critic.to(device)
+
+    agent = prepare_agent(actor_critic, args, device)
 
     if args.gail:
         assert len(env.observation_space.shape) == 1
