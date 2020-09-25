@@ -2,7 +2,7 @@ import gym
 from gym import spaces
 import numpy as np
 
-gym.logger.set_level(40)
+# gym.logger.set_level(40)
 
 
 class CirclesEnv(gym.Env):
@@ -72,6 +72,8 @@ class CirclesEnv(gym.Env):
         self.y_threshold = L * 2
 
         self.max_steps = 2000
+        self.step_num = None  # how many steps passed since environment reset
+
         self.state_len = state_len  # number of consecutive locations to be concatenated as state
 
         self.max_ac_mag = 0.05 * L  # max action magnitude
@@ -165,6 +167,8 @@ class CirclesEnv(gym.Env):
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
     def step(self, action):
+        self.step_num += 1
+
         loc = self.loc_history[-1]
         vel = action  # 2D instantaneous velocity
         new_loc = loc + vel
@@ -177,6 +181,7 @@ class CirclesEnv(gym.Env):
             or y < -self.y_threshold
             or y > self.y_threshold
             or len(self.loc_history) > self.max_steps
+            or self.step_num >= self.max_steps
         )
 
         if done:
@@ -199,6 +204,7 @@ class CirclesEnv(gym.Env):
         self._init_circle()
         self._init_loc()
         self.steps_beyond_done = None
+        self.step_num = 0
 
         return self.state
 

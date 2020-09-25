@@ -1,6 +1,8 @@
 import os
 
 import gym
+import gym_sog
+
 import numpy as np
 import torch
 from gym.spaces.box import Box

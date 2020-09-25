@@ -128,6 +128,8 @@ class ExpertDataset(torch.utils.data.Dataset):
         for k, v in all_trajectories.items():
             data = v[idx]
 
+            if k == 'radii':
+                continue
             if k != 'lengths':
                 samples = []
                 for i in range(num_trajectories):

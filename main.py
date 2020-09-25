@@ -16,9 +16,11 @@ from a2c_ppo_acktr import algo, utils
 from a2c_ppo_acktr.algo import gail
 from a2c_ppo_acktr.arguments import get_args
 from a2c_ppo_acktr.envs import make_vec_envs
-from a2c_ppo_acktr.model import Policy
+from a2c_ppo_acktr.model import Policy, CirclePolicy
 from a2c_ppo_acktr.storage import RolloutStorage
 from evaluation import evaluate
+
+from tqdm.auto import tqdm
 
 
 def prepare_agent(actor_critic, args, device):
@@ -73,14 +75,19 @@ def main():
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                        args.gamma, args.log_dir, device, False, radii=[-5, 5, 10])
+                         args.gamma, args.log_dir, device, False, radii=[-10, 10, 20], no_render=True)
 
-    # env = gym.make("Circles-v0", radii=[10, 5, -5])
+    # actor_critic = Policy(
+    #     env.observation_space.shape,
+    #     env.action_space,
+    #     base_kwargs={'recurrent': args.recurrent_policy})
+    # actor_critic.to(device)
 
-    actor_critic = Policy(
+    actor_critic = CirclePolicy(
         env.observation_space.shape,
         env.action_space,
-        base_kwargs={'recurrent': args.recurrent_policy})
+        base_kwargs={})
+        #base_kwargs={'recurrent': args.recurrent_policy})
     actor_critic.to(device)
 
     agent = prepare_agent(actor_critic, args, device)
@@ -95,7 +102,7 @@ def main():
                 args.env_name.split('-')[0].lower()))
 
         expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=4, subsample_frequency=20)
+            file_name, num_trajectories=5, subsample_frequency=20)
         drop_last = len(expert_dataset) > args.gail_batch_size
         gail_train_loader = torch.utils.data.DataLoader(
             dataset=expert_dataset,
@@ -114,20 +121,29 @@ def main():
     episode_rewards = deque(maxlen=10)
 
     start = time.time()
-    num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
-    for j in range(num_updates):
-
+    num_updates = int(
+        args.num_env_steps) // args.num_steps // args.num_processes
+    for j in tqdm(range(num_updates)):
         if args.use_linear_lr_decay:
             # decrease learning rate linearly
             utils.update_linear_schedule(
                 agent.optimizer, j, num_updates,
                 agent.optimizer.lr if args.algo == "acktr" else args.lr)
 
+        ### generate one set of random latent codes
+        fake_z0 = np.random.randint(3, size=args.num_steps)
+        latent_code = np.zeros((args.num_steps, 3))
+        latent_code[np.arange(args.num_steps), fake_z0] = 1
+        latent_code = torch.FloatTensor(latent_code.copy()).to(device)
+    
         for step in range(args.num_steps):
             # Sample actions
             with torch.no_grad():
-                value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(
-                    rollouts.obs[step], rollouts.recurrent_hidden_states[step],
+                # value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(
+                #     rollouts.obs[step], rollouts.recurrent_hidden_states[step],
+                #     rollouts.masks[step])
+                value, action, action_log_prob, step_latent_code = actor_critic.act(
+                    rollouts.obs[step], latent_code[step],
                     rollouts.masks[step])
 
             # Obser reward and next obs
@@ -143,12 +159,13 @@ def main():
             bad_masks = torch.FloatTensor(
                 [[0.0] if 'bad_transition' in info.keys() else [1.0]
                  for info in infos])
-            rollouts.insert(obs, recurrent_hidden_states, action,
+            ## Note this is next state, current latent code and current action
+            rollouts.insert(obs, step_latent_code, action,
                             action_log_prob, value, reward, masks, bad_masks)
 
         with torch.no_grad():
             next_value = actor_critic.get_value(
-                rollouts.obs[-1], rollouts.recurrent_hidden_states[-1],
+                rollouts.obs[-1], step_latent_code,
                 rollouts.masks[-1]).detach()
 
         if args.gail:
@@ -175,7 +192,9 @@ def main():
         rollouts.after_update()
 
         # save for every interval-th episode or for the last epoch
-        if (j % args.save_interval == 0
+        ## hard set 
+        #if (j % args.save_interval == 0
+        if (j % 20 == 0
                 or j == num_updates - 1) and args.save_dir != "":
             save_path = os.path.join(args.save_dir, args.algo)
             try:
@@ -186,7 +205,7 @@ def main():
             torch.save([
                 actor_critic,
                 getattr(utils.get_vec_normalize(env), 'ob_rms', None)
-            ], os.path.join(save_path, args.env_name + ".pt"))
+            ], os.path.join(save_path, args.env_name + f"mlp_{j}.pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             total_num_steps = (j + 1) * args.num_processes * args.num_steps

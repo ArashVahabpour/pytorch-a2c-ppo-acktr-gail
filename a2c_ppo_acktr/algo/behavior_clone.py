@@ -285,7 +285,7 @@ class MlpPolicyNet(PolicyNet):
 
     def get_log_prob(self, state, latent_code, actions):
         """
-        For continus action space. fixed action log std
+        For continuous action space. fixed action log std
         """
         action_mu = self.forward(state, latent_code)
         device = state.device
@@ -317,7 +317,7 @@ def argsparser():
     parser.add_argument('--traj_limitation', type=int, default=-1)
     # Network Configuration (Using MLP Policy)
     parser.add_argument('--policy_hidden_size', type=int, default=100)
-    # for evaluatation
+    # for evaluation
     boolean_flag(parser, 'stochastic_policy', default=False,
                  help='use stochastic/deterministic policy to evaluate')
     boolean_flag(parser, 'save_sample', default=False,
@@ -325,39 +325,6 @@ def argsparser():
     parser.add_argument(
         '--BC_max_iter', help='Max iteration for training BC', type=int, default=1e5)
     return parser.parse_args()
-
-# def main(args):
-#     U.make_session(num_cpu=1).__enter__()
-#     set_global_seeds(args.seed)
-#     env = gym.make(args.env_id)
-
-    # def policy_fn(name, ob_space, ac_space, reuse=False):
-    #     return MlpPolicyNet()
-#     env = bench.Monitor(env, logger.get_dir() and
-#                         osp.join(logger.get_dir(), "monitor.json"))
-#     env.seed(args.seed)
-#     gym.logger.setLevel(logging.WARN)
-#     task_name = get_task_name(args)
-#     args.checkpoint_dir = osp.join(args.checkpoint_dir, task_name)
-#     args.log_dir = osp.join(args.log_dir, task_name)
-#     dataset = Mujoco_Dset(expert_path=args.expert_path, traj_limitation=args.traj_limitation)
-#     savedir_fname = learn(env,
-#                           policy_fn,
-#                           dataset,
-#                           max_iters=args.BC_max_iter,
-#                           ckpt_dir=args.checkpoint_dir,
-#                           log_dir=args.log_dir,
-#                           task_name=task_name,
-#                           verbose=True)
-#     avg_len, avg_ret = runner(env,
-#                               policy_fn,
-#                               savedir_fname,
-#                               timesteps_per_batch=1024,
-#                               number_trajs=10,
-#                               stochastic_policy=args.stochastic_policy,
-#                               save=args.save_sample,
-#                               reuse=True)
-
 
 if __name__ == '__main__':
     #     args = argsparser()
