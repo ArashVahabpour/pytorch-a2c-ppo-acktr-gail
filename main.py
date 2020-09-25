@@ -17,9 +17,11 @@ from a2c_ppo_acktr import algo, utils
 from a2c_ppo_acktr.algo import gail
 from a2c_ppo_acktr.arguments import get_args
 from a2c_ppo_acktr.envs import make_vec_envs
-from a2c_ppo_acktr.model import Policy
+from a2c_ppo_acktr.model import Policy, CirclePolicy
 from a2c_ppo_acktr.storage import RolloutStorage
 from evaluation import evaluate
+
+from tqdm.auto import tqdm
 
 
 def main():
@@ -43,7 +45,13 @@ def main():
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
                          args.gamma, args.log_dir, device, False, radii=[-10, 10, 20], no_render=True)
 
-    actor_critic = Policy(
+    # actor_critic = Policy(
+    #     env.observation_space.shape,
+    #     env.action_space,
+    #     base_kwargs={'recurrent': args.recurrent_policy})
+    # actor_critic.to(device)
+
+    actor_critic = CirclePolicy(
         env.observation_space.shape,
         env.action_space,
         base_kwargs={'recurrent': args.recurrent_policy})
@@ -83,7 +91,7 @@ def main():
                 args.env_name.split('-')[0].lower()))
         
         expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=4, subsample_frequency=20)
+            file_name, num_trajectories=500, subsample_frequency=20)
         drop_last = len(expert_dataset) > args.gail_batch_size
         gail_train_loader = torch.utils.data.DataLoader(
             dataset=expert_dataset,
@@ -104,8 +112,7 @@ def main():
     start = time.time()
     num_updates = int(
         args.num_env_steps) // args.num_steps // args.num_processes
-    for j in range(num_updates):
-
+    for j in tqdm(range(num_updates)):
         if args.use_linear_lr_decay:
             # decrease learning rate linearly
             utils.update_linear_schedule(

@@ -49,8 +49,8 @@ def main():
     #     base_kwargs={'recurrent': args.recurrent_policy})
     # actor_critic.to(device)
 
-    save_path = os.path.join(args.save_dir, args.algo)
-    actor_critic = torch.load(os.path.join(save_path, args.env_name + ".pt"), map_location=torch.device('cpu'))[0].to(device)
+    load_path = os.path.join(args.save_dir, args.algo)
+    actor_critic = torch.load(os.path.join(load_path, args.env_name + ".pt"), map_location=torch.device('cpu'))[0].to(device)
 
     if args.algo == 'a2c':
         agent = algo.A2C_ACKTR(
@@ -81,18 +81,18 @@ def main():
         discr = gail.Discriminator(
             env.observation_space.shape[0] + env.action_space.shape[0], 100,
             device)
-        file_name = os.path.join(
-            args.gail_experts_dir, "trajs_{}.pt".format(
-                args.env_name.split('-')[0].lower()))
+        # file_name = os.path.join(
+        #     args.gail_experts_dir, "trajs_{}.pt".format(
+        #         args.env_name.split('-')[0].lower()))
         
-        expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=4, subsample_frequency=20)
-        drop_last = len(expert_dataset) > args.gail_batch_size
-        gail_train_loader = torch.utils.data.DataLoader(
-            dataset=expert_dataset,
-            batch_size=args.gail_batch_size,
-            shuffle=True,
-            drop_last=drop_last)
+        # expert_dataset = gail.ExpertDataset(
+        #     file_name, num_trajectories=4, subsample_frequency=20)
+        # drop_last = len(expert_dataset) > args.gail_batch_size
+        # gail_train_loader = torch.utils.data.DataLoader(
+        #     dataset=expert_dataset,
+        #     batch_size=args.gail_batch_size,
+        #     shuffle=True,
+        #     drop_last=drop_last)
 
     rollouts = RolloutStorage(args.num_steps, args.num_processes,
                               env.observation_space.shape, env.action_space,
@@ -105,9 +105,12 @@ def main():
     episode_rewards = deque(maxlen=10)
 
     start = time.time()
-    num_updates = int(
-        args.num_env_steps) // args.num_steps // args.num_processes
-    for j in range(num_updates):
+    # num_updates = int(
+    #     args.num_env_steps) // args.num_steps // args.num_processes
+
+    num_trajectories = 10
+    for j in range(num_trajectories):
+        print('traj #{}'.format(j))
 
         # if args.use_linear_lr_decay:
         #     # decrease learning rate linearly
@@ -126,9 +129,9 @@ def main():
             obs, reward, done, infos = env.step(action)
             env.render()
 
-            for info in infos:
-                if 'episode' in info.keys():
-                    episode_rewards.append(info['episode']['r'])
+            # for info in infos:
+            #     if 'episode' in info.keys():
+            #         episode_rewards.append(info['episode']['r'])
 
             # If done then clean the history of observations.
             masks = torch.FloatTensor(
@@ -139,10 +142,12 @@ def main():
             rollouts.insert(obs, recurrent_hidden_states, action,
                             action_log_prob, value, reward, masks, bad_masks)
 
-        with torch.no_grad():
-            next_value = actor_critic.get_value(
-                rollouts.obs[-1], rollouts.recurrent_hidden_states[-1],
-                rollouts.masks[-1]).detach()
+            if done:
+                continue
+        # with torch.no_grad():
+        #     next_value = actor_critic.get_value(
+        #         rollouts.obs[-1], rollouts.recurrent_hidden_states[-1],
+        #         rollouts.masks[-1]).detach()
 
         if args.gail:
             if j >= 10:
@@ -160,10 +165,10 @@ def main():
             #         rollouts.obs[step], rollouts.actions[step], args.gamma,
             #         rollouts.masks[step])
 
-        rollouts.compute_returns(next_value, args.use_gae, args.gamma,
-                                 args.gae_lambda, args.use_proper_time_limits)
+        # rollouts.compute_returns(next_value, args.use_gae, args.gamma,
+        #                          args.gae_lambda, args.use_proper_time_limits)
 
-        value_loss, action_loss, dist_entropy = agent.update(rollouts)
+        # value_loss, action_loss, dist_entropy = agent.update(rollouts)
 
         rollouts.after_update()
 
@@ -181,17 +186,17 @@ def main():
         #         getattr(utils.get_vec_normalize(env), 'ob_rms', None)
         #     ], os.path.join(save_path, args.env_name + ".pt"))
 
-        if j % args.log_interval == 0 and len(episode_rewards) > 1:
-            total_num_steps = (j + 1) * args.num_processes * args.num_steps
-            end = time.time()
-            print(
-                "Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}\n"
-                .format(j, total_num_steps,
-                        int(total_num_steps / (end - start)),
-                        len(episode_rewards), np.mean(episode_rewards),
-                        np.median(episode_rewards), np.min(episode_rewards),
-                        np.max(episode_rewards), dist_entropy, value_loss,
-                        action_loss))
+        # if j % args.log_interval == 0 and len(episode_rewards) > 1:
+        #     total_num_steps = (j + 1) * args.num_processes * args.num_steps
+        #     end = time.time()
+        #     print(
+        #         "Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}\n"
+        #         .format(j, total_num_steps,
+        #                 int(total_num_steps / (end - start)),
+        #                 len(episode_rewards), np.mean(episode_rewards),
+        #                 np.median(episode_rewards), np.min(episode_rewards),
+        #                 np.max(episode_rewards), dist_entropy, value_loss,
+        #                 action_loss))
 
         if (args.eval_interval is not None and len(episode_rewards) > 1
                 and j % args.eval_interval == 0):
