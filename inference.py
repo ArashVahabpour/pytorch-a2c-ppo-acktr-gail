@@ -32,10 +32,12 @@ def fake_codes(lengths: Union[int, List[int], np.ndarray], dim: int = 3, one_hot
 
 
 def model_inference(model, start_state, latent_code, traj_len):
-    state = start_state.clone().detach()
+    device = get_module_device(model)
+    latent_code = to_tensor(latent_code, device)
+    state = start_state.clone().detach().to(device)
     num_traj = start_state.shape[0]
-    state_arr = torch.from_numpy(np.zeros((num_traj, traj_len, 5, 2))).float()
-    action_arr = torch.from_numpy(np.zeros((num_traj, traj_len, 2))).float()
+    state_arr = torch.from_numpy(np.zeros((num_traj, traj_len, 5, 2))).float().to(device)
+    action_arr = torch.from_numpy(np.zeros((num_traj, traj_len, 2))).float().to(device)
     for i in range(traj_len):  # vectorized along the num_traj axis
         state_flat = state.reshape(state.shape[0], -1)
         speed = model(state_flat, latent_code)
