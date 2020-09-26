@@ -1,7 +1,7 @@
 import numpy as np
 from .vec_env import VecEnv
 from .util import copy_obs_dict, dict_to_obs, obs_space_info
-from gym_envs import gym_sog
+import gym_sog
 
 
 class DummyVecEnv(VecEnv):

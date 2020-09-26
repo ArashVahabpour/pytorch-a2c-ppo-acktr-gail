@@ -276,14 +276,21 @@ def generate_traj_env(num_traj, state_len, radii, save_dir="gail_experts/circle"
     print('expert data saved successfully.')
 
 
-def flat_to_nested(states, history_length):
+def flat_to_nested(states, state_len=None, dim_state=None):
     """Restructure the flattened states to nested states
     [num_traj] x num_batch x dim_flat_state -> [num_traj] x num_batch x history_length x dim_state 
     """
-    return states.reshape(states)
+    assert (state_len is not None) or (dim_state is not None), "At least one of the `history_length` and `dim_state` needs to be specified"
+    if (state_len is not None) and (dim_state is not None):
+        assert state_len * dim_state == states.shape[-1], f"Dimensions don't match: history_length ({state_len}) x dim_state ({dim_state}) and states.shape[-1] ({states.shape[-1]})"
+    if state_len is not None:
+        return states.reshape(*states.shape[:-1], state_len, -1)
+    else:
+        return states.reshape(*states.shape[:-1], -1, dim_state)
+
 
 def nested_to_flat(states):
     """Restructure the nested states to flattened states
     [num_traj] x num_batch x history_length x dim_state -> [num_traj] x num_batch x dim_flat_state 
     """
-    return states
+    return states.reshape(*states.shape[:-2], -1)

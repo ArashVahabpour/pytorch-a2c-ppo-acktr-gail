@@ -20,7 +20,7 @@ from utilities import normal_log_density, set_random_seed, to_tensor, save_check
 from abc import ABC, abstractmethod
 from typing import List
 # import tensorflow as tf
-from inference import get_start_state, model_infer_vis
+from inference import get_start_state, model_infer_vis, model_inference_env, visualize_trajs_new
 
 
 # from baselines.gail import mlp_policy
@@ -362,21 +362,25 @@ def argsparser():
 
 
 if __name__ == '__main__':
-    #     args = argsparser()
-    #     main(args)
+    ############### Train ###############
     # train_data_path = "three_modes_traj_train_everywhere.pkl"
     # val_data_path = "three_modes_traj_val.pkl"
-    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
+    # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
+    # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
+    # train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
+    # train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
+    # bc.train(train_loader, val_loader)
+    # model = bc.policy
+
+    ############### Load Checkpoint ###############
     train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
     train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
-    train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
-    bc.train(train_loader, val_loader)
-    model = bc.policy
+    model = MlpPolicyNet(code_dim=3)
+    checkpoint = torch.load(
+        "checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
+    model.load_state_dict(checkpoint)
 
-    # model = MlpPolicyNet(code_dim=None)
-    # checkpoint = torch.load(
-    #     "checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
-    # model.load_state_dict(checkpoint)
+    ############### Inference ###############
     num_trajs = 20
     start_state = get_start_state(
         num_trajs, mode="sample_data", dataset=val_dataset)
@@ -387,3 +391,7 @@ if __name__ == '__main__':
     # fake_code[:,0] = 1
     traj_len = 1000
     model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name="info_info_leak")
+
+    ############### use env for inference ###############
+    flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20])
+    visualize_trajs_new(flat_state_arr, action_arr, "./imgs/circle/env_inference.pdf")
