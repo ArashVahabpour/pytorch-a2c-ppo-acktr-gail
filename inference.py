@@ -4,7 +4,7 @@ from utilities import *
 from numpy import random
 import matplotlib.pylab as plt
 import copy
-# from a2c_ppo_acktr.algo.behavior_clone import TrajectoryDataset
+from tqdm.auto import tqdm
 
 import gym
 from gym_sog.envs.circle_utils import generate_one_traj_env, clip_speed, flat_to_nested
@@ -44,7 +44,7 @@ def model_inference(model, start_state, latent_code, traj_len):
         np.zeros((num_traj, traj_len, 5, 2))).float().to(device)
     action_arr = torch.from_numpy(
         np.zeros((num_traj, traj_len, 2))).float().to(device)
-    for i in range(traj_len):  # vectorized along the num_traj axis
+    for i in tqdm(range(traj_len)):  # vectorized along the num_traj axis
         state_flat = state.reshape(state.shape[0], -1)
         speed = model(state_flat, latent_code)
         new_state = step(state, speed, mode="nested")
@@ -137,6 +137,7 @@ def model_inference_env(model, num_traj: int, traj_len: int, state_len: int, rad
     states_arr, action_arr = [], []
     for i, code in enumerate(fake_code):
         radius = np.random.choice(radii)
+        print(f"Generating trajectory #{i}: radius = {radius}")
 
         def actor(states, radius, max_ac_mag):
             return clip_speed(
