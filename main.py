@@ -184,7 +184,7 @@ def main():
         # save for every interval-th episode or for the last epoch
         ## hard set 
         #if (j % args.save_interval == 0
-        if (j % 20 == 0
+        if (j % 50 == 0
                 or j == num_updates - 1) and args.save_dir != "":
             save_path = os.path.join(args.save_dir, args.algo)
             try:
