@@ -394,4 +394,4 @@ if __name__ == '__main__':
 
     ############### use env for inference ###############
     flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20])
-    visualize_trajs_new(flat_state_arr, action_arr, "./imgs/circle/env_inference.pdf")
+    visualize_trajs_new(flat_state_arr, action_arr, "./imgs/circle/env_inference.png")
