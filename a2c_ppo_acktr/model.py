@@ -7,6 +7,7 @@ from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 from a2c_ppo_acktr.distributions import Bernoulli, Categorical, DiagGaussian
 from a2c_ppo_acktr.utils import init
 
+from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -229,9 +230,9 @@ class MLPBase(NNBase):
 
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
 
-class Value_net(nn.Module):
+class ValueNet(nn.Module):
     def __init__(self, inputs_dim=10, inputc_dim=3, ft_dim=128,  activation=F.relu):
-        super(Value_net, self).__init__()
+        super(ValueNet, self).__init__()
         self.activation = activation
         self.fc_s1 = nn.Linear(inputs_dim, ft_dim)
         self.fc_s2 = nn.Linear(ft_dim, ft_dim)
@@ -260,7 +261,7 @@ class CirclePolicy(nn.Module):
         #         raise NotImplementedError
 
         self.mlp_policy_net = MlpPolicyNet(obs_shape[0], **base_kwargs)
-        self.mlp_value_net = Value_net(obs_shape[0], **base_kwargs)
+        self.mlp_value_net = ValueNet(obs_shape[0], **base_kwargs)
         num_outputs = action_space.shape[0]
         
         # if action_space.__class__.__name__ == "Discrete":
@@ -314,6 +315,7 @@ class CirclePolicy(nn.Module):
         return value
 
     def evaluate_actions(self, inputs, rnn_hxs, masks, action):
+        # pylint: disable=not-callable
         #value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
         value = self.mlp_value_net(inputs, rnn_hxs)
         action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=False)

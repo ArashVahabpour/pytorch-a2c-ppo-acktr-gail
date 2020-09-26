@@ -106,8 +106,7 @@ class CirclesEnv(gym.Env):
         self.radius = np.random.choice(self.radii)
 
     def _init_loc(self):
-        """
-        Initializes the first `state_len` locations when episode starts
+        """Initializes the first `state_len` locations when episode starts
         """
         self.loc_history = np.zeros([self.state_len, 2])
 

@@ -107,3 +107,10 @@ trained_models/
 .DS_Store
 .idea/*
 
+
+baselines-repo
+.vscode
+*.h5
+*.pt
+checkpoints
+imgs

@@ -15,14 +15,12 @@ import tempfile
 import os.path as osp
 import gym
 from tqdm.auto import tqdm
-import sys
-file_dir = osp.dirname(__file__)
-sys.path.append(file_dir)
 
 from utilities import normal_log_density, set_random_seed, to_tensor, save_checkpoint, load_pickle, onehot, get_logger
 from abc import ABC, abstractmethod
 from typing import List
 # import tensorflow as tf
+from inference import get_start_state, model_infer_vis
 
 
 # from baselines.gail import mlp_policy
@@ -74,7 +72,7 @@ class ExpertTrajectory:
 
         new_z = np.repeat(fake_z0, traj_fre)
         #print("end t after latent code sampling:", time() -  start_t)
-        fake_z = onehot(new_z)
+        fake_z = onehot(new_z, 3)
 
         state = self.expert_states[indexes]
         action = self.expert_actions[indexes]
@@ -93,22 +91,8 @@ class TrajectoryDataset(TensorDataset):
         X = self.transform(X)
         self.X = torch.as_tensor(X, device=device)  # state
         self.y = torch.as_tensor(y, device=device)  # action
-        c = torch.as_tensor(c, device=device, dtype=torch.int64).reshape(-1, 1)
-        print(X.shape)
-        print(y.shape)
-        print(c.shape)
-        self.c = torch.zeros(X.shape[0], torch.max(
-            c), device=device).scatter_(1, c-1, 1)  # one-hot code
-        super(TrajectoryDataset, self).__init__(X, y, c)
-
-    # def __getitem__(self, index):
-    #     if self.transform is not None:
-    #         tmp = self.X[index]
-    #         return self.transform(tmp), self.y[index], self.c[index]
-    #     return self.X[index], self.y[index], self.c[index]
-
-    # def __len__(self):
-    #     return self.X.shape[0]
+        self.c = torch.as_tensor(c, device=device)
+        super(TrajectoryDataset, self).__init__(self.X, self.y, self.c)
 
 
 def train(epoch, net, dataloader, optimizer, criterion, device, writer):
@@ -140,11 +124,12 @@ def train(epoch, net, dataloader, optimizer, criterion, device, writer):
 
 class BC():
     def __init__(self, epochs=300, lr=0.0001, eps=1e-5, device="cpu", policy_activation=F.relu,
-                 tb_writer=None, validate_freq=1, checkpoint_dir="."):
+                 tb_writer=None, validate_freq=1, checkpoint_dir=".", code_dim=None):
         self.epochs = epochs
         self.device = device
         self.policy = MlpPolicyNet(
-            state_dim=10, code_dim=None, ft_dim=128, activation=policy_activation).to(device)
+            state_dim=10, code_dim=code_dim, ft_dim=128, activation=policy_activation
+        ).to(device)
         self.optimizer = optim.Adam(self.policy.parameters(), lr=lr, eps=eps)
         self.criterion = nn.MSELoss()
         self.writer = tb_writer
@@ -187,7 +172,8 @@ def validate(epoch, net, val_loader, criterion, device, best_loss, writer, check
             if writer is not None:
                 writer.add_scalars("Loss/BC_val", {"val_loss": valid_loss/(
                     (batch_idx+1))}, batch_idx + number_batches * (epoch-1))
-    checkpoint_path = osp.join(checkpoint_dir, 'checkpoints/bestbc_model_new_everywhere.pth')
+    checkpoint_path = osp.join(
+        checkpoint_dir, 'checkpoints/bestbc_model_new_everywhere.pth')
     if avg_valid_loss <= best_loss:
         best_loss = avg_valid_loss
         print('Best epoch: ' + str(epoch))
@@ -198,47 +184,90 @@ def validate(epoch, net, val_loader, criterion, device, best_loss, writer, check
     return best_loss, checkpoint_path
 
 
-def load_data(data_file):
+def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map=None):
     # TODO: remove the radii selection lines
+    # TODO: Currently the one-hot encoding is done in memory all at once. Potentially it needs to be moved to a custom DataLoader like ExpertTrajectory above
     """For Arash's format
     """
     data_dict = torch.load(data_file)
 
+    lengths = data_dict["lengths"]
+    lengths = lengths[data_dict["radii"] == 10]
+
     X_all = data_dict["states"]
     X_all = X_all[data_dict["radii"] == 10]
-    num_traj, traj_len, dim_state = X_all.shape
-    X_all = X_all.reshape(-1, dim_state)
+    num_traj, max_traj_len_x, dim_state = X_all.shape
+    # X_all = X_all.reshape(-1, dim_state)
+    X_all = torch.cat([X[:l] for X, l in zip(X_all, lengths)], dim=0)
 
     y_all = data_dict["actions"]
     y_all = y_all[data_dict["radii"] == 10]
-    num_traj, traj_len, dim_action = y_all.shape
-    y_all = y_all.reshape(-1, dim_action)
+    num_traj, max_traj_len_y, dim_action = y_all.shape
+    # y_all = y_all.reshape(-1, dim_action)
+    y_all = torch.cat([y[:l] for y, l in zip(y_all, lengths)], dim=0)
 
-    c = data_dict["radii"][data_dict["radii"] == 10]
+    c = data_dict["radii"]
+    c = c[data_dict["radii"] == 10]
+
     # change to scalar encoding here in case it's useful
-    c_all = torch.zeros(num_traj, traj_len, dtype=torch.int64)
-    c_all[c == 10, :] = 1
-    c_all[c == 20, :] = 2
-    c_all[c == -10, :] = 3
-    c_all = c_all.flatten()
+    unique_c, inv = np.unique(c, return_inverse=True)
+    dim = len(unique_c)
+    if code_map is None:
+        codes = np.arange(dim)
+        code_map = dict(zip(unique_c, codes))
+        # c, fake_c = codes[inv], np.random.choice(codes, size=len(c))
+        # c_all, fake_c_all = np.repeat(c, lengths), np.repeat(fake_c, lengths)
+        c = codes[inv]
+        try:
+            # for torch.tensor lengths
+            c_all, fake_c_all = np.repeat(c, lengths), np.random.randint(dim, size=lengths.sum().item())
+        except:
+            # for np.array lengths
+            c_all, fake_c_all = np.repeat(c, lengths), np.random.randint(dim, size=lengths.sum())
+    else:
+        c = np.array([code_map[c_] for c_ in unique_c])[inv]
 
-    return X_all, y_all, c_all
+    # make sure that one_hot_dim >= the inferred dim
+    if one_hot_dim is None:
+        one_hot_dim = dim
+    elif one_hot_dim < dim:
+        raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the number of unique values in c ({dim})")
+
+    if one_hot:
+        c_all, fake_c_all = onehot(c_all, dim=one_hot_dim), onehot(fake_c_all, dim=one_hot_dim)
+
+    # c_all = torch.zeros(num_traj, traj_len, dtype=torch.int64)
+    # c_all[c == 10, :] = 1
+    # c_all[c == 20, :] = 2
+    # c_all[c == -10, :] = 3
+    # c_all = c_all.flatten()
+
+    return X_all, y_all, c_all, fake_c_all, code_map
 
 
-def create_dataloader(train_data_path, val_data_path=None, batch_size=4):
-    #train_data_f = "three_modes_traj.pkl"
-    # train_data_path = "three_modes_traj_train_everywhere.pkl"
-    # val_data_path = "three_modes_traj_val.pkl"
+def create_dataset(train_data_path, val_data_path=None, fake=True, one_hot=True, one_hot_dim=None):
     from sklearn.model_selection import train_test_split
-    X, y, c = load_data(train_data_path)
+    X, y, c, fake_c, code_map = load_data(
+        train_data_path, one_hot=one_hot, one_hot_dim=one_hot_dim
+    )
+    if fake:
+        c = fake_c
     if val_data_path is None:
         X_train, X_val, y_train, y_val, c_train, c_val = train_test_split(X, y, c, test_size=0.2)
     else:
         X_train, y_train, c_train = X, y, c
-        X_val, y_val, c_val = load_data(val_data_path)
+        X_val, y_val, c_val, fake_c_val, code_map = load_data(
+            val_data_path, one_hot=one_hot, code_map=code_map
+        )
+        if fake:
+            c_val = fake_c_val
 
     train_dataset = TrajectoryDataset(X_train, y_train, c_train)
     val_dataset = TrajectoryDataset(X_val, y_val, c_val)
+    return train_dataset, val_dataset
+
+
+def create_dataloader(train_dataset, val_dataset, batch_size=4):
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size,
                                   shuffle=True, num_workers=0)
     val_dataloader = DataLoader(val_dataset, batch_size=batch_size,
@@ -280,7 +309,6 @@ class MlpPolicyNet(PolicyNet):
         self.action_logstds = torch.log(
             torch.from_numpy(np.array([2, 2])).clone().float())
         self.action_std = torch.from_numpy(np.array([2, 2])).clone().float()
-        
 
     def forward(self, state, latent_code):
         output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
@@ -332,45 +360,30 @@ def argsparser():
         '--BC_max_iter', help='Max iteration for training BC', type=int, default=1e5)
     return parser.parse_args()
 
-# def main(args):
-#     U.make_session(num_cpu=1).__enter__()
-#     set_global_seeds(args.seed)
-#     env = gym.make(args.env_id)
-
-    # def policy_fn(name, ob_space, ac_space, reuse=False):
-    #     return MlpPolicyNet()
-#     env = bench.Monitor(env, logger.get_dir() and
-#                         osp.join(logger.get_dir(), "monitor.json"))
-#     env.seed(args.seed)
-#     gym.logger.setLevel(logging.WARN)
-#     task_name = get_task_name(args)
-#     args.checkpoint_dir = osp.join(args.checkpoint_dir, task_name)
-#     args.log_dir = osp.join(args.log_dir, task_name)
-#     dataset = Mujoco_Dset(expert_path=args.expert_path, traj_limitation=args.traj_limitation)
-#     savedir_fname = learn(env,
-#                           policy_fn,
-#                           dataset,
-#                           max_iters=args.BC_max_iter,
-#                           ckpt_dir=args.checkpoint_dir,
-#                           log_dir=args.log_dir,
-#                           task_name=task_name,
-#                           verbose=True)
-#     avg_len, avg_ret = runner(env,
-#                               policy_fn,
-#                               savedir_fname,
-#                               timesteps_per_batch=1024,
-#                               number_trajs=10,
-#                               stochastic_policy=args.stochastic_policy,
-#                               save=args.save_sample,
-#                               reuse=True)
-
 
 if __name__ == '__main__':
     #     args = argsparser()
     #     main(args)
     # train_data_path = "three_modes_traj_train_everywhere.pkl"
     # val_data_path = "three_modes_traj_val.pkl"
+    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
     train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0")
-    train_loader, val_loader = create_dataloader(train_data_path, batch_size=400)
+    train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
+    train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
     bc.train(train_loader, val_loader)
+    model = bc.policy
+
+    # model = MlpPolicyNet(code_dim=None)
+    # checkpoint = torch.load(
+    #     "checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
+    # model.load_state_dict(checkpoint)
+    num_trajs = 20
+    start_state = get_start_state(
+        num_trajs, mode="sample_data", dataset=val_dataset)
+    # print(start_state.shape)
+    code_dim = 3
+    fake_code = onehot(np.random.randint(code_dim, size=num_trajs), dim=code_dim)
+    # fake_code = torch.zeros(num_trajs, code_dim)
+    # fake_code[:,0] = 1
+    traj_len = 1000
+    model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name="info_info_leak")

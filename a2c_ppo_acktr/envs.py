@@ -1,7 +1,7 @@
 import os
 
 import gym
-import gym_sog
+from gym_envs import gym_sog
 
 import numpy as np
 import torch
