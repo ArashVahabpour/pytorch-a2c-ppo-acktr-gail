@@ -6,8 +6,11 @@ import matplotlib.pylab as plt
 import copy
 # from a2c_ppo_acktr.algo.behavior_clone import TrajectoryDataset
 
-from typing import Union, List
+import gym
+from gym_sog.envs.cirle_utils import generate_one_traj_env, clip_speed
 
+from typing import Union, List
+from numbers import Real
 
 def load_model(model, filename):
     if torch.cuda.is_available():
@@ -92,3 +95,23 @@ def get_start_state(n: int, state_dim: int = 2, history_len: int = 5,
         start_state, _, _ = dataset[sample_inds]
         start_state = start_state.reshape(n, history_len, state_dim)
     return start_state
+
+
+def model_inference_env(model, num_traj: int, traj_len: int, state_len:int, radii: List[Real]):
+    device = get_module_device(model)
+
+    if model.code_dim is None:
+        fake_code = None
+    else:
+        fake_code = onehot(np.random.randint(model.code_dim, size=num_traj), dim=model.code_dim)
+        fake_code = to_tensor(fake_code, device)
+
+    states_arr, action_arr = [], []
+    for i, code in enumerate(fake_code):
+        radius = np.random.choice(radii)
+        actor = lambda states, radius, max_ac_mag: clip_speed(model(states, code), max_ac_mag)
+        states, actions, length = generate_one_traj_env(traj_len, state_len, radius, actor)
+
+    states_arr = np.vstack(states_arr)
+    action_arr = np.vstack(action_arr)
+    return states_arr, action_arr
