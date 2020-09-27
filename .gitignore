@@ -114,3 +114,4 @@ baselines-repo
 *.pt
 checkpoints
 imgs
+log*
