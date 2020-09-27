@@ -20,7 +20,7 @@ from utilities import normal_log_density, set_random_seed, to_tensor, save_check
 from abc import ABC, abstractmethod
 from typing import List
 # import tensorflow as tf
-from inference import get_start_state, model_infer_vis
+from inference import get_start_state, model_infer_vis, model_inference_env, visualize_trajs_new
 
 
 # from baselines.gail import mlp_policy
@@ -192,26 +192,33 @@ def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map
     data_dict = torch.load(data_file)
 
     lengths = data_dict["lengths"]
-    lengths = lengths[data_dict["radii"] == 10]
+    # lengths = lengths[data_dict["radii"] == 10]
 
     X_all = data_dict["states"]
-    X_all = X_all[data_dict["radii"] == 10]
+    # X_all = X_all[data_dict["radii"] == 10]
     num_traj, max_traj_len_x, dim_state = X_all.shape
     # X_all = X_all.reshape(-1, dim_state)
     X_all = torch.cat([X[:l] for X, l in zip(X_all, lengths)], dim=0)
 
     y_all = data_dict["actions"]
-    y_all = y_all[data_dict["radii"] == 10]
+    # y_all = y_all[data_dict["radii"] == 10]
     num_traj, max_traj_len_y, dim_action = y_all.shape
     # y_all = y_all.reshape(-1, dim_action)
     y_all = torch.cat([y[:l] for y, l in zip(y_all, lengths)], dim=0)
 
     c = data_dict["radii"]
-    c = c[data_dict["radii"] == 10]
+    # c = c[data_dict["radii"] == 10]
 
     # change to scalar encoding here in case it's useful
     unique_c, inv = np.unique(c, return_inverse=True)
     dim = len(unique_c)
+
+    # make sure that one_hot_dim >= the inferred dim
+    if one_hot_dim is None:
+        one_hot_dim = dim
+    elif one_hot_dim < dim:
+        raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the number of unique values in c ({dim})")
+
     if code_map is None:
         codes = np.arange(dim)
         code_map = dict(zip(unique_c, codes))
@@ -226,12 +233,6 @@ def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map
             c_all, fake_c_all = np.repeat(c, lengths), np.random.randint(dim, size=lengths.sum())
     else:
         c = np.array([code_map[c_] for c_ in unique_c])[inv]
-
-    # make sure that one_hot_dim >= the inferred dim
-    if one_hot_dim is None:
-        one_hot_dim = dim
-    elif one_hot_dim < dim:
-        raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the number of unique values in c ({dim})")
 
     if one_hot:
         c_all, fake_c_all = onehot(c_all, dim=one_hot_dim), onehot(fake_c_all, dim=one_hot_dim)
@@ -362,21 +363,25 @@ def argsparser():
 
 
 if __name__ == '__main__':
-    #     args = argsparser()
-    #     main(args)
-    # train_data_path = "three_modes_traj_train_everywhere.pkl"
-    # val_data_path = "three_modes_traj_val.pkl"
+    ############### Train ###############
+    train_data_path = "three_modes_traj_train_everywhere.pkl"
+    val_data_path = "three_modes_traj_val.pkl"
     bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
     train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-    train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
+    train_dataset, val_dataset = create_dataset(train_data_path, fake=True, one_hot=True, one_hot_dim=3)
     train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
     bc.train(train_loader, val_loader)
     model = bc.policy
 
-    # model = MlpPolicyNet(code_dim=None)
+    ############### Load Checkpoint ###############
+    # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
+    # train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
+    # model = MlpPolicyNet(code_dim=3)
     # checkpoint = torch.load(
     #     "checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
     # model.load_state_dict(checkpoint)
+
+    ############### Inference ###############
     num_trajs = 20
     start_state = get_start_state(
         num_trajs, mode="sample_data", dataset=val_dataset)
@@ -386,4 +391,8 @@ if __name__ == '__main__':
     # fake_code = torch.zeros(num_trajs, code_dim)
     # fake_code[:,0] = 1
     traj_len = 1000
-    model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name="info_info_leak")
+    model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name="info_fake")
+
+    ############### use env for inference ###############
+    flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20])
+    visualize_trajs_new(flat_state_arr, action_arr, "./imgs/circle/env_inference.png")
