@@ -1,0 +1,2579 @@
+Updates 0, num timesteps 2048, FPS 21
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 1.182, action_loss: 1.800
+
+Updates 1, num timesteps 4096, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 4.413
+
+Updates 2, num timesteps 6144, FPS 22
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.306
+
+Updates 3, num timesteps 8192, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 3.086
+
+Updates 4, num timesteps 10240, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.020, action_loss: 4.896
+
+Updates 5, num timesteps 12288, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.956
+
+Updates 6, num timesteps 14336, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.011
+
+Updates 7, num timesteps 16384, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 3.980
+
+Updates 8, num timesteps 18432, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 1.904
+
+Updates 9, num timesteps 20480, FPS 23
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.362
+
+Updates 10, num timesteps 22528, FPS 24
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.032, action_loss: 6.193
+
+Updates 11, num timesteps 24576, FPS 25
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.463
+
+Updates 12, num timesteps 26624, FPS 26
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 1.604
+
+Updates 13, num timesteps 28672, FPS 27
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 4.246
+
+Updates 14, num timesteps 30720, FPS 28
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 3.454
+
+Updates 15, num timesteps 32768, FPS 29
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.790
+
+Updates 16, num timesteps 34816, FPS 30
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 122.100
+
+Updates 17, num timesteps 36864, FPS 30
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 10.190
+
+Updates 18, num timesteps 38912, FPS 31
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 9.801
+
+Updates 19, num timesteps 40960, FPS 32
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 3.256
+
+Updates 20, num timesteps 43008, FPS 32
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 4.482
+
+Updates 21, num timesteps 45056, FPS 33
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 2.121
+
+Updates 22, num timesteps 47104, FPS 33
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.085, action_loss: 2.402
+
+Updates 23, num timesteps 49152, FPS 34
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.080, action_loss: 2.304
+
+Updates 24, num timesteps 51200, FPS 34
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.081, action_loss: 3.565
+
+Updates 25, num timesteps 53248, FPS 35
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 4.203
+
+Updates 26, num timesteps 55296, FPS 35
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 3.937
+
+Updates 27, num timesteps 57344, FPS 36
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.088, action_loss: 15.149
+
+Updates 28, num timesteps 59392, FPS 36
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 5.853
+
+Updates 29, num timesteps 61440, FPS 37
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 4.324
+
+Updates 30, num timesteps 63488, FPS 37
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.887
+
+Updates 31, num timesteps 65536, FPS 37
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 3.223
+
+Updates 32, num timesteps 67584, FPS 38
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.013
+
+Updates 33, num timesteps 69632, FPS 38
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 4.281
+
+Updates 34, num timesteps 71680, FPS 39
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 5.028
+
+Updates 35, num timesteps 73728, FPS 39
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 13.834
+
+Updates 36, num timesteps 75776, FPS 39
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 2.609
+
+Updates 37, num timesteps 77824, FPS 39
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 4.197
+
+Updates 38, num timesteps 79872, FPS 40
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 3.677
+
+Updates 39, num timesteps 81920, FPS 40
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.055, action_loss: 1.794
+
+Updates 40, num timesteps 83968, FPS 40
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 2.277
+
+Updates 41, num timesteps 86016, FPS 40
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.081, action_loss: 4.871
+
+Updates 42, num timesteps 88064, FPS 41
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 6.247
+
+Updates 43, num timesteps 90112, FPS 41
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 2.024
+
+Updates 44, num timesteps 92160, FPS 41
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.073, action_loss: 4.223
+
+Updates 45, num timesteps 94208, FPS 41
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 2.057
+
+Updates 46, num timesteps 96256, FPS 41
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 2.797
+
+Updates 47, num timesteps 98304, FPS 42
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 2.501
+
+Updates 48, num timesteps 100352, FPS 42
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 2.512
+
+Updates 49, num timesteps 102400, FPS 42
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.699
+
+Updates 50, num timesteps 104448, FPS 42
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 3.206
+
+Updates 51, num timesteps 106496, FPS 42
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.903
+
+Updates 52, num timesteps 108544, FPS 43
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 1.553
+
+Updates 53, num timesteps 110592, FPS 43
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 6.350
+
+Updates 54, num timesteps 112640, FPS 43
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 4.125
+
+Updates 55, num timesteps 114688, FPS 43
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 9.180
+
+Updates 56, num timesteps 116736, FPS 43
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 4.000
+
+Updates 57, num timesteps 118784, FPS 43
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 9.160
+
+Updates 58, num timesteps 120832, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 3.667
+
+Updates 59, num timesteps 122880, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 22.022
+
+Updates 60, num timesteps 124928, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.073, action_loss: 16.070
+
+Updates 61, num timesteps 126976, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.737
+
+Updates 62, num timesteps 129024, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 3.409
+
+Updates 63, num timesteps 131072, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.038
+
+Updates 64, num timesteps 133120, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 3.175
+
+Updates 65, num timesteps 135168, FPS 44
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 3.912
+
+Updates 66, num timesteps 137216, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.116, action_loss: 2.444
+
+Updates 67, num timesteps 139264, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 2.931
+
+Updates 68, num timesteps 141312, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.098, action_loss: 3.095
+
+Updates 69, num timesteps 143360, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 2.828
+
+Updates 70, num timesteps 145408, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.099, action_loss: 3.720
+
+Updates 71, num timesteps 147456, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 2.493
+
+Updates 72, num timesteps 149504, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.479
+
+Updates 73, num timesteps 151552, FPS 45
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 5.746
+
+Updates 74, num timesteps 153600, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 6.713
+
+Updates 75, num timesteps 155648, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 4.017
+
+Updates 76, num timesteps 157696, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.032, action_loss: 2.631
+
+Updates 77, num timesteps 159744, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.668
+
+Updates 78, num timesteps 161792, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 3.021
+
+Updates 79, num timesteps 163840, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.096, action_loss: 3.312
+
+Updates 80, num timesteps 165888, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 3.025
+
+Updates 81, num timesteps 167936, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 4.558
+
+Updates 82, num timesteps 169984, FPS 46
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.886
+
+Updates 83, num timesteps 172032, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 2.873
+
+Updates 84, num timesteps 174080, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.374
+
+Updates 85, num timesteps 176128, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 2.978
+
+Updates 86, num timesteps 178176, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 3.715
+
+Updates 87, num timesteps 180224, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 3.233
+
+Updates 88, num timesteps 182272, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 2.749
+
+Updates 89, num timesteps 184320, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 2.753
+
+Updates 90, num timesteps 186368, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.931
+
+Updates 91, num timesteps 188416, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.513
+
+Updates 92, num timesteps 190464, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 1.976
+
+Updates 93, num timesteps 192512, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 4.109
+
+Updates 94, num timesteps 194560, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 2.635
+
+Updates 95, num timesteps 196608, FPS 47
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 2.642
+
+Updates 96, num timesteps 198656, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.078, action_loss: 2.152
+
+Updates 97, num timesteps 200704, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 2.982
+
+Updates 98, num timesteps 202752, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 9.693
+
+Updates 99, num timesteps 204800, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 2.788
+
+Updates 100, num timesteps 206848, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 2.573
+
+Updates 101, num timesteps 208896, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 26.848
+
+Updates 102, num timesteps 210944, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 3.000
+
+Updates 103, num timesteps 212992, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 4.364
+
+Updates 104, num timesteps 215040, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.240
+
+Updates 105, num timesteps 217088, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 2.098
+
+Updates 106, num timesteps 219136, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 5.536
+
+Updates 107, num timesteps 221184, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.797
+
+Updates 108, num timesteps 223232, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 21.820
+
+Updates 109, num timesteps 225280, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 2.456
+
+Updates 110, num timesteps 227328, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 5.928
+
+Updates 111, num timesteps 229376, FPS 48
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.026, action_loss: 2.384
+
+Updates 112, num timesteps 231424, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.301
+
+Updates 113, num timesteps 233472, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 1.715
+
+Updates 114, num timesteps 235520, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 3.768
+
+Updates 115, num timesteps 237568, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 3.316
+
+Updates 116, num timesteps 239616, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.155
+
+Updates 117, num timesteps 241664, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 6.434
+
+Updates 118, num timesteps 243712, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.342
+
+Updates 119, num timesteps 245760, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.028, action_loss: 1.931
+
+Updates 120, num timesteps 247808, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 2.911
+
+Updates 121, num timesteps 249856, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 3.051
+
+Updates 122, num timesteps 251904, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 3.226
+
+Updates 123, num timesteps 253952, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 2.267
+
+Updates 124, num timesteps 256000, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 6.062
+
+Updates 125, num timesteps 258048, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 8.011
+
+Updates 126, num timesteps 260096, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.158
+
+Updates 127, num timesteps 262144, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 1.625
+
+Updates 128, num timesteps 264192, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.307
+
+Updates 129, num timesteps 266240, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 3.733
+
+Updates 130, num timesteps 268288, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 3.137
+
+Updates 131, num timesteps 270336, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 4.125
+
+Updates 132, num timesteps 272384, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 3.653
+
+Updates 133, num timesteps 274432, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 4.972
+
+Updates 134, num timesteps 276480, FPS 49
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.072, action_loss: 3.648
+
+Updates 135, num timesteps 278528, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 4.517
+
+Updates 136, num timesteps 280576, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 1.877
+
+Updates 137, num timesteps 282624, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 2.096
+
+Updates 138, num timesteps 284672, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 2.526
+
+Updates 139, num timesteps 286720, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.638
+
+Updates 140, num timesteps 288768, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 6.953
+
+Updates 141, num timesteps 290816, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.860
+
+Updates 142, num timesteps 292864, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 4.576
+
+Updates 143, num timesteps 294912, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 5.282
+
+Updates 144, num timesteps 296960, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 3.363
+
+Updates 145, num timesteps 299008, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 1.947
+
+Updates 146, num timesteps 301056, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.093, action_loss: 3.336
+
+Updates 147, num timesteps 303104, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.742
+
+Updates 148, num timesteps 305152, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 6.712
+
+Updates 149, num timesteps 307200, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 3.661
+
+Updates 150, num timesteps 309248, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 4.478
+
+Updates 151, num timesteps 311296, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.070, action_loss: 2.440
+
+Updates 152, num timesteps 313344, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.075, action_loss: 1.807
+
+Updates 153, num timesteps 315392, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 3.138
+
+Updates 154, num timesteps 317440, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 73.218
+
+Updates 155, num timesteps 319488, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.091
+
+Updates 156, num timesteps 321536, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 3.458
+
+Updates 157, num timesteps 323584, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 3.657
+
+Updates 158, num timesteps 325632, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.070, action_loss: 3.122
+
+Updates 159, num timesteps 327680, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.151
+
+Updates 160, num timesteps 329728, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 3.231
+
+Updates 161, num timesteps 331776, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.082, action_loss: 2.393
+
+Updates 162, num timesteps 333824, FPS 50
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 2.648
+
+Updates 163, num timesteps 335872, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 4.591
+
+Updates 164, num timesteps 337920, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.028, action_loss: 2.359
+
+Updates 165, num timesteps 339968, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.814
+
+Updates 166, num timesteps 342016, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 5.807
+
+Updates 167, num timesteps 344064, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 3.108
+
+Updates 168, num timesteps 346112, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 1.828
+
+Updates 169, num timesteps 348160, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 2.352
+
+Updates 170, num timesteps 350208, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.887
+
+Updates 171, num timesteps 352256, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.531
+
+Updates 172, num timesteps 354304, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 2.134
+
+Updates 173, num timesteps 356352, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 6.839
+
+Updates 174, num timesteps 358400, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.533
+
+Updates 175, num timesteps 360448, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.070, action_loss: 3.817
+
+Updates 176, num timesteps 362496, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 3.081
+
+Updates 177, num timesteps 364544, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 15.006
+
+Updates 178, num timesteps 366592, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.032, action_loss: 5.291
+
+Updates 179, num timesteps 368640, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 12.944
+
+Updates 180, num timesteps 370688, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 4.577
+
+Updates 181, num timesteps 372736, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 4.091
+
+Updates 182, num timesteps 374784, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 4.195
+
+Updates 183, num timesteps 376832, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.733
+
+Updates 184, num timesteps 378880, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 5.394
+
+Updates 185, num timesteps 380928, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.153
+
+Updates 186, num timesteps 382976, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 2.816
+
+Updates 187, num timesteps 385024, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 3.920
+
+Updates 188, num timesteps 387072, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 2.041
+
+Updates 189, num timesteps 389120, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 2.846
+
+Updates 190, num timesteps 391168, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.809
+
+Updates 191, num timesteps 393216, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.097, action_loss: 1.467
+
+Updates 192, num timesteps 395264, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 3.064
+
+Updates 193, num timesteps 397312, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 2.502
+
+Updates 194, num timesteps 399360, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 14.367
+
+Updates 195, num timesteps 401408, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.028, action_loss: 3.296
+
+Updates 196, num timesteps 403456, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 2.503
+
+Updates 197, num timesteps 405504, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 3.950
+
+Updates 198, num timesteps 407552, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.371
+
+Updates 199, num timesteps 409600, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.856
+
+Updates 200, num timesteps 411648, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 6.597
+
+Updates 201, num timesteps 413696, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 2.858
+
+Updates 202, num timesteps 415744, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 5.869
+
+Updates 203, num timesteps 417792, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.514
+
+Updates 204, num timesteps 419840, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 6.361
+
+Updates 205, num timesteps 421888, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.108, action_loss: 30.830
+
+Updates 206, num timesteps 423936, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 11.146
+
+Updates 207, num timesteps 425984, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 7.391
+
+Updates 208, num timesteps 428032, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.095, action_loss: 4.033
+
+Updates 209, num timesteps 430080, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 3.877
+
+Updates 210, num timesteps 432128, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 3.990
+
+Updates 211, num timesteps 434176, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 3.328
+
+Updates 212, num timesteps 436224, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 19.759
+
+Updates 213, num timesteps 438272, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 5.502
+
+Updates 214, num timesteps 440320, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 14.426
+
+Updates 215, num timesteps 442368, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 3.834
+
+Updates 216, num timesteps 444416, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 2.430
+
+Updates 217, num timesteps 446464, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.698
+
+Updates 218, num timesteps 448512, FPS 51
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 2.958
+
+Updates 219, num timesteps 450560, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 5.841
+
+Updates 220, num timesteps 452608, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.118
+
+Updates 221, num timesteps 454656, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.070, action_loss: 2.460
+
+Updates 222, num timesteps 456704, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 6.080
+
+Updates 223, num timesteps 458752, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.096, action_loss: 1.625
+
+Updates 224, num timesteps 460800, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 3.429
+
+Updates 225, num timesteps 462848, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.106, action_loss: 4.411
+
+Updates 226, num timesteps 464896, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 6.160
+
+Updates 227, num timesteps 466944, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.996
+
+Updates 228, num timesteps 468992, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.088, action_loss: 3.889
+
+Updates 229, num timesteps 471040, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 8.511
+
+Updates 230, num timesteps 473088, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.004
+
+Updates 231, num timesteps 475136, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 2.886
+
+Updates 232, num timesteps 477184, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 2.194
+
+Updates 233, num timesteps 479232, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 2.912
+
+Updates 234, num timesteps 481280, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.080, action_loss: 6.052
+
+Updates 235, num timesteps 483328, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.089, action_loss: 5.295
+
+Updates 236, num timesteps 485376, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.930
+
+Updates 237, num timesteps 487424, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 2.715
+
+Updates 238, num timesteps 489472, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 3.328
+
+Updates 239, num timesteps 491520, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.179
+
+Updates 240, num timesteps 493568, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.193
+
+Updates 241, num timesteps 495616, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 2.769
+
+Updates 242, num timesteps 497664, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.278
+
+Updates 243, num timesteps 499712, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.640
+
+Updates 244, num timesteps 501760, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 6.229
+
+Updates 245, num timesteps 503808, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 1.895
+
+Updates 246, num timesteps 505856, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.398
+
+Updates 247, num timesteps 507904, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.074, action_loss: 3.817
+
+Updates 248, num timesteps 509952, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 2.092
+
+Updates 249, num timesteps 512000, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.109, action_loss: 3.739
+
+Updates 250, num timesteps 514048, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.140, action_loss: 2.474
+
+Updates 251, num timesteps 516096, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.108, action_loss: 3.223
+
+Updates 252, num timesteps 518144, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.087, action_loss: 2.064
+
+Updates 253, num timesteps 520192, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.075, action_loss: 4.124
+
+Updates 254, num timesteps 522240, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.088, action_loss: 3.904
+
+Updates 255, num timesteps 524288, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.089, action_loss: 2.048
+
+Updates 256, num timesteps 526336, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.646
+
+Updates 257, num timesteps 528384, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 314.266
+
+Updates 258, num timesteps 530432, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.091, action_loss: 2.736
+
+Updates 259, num timesteps 532480, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 5.774
+
+Updates 260, num timesteps 534528, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 3.755
+
+Updates 261, num timesteps 536576, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 33.342
+
+Updates 262, num timesteps 538624, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.482
+
+Updates 263, num timesteps 540672, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 1.988
+
+Updates 264, num timesteps 542720, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.097, action_loss: 2.822
+
+Updates 265, num timesteps 544768, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.055, action_loss: 9.168
+
+Updates 266, num timesteps 546816, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 7.775
+
+Updates 267, num timesteps 548864, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.078, action_loss: 2.535
+
+Updates 268, num timesteps 550912, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 14.260
+
+Updates 269, num timesteps 552960, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 3.122
+
+Updates 270, num timesteps 555008, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 7.684
+
+Updates 271, num timesteps 557056, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.076, action_loss: 5.237
+
+Updates 272, num timesteps 559104, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 3.019
+
+Updates 273, num timesteps 561152, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.506
+
+Updates 274, num timesteps 563200, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 3.145
+
+Updates 275, num timesteps 565248, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.816
+
+Updates 276, num timesteps 567296, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 6.036
+
+Updates 277, num timesteps 569344, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.798
+
+Updates 278, num timesteps 571392, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 3.883
+
+Updates 279, num timesteps 573440, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 6.097
+
+Updates 280, num timesteps 575488, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 1.667
+
+Updates 281, num timesteps 577536, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.026, action_loss: 3.714
+
+Updates 282, num timesteps 579584, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 5.338
+
+Updates 283, num timesteps 581632, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.618
+
+Updates 284, num timesteps 583680, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 1.717
+
+Updates 285, num timesteps 585728, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.318
+
+Updates 286, num timesteps 587776, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 3.087
+
+Updates 287, num timesteps 589824, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.966
+
+Updates 288, num timesteps 591872, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 6.318
+
+Updates 289, num timesteps 593920, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.232
+
+Updates 290, num timesteps 595968, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 3.320
+
+Updates 291, num timesteps 598016, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.000
+
+Updates 292, num timesteps 600064, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.294
+
+Updates 293, num timesteps 602112, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 4.876
+
+Updates 294, num timesteps 604160, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.075, action_loss: 3.305
+
+Updates 295, num timesteps 606208, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 10.112
+
+Updates 296, num timesteps 608256, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.459
+
+Updates 297, num timesteps 610304, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 4.741
+
+Updates 298, num timesteps 612352, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 1.865
+
+Updates 299, num timesteps 614400, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 3.912
+
+Updates 300, num timesteps 616448, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 5.792
+
+Updates 301, num timesteps 618496, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 4.504
+
+Updates 302, num timesteps 620544, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 2.754
+
+Updates 303, num timesteps 622592, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.607
+
+Updates 304, num timesteps 624640, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 4.909
+
+Updates 305, num timesteps 626688, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 3.453
+
+Updates 306, num timesteps 628736, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.617
+
+Updates 307, num timesteps 630784, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 16.994
+
+Updates 308, num timesteps 632832, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 2.700
+
+Updates 309, num timesteps 634880, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 1.941
+
+Updates 310, num timesteps 636928, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.792
+
+Updates 311, num timesteps 638976, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.079, action_loss: 12.367
+
+Updates 312, num timesteps 641024, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 2.710
+
+Updates 313, num timesteps 643072, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 2.239
+
+Updates 314, num timesteps 645120, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 8.369
+
+Updates 315, num timesteps 647168, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 1.604
+
+Updates 316, num timesteps 649216, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.080, action_loss: 3.202
+
+Updates 317, num timesteps 651264, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.084, action_loss: 2.373
+
+Updates 318, num timesteps 653312, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 5.084
+
+Updates 319, num timesteps 655360, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.548
+
+Updates 320, num timesteps 657408, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 4.433
+
+Updates 321, num timesteps 659456, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 3.948
+
+Updates 322, num timesteps 661504, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 2.998
+
+Updates 323, num timesteps 663552, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 5.496
+
+Updates 324, num timesteps 665600, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 14.253
+
+Updates 325, num timesteps 667648, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 10.058
+
+Updates 326, num timesteps 669696, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 2.622
+
+Updates 327, num timesteps 671744, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 3.948
+
+Updates 328, num timesteps 673792, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.490
+
+Updates 329, num timesteps 675840, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.863
+
+Updates 330, num timesteps 677888, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 5.868
+
+Updates 331, num timesteps 679936, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 7.659
+
+Updates 332, num timesteps 681984, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 5.937
+
+Updates 333, num timesteps 684032, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.547
+
+Updates 334, num timesteps 686080, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 3.394
+
+Updates 335, num timesteps 688128, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 5.136
+
+Updates 336, num timesteps 690176, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.581
+
+Updates 337, num timesteps 692224, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 4.422
+
+Updates 338, num timesteps 694272, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 3.196
+
+Updates 339, num timesteps 696320, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 3.296
+
+Updates 340, num timesteps 698368, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 12.208
+
+Updates 341, num timesteps 700416, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 4.609
+
+Updates 342, num timesteps 702464, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 4.404
+
+Updates 343, num timesteps 704512, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.596
+
+Updates 344, num timesteps 706560, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 10.236
+
+Updates 345, num timesteps 708608, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.032, action_loss: 3.086
+
+Updates 346, num timesteps 710656, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 7.719
+
+Updates 347, num timesteps 712704, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 9.375
+
+Updates 348, num timesteps 714752, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 2.667
+
+Updates 349, num timesteps 716800, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 2.829
+
+Updates 350, num timesteps 718848, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 3.060
+
+Updates 351, num timesteps 720896, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 3.333
+
+Updates 352, num timesteps 722944, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.989
+
+Updates 353, num timesteps 724992, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.224
+
+Updates 354, num timesteps 727040, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 2.350
+
+Updates 355, num timesteps 729088, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 2.183
+
+Updates 356, num timesteps 731136, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 3.916
+
+Updates 357, num timesteps 733184, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 3.156
+
+Updates 358, num timesteps 735232, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 4.615
+
+Updates 359, num timesteps 737280, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 4.556
+
+Updates 360, num timesteps 739328, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.461
+
+Updates 361, num timesteps 741376, FPS 52
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 11.763
+
+Updates 362, num timesteps 743424, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 2.881
+
+Updates 363, num timesteps 745472, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 13.771
+
+Updates 364, num timesteps 747520, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 2.673
+
+Updates 365, num timesteps 749568, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 5.470
+
+Updates 366, num timesteps 751616, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 4.857
+
+Updates 367, num timesteps 753664, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.743
+
+Updates 368, num timesteps 755712, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.073, action_loss: 2.784
+
+Updates 369, num timesteps 757760, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 1.868
+
+Updates 370, num timesteps 759808, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 1.922
+
+Updates 371, num timesteps 761856, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.976
+
+Updates 372, num timesteps 763904, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.026, action_loss: 13.019
+
+Updates 373, num timesteps 765952, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 4.792
+
+Updates 374, num timesteps 768000, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 4.673
+
+Updates 375, num timesteps 770048, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 1.763
+
+Updates 376, num timesteps 772096, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.686
+
+Updates 377, num timesteps 774144, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 96.589
+
+Updates 378, num timesteps 776192, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 3.425
+
+Updates 379, num timesteps 778240, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 14.140
+
+Updates 380, num timesteps 780288, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 3.896
+
+Updates 381, num timesteps 782336, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 2.361
+
+Updates 382, num timesteps 784384, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 3.678
+
+Updates 383, num timesteps 786432, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.701
+
+Updates 384, num timesteps 788480, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 19.835
+
+Updates 385, num timesteps 790528, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.193
+
+Updates 386, num timesteps 792576, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 11.850
+
+Updates 387, num timesteps 794624, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 4.539
+
+Updates 388, num timesteps 796672, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 18.372
+
+Updates 389, num timesteps 798720, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.076, action_loss: 6.030
+
+Updates 390, num timesteps 800768, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 3.984
+
+Updates 391, num timesteps 802816, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 2.822
+
+Updates 392, num timesteps 804864, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.359
+
+Updates 393, num timesteps 806912, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.090, action_loss: 4.852
+
+Updates 394, num timesteps 808960, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.782
+
+Updates 395, num timesteps 811008, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 11.095
+
+Updates 396, num timesteps 813056, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.381
+
+Updates 397, num timesteps 815104, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 12.944
+
+Updates 398, num timesteps 817152, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.405
+
+Updates 399, num timesteps 819200, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 2.090
+
+Updates 400, num timesteps 821248, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 3.497
+
+Updates 401, num timesteps 823296, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 3.033
+
+Updates 402, num timesteps 825344, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 7.748
+
+Updates 403, num timesteps 827392, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 1.819
+
+Updates 404, num timesteps 829440, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 3.432
+
+Updates 405, num timesteps 831488, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 9.531
+
+Updates 406, num timesteps 833536, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 4.569
+
+Updates 407, num timesteps 835584, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 2.141
+
+Updates 408, num timesteps 837632, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 5.631
+
+Updates 409, num timesteps 839680, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 2.391
+
+Updates 410, num timesteps 841728, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 3.059
+
+Updates 411, num timesteps 843776, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 9.739
+
+Updates 412, num timesteps 845824, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 5.603
+
+Updates 413, num timesteps 847872, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.379
+
+Updates 414, num timesteps 849920, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.816
+
+Updates 415, num timesteps 851968, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.029, action_loss: 6.173
+
+Updates 416, num timesteps 854016, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 4.162
+
+Updates 417, num timesteps 856064, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 6.625
+
+Updates 418, num timesteps 858112, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 2.433
+
+Updates 419, num timesteps 860160, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 7.088
+
+Updates 420, num timesteps 862208, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.072, action_loss: 3.061
+
+Updates 421, num timesteps 864256, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.075, action_loss: 2.232
+
+Updates 422, num timesteps 866304, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 4.369
+
+Updates 423, num timesteps 868352, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 1.976
+
+Updates 424, num timesteps 870400, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 2.658
+
+Updates 425, num timesteps 872448, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.356
+
+Updates 426, num timesteps 874496, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.085, action_loss: 2.893
+
+Updates 427, num timesteps 876544, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 7.109
+
+Updates 428, num timesteps 878592, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 4.307
+
+Updates 429, num timesteps 880640, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 2.702
+
+Updates 430, num timesteps 882688, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 4.823
+
+Updates 431, num timesteps 884736, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.082, action_loss: 2.903
+
+Updates 432, num timesteps 886784, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.281
+
+Updates 433, num timesteps 888832, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 2.883
+
+Updates 434, num timesteps 890880, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 3.577
+
+Updates 435, num timesteps 892928, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 1.913
+
+Updates 436, num timesteps 894976, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 4.225
+
+Updates 437, num timesteps 897024, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.405
+
+Updates 438, num timesteps 899072, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 2.585
+
+Updates 439, num timesteps 901120, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.026
+
+Updates 440, num timesteps 903168, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 7.567
+
+Updates 441, num timesteps 905216, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.029, action_loss: 2.541
+
+Updates 442, num timesteps 907264, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 1.901
+
+Updates 443, num timesteps 909312, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.440
+
+Updates 444, num timesteps 911360, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 3.789
+
+Updates 445, num timesteps 913408, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 5.486
+
+Updates 446, num timesteps 915456, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 8.136
+
+Updates 447, num timesteps 917504, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 4.233
+
+Updates 448, num timesteps 919552, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 5.554
+
+Updates 449, num timesteps 921600, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 2.909
+
+Updates 450, num timesteps 923648, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 3.278
+
+Updates 451, num timesteps 925696, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 3.887
+
+Updates 452, num timesteps 927744, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.740
+
+Updates 453, num timesteps 929792, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.032, action_loss: 4.646
+
+Updates 454, num timesteps 931840, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 4.050
+
+Updates 455, num timesteps 933888, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 13.533
+
+Updates 456, num timesteps 935936, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 5.077
+
+Updates 457, num timesteps 937984, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 2.853
+
+Updates 458, num timesteps 940032, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 3.162
+
+Updates 459, num timesteps 942080, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 2.271
+
+Updates 460, num timesteps 944128, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 3.737
+
+Updates 461, num timesteps 946176, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 2.158
+
+Updates 462, num timesteps 948224, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.062, action_loss: 2.841
+
+Updates 463, num timesteps 950272, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 45.380
+
+Updates 464, num timesteps 952320, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.091, action_loss: 8.702
+
+Updates 465, num timesteps 954368, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 4.628
+
+Updates 466, num timesteps 956416, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 4.138
+
+Updates 467, num timesteps 958464, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 3.793
+
+Updates 468, num timesteps 960512, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 3.090
+
+Updates 469, num timesteps 962560, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 4.150
+
+Updates 470, num timesteps 964608, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 3.462
+
+Updates 471, num timesteps 966656, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.412
+
+Updates 472, num timesteps 968704, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 5.691
+
+Updates 473, num timesteps 970752, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 4.094
+
+Updates 474, num timesteps 972800, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.091
+
+Updates 475, num timesteps 974848, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.073, action_loss: 1.374
+
+Updates 476, num timesteps 976896, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 2.603
+
+Updates 477, num timesteps 978944, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 17.235
+
+Updates 478, num timesteps 980992, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 3.778
+
+Updates 479, num timesteps 983040, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 123.276
+
+Updates 480, num timesteps 985088, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 190.726
+
+Updates 481, num timesteps 987136, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.950
+
+Updates 482, num timesteps 989184, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 2.233
+
+Updates 483, num timesteps 991232, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 3.062
+
+Updates 484, num timesteps 993280, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.669
+
+Updates 485, num timesteps 995328, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 3.035
+
+Updates 486, num timesteps 997376, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.428
+
+Updates 487, num timesteps 999424, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.025, action_loss: 3.584
+
+Updates 488, num timesteps 1001472, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.669
+
+Updates 489, num timesteps 1003520, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.055, action_loss: 2.156
+
+Updates 490, num timesteps 1005568, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.235
+
+Updates 491, num timesteps 1007616, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 2.643
+
+Updates 492, num timesteps 1009664, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 3.717
+
+Updates 493, num timesteps 1011712, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 1.982
+
+Updates 494, num timesteps 1013760, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 3.212
+
+Updates 495, num timesteps 1015808, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 5.327
+
+Updates 496, num timesteps 1017856, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 2.605
+
+Updates 497, num timesteps 1019904, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 2.686
+
+Updates 498, num timesteps 1021952, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 2.119
+
+Updates 499, num timesteps 1024000, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 3.642
+
+Updates 500, num timesteps 1026048, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 99.602
+
+Updates 501, num timesteps 1028096, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 3.384
+
+Updates 502, num timesteps 1030144, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 3.747
+
+Updates 503, num timesteps 1032192, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 4.796
+
+Updates 504, num timesteps 1034240, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 4.711
+
+Updates 505, num timesteps 1036288, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.062, action_loss: 2.259
+
+Updates 506, num timesteps 1038336, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 5.939
+
+Updates 507, num timesteps 1040384, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.693
+
+Updates 508, num timesteps 1042432, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 3.691
+
+Updates 509, num timesteps 1044480, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 5.480
+
+Updates 510, num timesteps 1046528, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.076, action_loss: 2.585
+
+Updates 511, num timesteps 1048576, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 3.114
+
+Updates 512, num timesteps 1050624, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.828
+
+Updates 513, num timesteps 1052672, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.033, action_loss: 3.992
+
+Updates 514, num timesteps 1054720, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 4.119
+
+Updates 515, num timesteps 1056768, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 1.910
+
+Updates 516, num timesteps 1058816, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 2.297
+
+Updates 517, num timesteps 1060864, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 1.977
+
+Updates 518, num timesteps 1062912, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 2.669
+
+Updates 519, num timesteps 1064960, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.681
+
+Updates 520, num timesteps 1067008, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 3.840
+
+Updates 521, num timesteps 1069056, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 3.340
+
+Updates 522, num timesteps 1071104, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 10.934
+
+Updates 523, num timesteps 1073152, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.055, action_loss: 3.215
+
+Updates 524, num timesteps 1075200, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.031, action_loss: 3.798
+
+Updates 525, num timesteps 1077248, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 4.963
+
+Updates 526, num timesteps 1079296, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 2.713
+
+Updates 527, num timesteps 1081344, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.127
+
+Updates 528, num timesteps 1083392, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 4.850
+
+Updates 529, num timesteps 1085440, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.192
+
+Updates 530, num timesteps 1087488, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 5.472
+
+Updates 531, num timesteps 1089536, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 6.186
+
+Updates 532, num timesteps 1091584, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 2.726
+
+Updates 533, num timesteps 1093632, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 3.015
+
+Updates 534, num timesteps 1095680, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 2.523
+
+Updates 535, num timesteps 1097728, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 3.085
+
+Updates 536, num timesteps 1099776, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.064, action_loss: 3.149
+
+Updates 537, num timesteps 1101824, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.119
+
+Updates 538, num timesteps 1103872, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 3.208
+
+Updates 539, num timesteps 1105920, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.066, action_loss: 2.594
+
+Updates 540, num timesteps 1107968, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 3.031
+
+Updates 541, num timesteps 1110016, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 2.997
+
+Updates 542, num timesteps 1112064, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.251
+
+Updates 543, num timesteps 1114112, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 2.338
+
+Updates 544, num timesteps 1116160, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 2.215
+
+Updates 545, num timesteps 1118208, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 2.848
+
+Updates 546, num timesteps 1120256, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.055, action_loss: 4.529
+
+Updates 547, num timesteps 1122304, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 34.755
+
+Updates 548, num timesteps 1124352, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.159
+
+Updates 549, num timesteps 1126400, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 3.317
+
+Updates 550, num timesteps 1128448, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 4.579
+
+Updates 551, num timesteps 1130496, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 5.382
+
+Updates 552, num timesteps 1132544, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 8.026
+
+Updates 553, num timesteps 1134592, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 11.800
+
+Updates 554, num timesteps 1136640, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 4.721
+
+Updates 555, num timesteps 1138688, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.051, action_loss: 3.058
+
+Updates 556, num timesteps 1140736, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 8.722
+
+Updates 557, num timesteps 1142784, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 7.096
+
+Updates 558, num timesteps 1144832, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.027, action_loss: 4.383
+
+Updates 559, num timesteps 1146880, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.056, action_loss: 3.869
+
+Updates 560, num timesteps 1148928, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 4.435
+
+Updates 561, num timesteps 1150976, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.095, action_loss: 3.124
+
+Updates 562, num timesteps 1153024, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 7.081
+
+Updates 563, num timesteps 1155072, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 7.063
+
+Updates 564, num timesteps 1157120, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.074, action_loss: 1.962
+
+Updates 565, num timesteps 1159168, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 6.480
+
+Updates 566, num timesteps 1161216, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.055, action_loss: 7.359
+
+Updates 567, num timesteps 1163264, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 3.221
+
+Updates 568, num timesteps 1165312, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.931
+
+Updates 569, num timesteps 1167360, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 2.770
+
+Updates 570, num timesteps 1169408, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 4.216
+
+Updates 571, num timesteps 1171456, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 1.928
+
+Updates 572, num timesteps 1173504, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.025, action_loss: 9.506
+
+Updates 573, num timesteps 1175552, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 2.540
+
+Updates 574, num timesteps 1177600, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.034, action_loss: 9.751
+
+Updates 575, num timesteps 1179648, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 2.855
+
+Updates 576, num timesteps 1181696, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.061, action_loss: 2.493
+
+Updates 577, num timesteps 1183744, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 3.467
+
+Updates 578, num timesteps 1185792, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 4.974
+
+Updates 579, num timesteps 1187840, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.063, action_loss: 3.093
+
+Updates 580, num timesteps 1189888, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.053, action_loss: 2.455
+
+Updates 581, num timesteps 1191936, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.069, action_loss: 9.255
+
+Updates 582, num timesteps 1193984, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 8.578
+
+Updates 583, num timesteps 1196032, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 4.795
+
+Updates 584, num timesteps 1198080, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.145
+
+Updates 585, num timesteps 1200128, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.062, action_loss: 2.225
+
+Updates 586, num timesteps 1202176, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 5.640
+
+Updates 587, num timesteps 1204224, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 4.155
+
+Updates 588, num timesteps 1206272, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.340
+
+Updates 589, num timesteps 1208320, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 1.878
+
+Updates 590, num timesteps 1210368, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.044, action_loss: 2.187
+
+Updates 591, num timesteps 1212416, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 3.197
+
+Updates 592, num timesteps 1214464, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.633
+
+Updates 593, num timesteps 1216512, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.042, action_loss: 2.997
+
+Updates 594, num timesteps 1218560, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.047, action_loss: 3.111
+
+Updates 595, num timesteps 1220608, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.057, action_loss: 4.779
+
+Updates 596, num timesteps 1222656, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 2.817
+
+Updates 597, num timesteps 1224704, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 5.932
+
+Updates 598, num timesteps 1226752, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.080, action_loss: 10.513
+
+Updates 599, num timesteps 1228800, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.100, action_loss: 4.207
+
+Updates 600, num timesteps 1230848, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 3.135
+
+Updates 601, num timesteps 1232896, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.036, action_loss: 13.279
+
+Updates 602, num timesteps 1234944, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 2.829
+
+Updates 603, num timesteps 1236992, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 4.186
+
+Updates 604, num timesteps 1239040, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 8.127
+
+Updates 605, num timesteps 1241088, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 3.744
+
+Updates 606, num timesteps 1243136, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.038, action_loss: 4.583
+
+Updates 607, num timesteps 1245184, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.050, action_loss: 22.606
+
+Updates 608, num timesteps 1247232, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.065, action_loss: 7.457
+
+Updates 609, num timesteps 1249280, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 3.632
+
+Updates 610, num timesteps 1251328, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.052, action_loss: 2.833
+
+Updates 611, num timesteps 1253376, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 3.428
+
+Updates 612, num timesteps 1255424, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.054, action_loss: 4.720
+
+Updates 613, num timesteps 1257472, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.062, action_loss: 5.929
+
+Updates 614, num timesteps 1259520, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.118, action_loss: 2.889
+
+Updates 615, num timesteps 1261568, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.060, action_loss: 4.343
+
+Updates 616, num timesteps 1263616, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.067, action_loss: 2.850
+
+Updates 617, num timesteps 1265664, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.091, action_loss: 3.651
+
+Updates 618, num timesteps 1267712, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.078, action_loss: 3.896
+
+Updates 619, num timesteps 1269760, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.059, action_loss: 2.354
+
+Updates 620, num timesteps 1271808, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.097, action_loss: 4.813
+
+Updates 621, num timesteps 1273856, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.070, action_loss: 3.543
+
+Updates 622, num timesteps 1275904, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 32.011
+
+Updates 623, num timesteps 1277952, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 5.935
+
+Updates 624, num timesteps 1280000, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.035, action_loss: 2.888
+
+Updates 625, num timesteps 1282048, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 2.684
+
+Updates 626, num timesteps 1284096, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.048, action_loss: 2.780
+
+Updates 627, num timesteps 1286144, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.070, action_loss: 3.556
+
+Updates 628, num timesteps 1288192, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.046, action_loss: 2.584
+
+Updates 629, num timesteps 1290240, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.068, action_loss: 4.287
+
+Updates 630, num timesteps 1292288, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.041, action_loss: 6.694
+
+Updates 631, num timesteps 1294336, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 2.770
+
+Updates 632, num timesteps 1296384, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.058, action_loss: 1.903
+
+Updates 633, num timesteps 1298432, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.071, action_loss: 8.138
+
+Updates 634, num timesteps 1300480, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 2.597
+
+Updates 635, num timesteps 1302528, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.049, action_loss: 4.224
+
+Updates 636, num timesteps 1304576, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.030, action_loss: 4.120
+
+Updates 637, num timesteps 1306624, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.039, action_loss: 3.871
+
+Updates 638, num timesteps 1308672, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.045, action_loss: 2.431
+
+Updates 639, num timesteps 1310720, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.043, action_loss: 1.538
+
+Updates 640, num timesteps 1312768, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.037, action_loss: 4.791
+
+Updates 641, num timesteps 1314816, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.029, action_loss: 3.363
+
+Updates 642, num timesteps 1316864, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.040, action_loss: 3.088
+
+Updates 643, num timesteps 1318912, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.092, action_loss: 2.907
+
+Updates 644, num timesteps 1320960, FPS 53
+Last 10 training episodes: mean/median reward 0.0/0.0, min/max reward 0.0/0.0
+dist_entropy: 1.000, value_loss: 0.093, action_loss: 5.145
