@@ -8,6 +8,7 @@ import random
 from matplotlib import pyplot as plt
 from typing import List
 from numbers import Real
+from tqdm.auto import tqdm
 
 # FIXME: all of these are to be tested
 
@@ -213,10 +214,10 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
     return states, actions, length
 
 
-def generate_traj_env_dataset(num_traj: int, state_len: int, radii: List[Real],
+def generate_traj_env_dataset(num_traj: int, traj_len: int, state_len: int, radii: List[Real],
                               save_path="gail_experts/circle/trajs_circles.pt",
                               noise=True, render=False):
-    traj_len = 1000  # length of each trajectory --- WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN
+    # traj_len = 1000  # length of each trajectory --- WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN
     expert_data = {'states': [],
                    'actions': [],
                    'radii': [],
@@ -228,8 +229,7 @@ def generate_traj_env_dataset(num_traj: int, state_len: int, radii: List[Real],
             x, y, abs(radius), max_ac_mag, 0, radius)
         return action
 
-    for traj_id in range(num_traj):
-        print('traj #{}'.format(traj_id + 1))
+    for traj_id in tqdm(range(num_traj)):
         radius = np.random.choice(radii)
         states, actions, length = generate_one_traj_env(
             traj_len, state_len, radius, circular_actor, noise, render
@@ -327,4 +327,4 @@ def nested_to_flat(states):
 
 if __name__ == "__main__":
     generate_traj_env_dataset(
-        20, 1000, [-10, 10, 5, 20], save_path="/tmp/trajs_circle.pt", noise=True, render=False)
+        500, 1000, 5, [-10, 10, 20], save_path="/tmp/trajs_circles.pt", noise=True, render=False)

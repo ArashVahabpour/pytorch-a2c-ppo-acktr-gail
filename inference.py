@@ -146,7 +146,7 @@ def model_inference_env(model, num_traj: int, traj_len: int, state_len: int, rad
 
 
         states, actions, length = generate_one_traj_env(
-            traj_len, state_len, radius, actor)
+            traj_len, state_len, radius, actor, noise=True)
         states_arr.append(states)
         action_arr.append(actions)
 

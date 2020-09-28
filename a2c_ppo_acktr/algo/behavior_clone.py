@@ -366,8 +366,10 @@ if __name__ == '__main__':
     ############### Train ###############
     train_data_path = "three_modes_traj_train_everywhere.pkl"
     val_data_path = "three_modes_traj_val.pkl"
-    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
-    train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
+    # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
+    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=None)
+    # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
+    train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
     train_dataset, val_dataset = create_dataset(train_data_path, fake=True, one_hot=True, one_hot_dim=3)
     train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
     bc.train(train_loader, val_loader)
@@ -376,7 +378,8 @@ if __name__ == '__main__':
     ############### Load Checkpoint ###############
     # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
     # train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
-    # model = MlpPolicyNet(code_dim=3)
+    # # model = MlpPolicyNet(code_dim=3)
+    # model = MlpPolicyNet(code_dim=None)
     # checkpoint = torch.load(
     #     "checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
     # model.load_state_dict(checkpoint)
