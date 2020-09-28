@@ -134,18 +134,19 @@ def model_inference_env(model, num_traj: int, traj_len: int, state_len: int, rad
             model.code_dim, size=num_traj), dim=model.code_dim)
         fake_code = to_tensor(fake_code, device)
 
+    def actor(states, radius, max_ac_mag):
+        return clip_speed(
+            model(to_tensor(states, device), code).cpu().detach().numpy(),
+            max_ac_mag
+        )
     states_arr, action_arr = [], []
     for i, code in enumerate(fake_code):
         radius = np.random.choice(radii)
         print(f"Generating trajectory #{i}: radius = {radius}")
 
-        def actor(states, radius, max_ac_mag):
-            return clip_speed(
-                model(to_tensor(states, device), code).cpu().detach().numpy(),
-                max_ac_mag
-            )
+
         states, actions, length = generate_one_traj_env(
-            traj_len, state_len, radius, actor)
+            traj_len, state_len, radius, actor, noise=True)
         states_arr.append(states)
         action_arr.append(actions)
 
