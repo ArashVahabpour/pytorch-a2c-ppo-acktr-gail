@@ -121,7 +121,7 @@ class CirclesEnv(gym.Env):
         screen_height = scale * 2 * self.y_threshold
 
         if self.viewer is None:
-            self.viewer = rendering.Viewer(screen_width, screen_height)
+            self.viewer = rendering.Viewer(int(screen_width), int(screen_height))
 
             coordinate_offset = np.array((screen_width / 2, screen_height / 2))
             coordinate_trans = rendering.Transform(translation=coordinate_offset)
@@ -166,12 +166,15 @@ class CirclesEnv(gym.Env):
 
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
-    def step(self, action):
+    def step(self, action, noise=False):
         self.step_num += 1
 
         loc = self.loc_history[-1]
         vel = action  # 2D instantaneous velocity
         new_loc = loc + vel
+        if noise:
+            # TODO: allow control of noise parameters
+            new_loc += np.random.randn(2) * self.max_ac_mag * 0.1
         self.loc_history = np.vstack([self.loc_history, new_loc])
 
         x, y = new_loc
