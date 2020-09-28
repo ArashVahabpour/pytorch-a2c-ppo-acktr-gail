@@ -54,21 +54,23 @@ def model_inference(model, start_state, latent_code, traj_len):
     return state_arr, action_arr
 
 
-def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=0,
+def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=[0],
                     color="c", save_fig_name="info", save_fig_title="model"):
     # one trajectory visualization
     plt.figure(figsize=(20, 10))
     plt.subplot(1, 2, 1)
     for j, traj_ind in enumerate(sel_indx):
-        for i in range(traj_len):
-            plt.plot(state_arr[j, i, -1, 0],
-                     state_arr[j, i, -1, 1], "*", color=color[j])
+        plt.plot(state_arr[j, :traj_len, -1, 0],
+                 state_arr[j, :traj_len, -1, 1], "*", color=color[j])
     # Action visualization
     plt.subplot(1, 2, 2)
     for j, traj_ind in enumerate(sel_indx):
-        for i in range(traj_len):
-            plt.plot(action_arr[j, i, 0],
-                     action_arr[j, i, 1], "*", color=color[j])
+        plt.plot(action_arr[j, :traj_len, 0],
+                 action_arr[j, :traj_len, 1], "*", color=color[j])
+
+        # for i in range(traj_len):
+        #     plt.plot(action_arr[j, i, 0],
+        #              action_arr[j, i, 1], "*", color=color[j])
     plt.title(save_fig_title)
     save_dir = "./imgs/circle/"
     create_dir(save_dir)
@@ -84,13 +86,15 @@ def visualize_trajs_new(flat_state_arr, action_arr, save_fig_path, save_fig_titl
 
     # state visualization
     fig, axs = plt.subplots(ncols=2, figsize=(20, 10))
-    axs[0].set_aspect('equal', 'box'); axs[1].set_aspect('equal', 'box')
-    axs[0].set_prop_cycle(custom_cycler); axs[1].set_prop_cycle(custom_cycler)
+    axs[0].set_aspect('equal', 'box')
+    axs[1].set_aspect('equal', 'box')
+    axs[0].set_prop_cycle(custom_cycler)
+    axs[1].set_prop_cycle(custom_cycler)
     for i, traj in enumerate(flat_state_arr):
-        axs[0].plot(traj[:,-2], traj[:, -1], "*", label=str(i))
+        axs[0].plot(traj[:, -2], traj[:, -1], "*", label=str(i))
     # Action visualization
     for i, a_traj in enumerate(action_arr):
-        axs[1].plot(a_traj[:,-2], a_traj[:, -1], "*", label=str(i))
+        axs[1].plot(a_traj[:, -2], a_traj[:, -1], "*", label=str(i))
     plt.legend()
     plt.tight_layout()
     plt.title(save_fig_title)
