@@ -129,24 +129,36 @@ def get_start_state(n: int, state_dim: int = 2, history_len: int = 5,
 
 
 def model_inference_env(model, num_traj: int, traj_len: int, state_len: int,
-                        radii: List[Real], noise: bool = True, render: bool = False):
+                        radii: List[Real], codes = None, noise: bool = True,
+                        render: bool = False):
     device = get_module_device(model)
 
-    if model.code_dim is None:
-        fake_code = [None] * num_traj
+    if codes is None:
+        if model.code_dim is None:
+            fake_codes = [None] * num_traj
+        else:
+            fake_codes = onehot(np.random.randint(
+                model.code_dim, size=num_traj), dim=model.code_dim)
+            fake_codes = to_tensor(fake_codes, device)
+        codes = fake_codes
     else:
-        fake_code = onehot(np.random.randint(
-            model.code_dim, size=num_traj), dim=model.code_dim)
-        fake_code = to_tensor(fake_code, device)
+        codes = to_tensor(codes, device)
 
-    def actor(states, radius, max_ac_mag):
-        return clip_speed(
-            model(to_tensor(states, device), code).cpu().detach().numpy(),
-            max_ac_mag
-        )
     states_arr, action_arr = [], []
-    for i, code in enumerate(fake_code):
-        radius = np.random.choice(radii)
+    for i, code in enumerate(codes):
+        def actor(states, radius, max_ac_mag):
+            """Closure capturing code"""
+            return clip_speed(
+                model(
+                    to_tensor(states, device), to_tensor(code, device)
+                ).cpu().detach().numpy(),
+                max_ac_mag
+            )
+        # radius = np.random.choice(radii)
+        try:
+            radius = np.array(radii)[code]
+        except:
+            radius = np.array(radii)[np.flatnonzero(code.cpu().detach().numpy())[0]]
         print(f"Generating trajectory #{i}: radius = {radius}")
 
         states, actions, length = generate_one_traj_env(

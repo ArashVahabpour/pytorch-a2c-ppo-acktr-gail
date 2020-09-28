@@ -220,7 +220,7 @@ def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map
         raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the number of unique values in c ({dim})")
 
     if code_map is None:
-        codes = np.arange(dim)
+        codes = np.argsort(np.argsort(unique_c))
         code_map = dict(zip(unique_c, codes))
         # c, fake_c = codes[inv], np.random.choice(codes, size=len(c))
         # c_all, fake_c_all = np.repeat(c, lengths), np.repeat(fake_c, lengths)
@@ -363,14 +363,18 @@ def argsparser():
 
 
 if __name__ == '__main__':
+    code_dim = None
+    use_fake_code = True
+    inference_name = "inference"
+
     ############### Train ###############
     train_data_path = "three_modes_traj_train_everywhere.pkl"
     val_data_path = "three_modes_traj_val.pkl"
-    # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
-    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=None)
+    bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:1", code_dim=code_dim)
+    # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=None)
     # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
     train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
-    train_dataset, val_dataset = create_dataset(train_data_path, fake=True, one_hot=True, one_hot_dim=3)
+    train_dataset, val_dataset = create_dataset(train_data_path, fake=use_fake_code, one_hot=True, one_hot_dim=3)
     train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
     bc.train(train_loader, val_loader)
     model = bc.policy
@@ -378,24 +382,26 @@ if __name__ == '__main__':
     ############### Load Checkpoint ###############
     # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
     # train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
-    # # model = MlpPolicyNet(code_dim=3)
-    # model = MlpPolicyNet(code_dim=None)
+    # model = MlpPolicyNet(code_dim=3)
+    # # model = MlpPolicyNet(code_dim=None)
     # checkpoint = torch.load(
     #     "checkpoints/bestbc_model_new_everywhere.pth")["state_dict"]
     # model.load_state_dict(checkpoint)
 
     ############### Inference ###############
-    num_trajs = 10
+    num_trajs = 20
     start_state = get_start_state(
         num_trajs, mode="sample_data", dataset=val_dataset)
     # print(start_state.shape)
-    code_dim = 3
-    fake_code = onehot(np.random.randint(code_dim, size=num_trajs), dim=code_dim)
+    if code_dim is not None:
+        fake_code = onehot(np.random.randint(code_dim, size=num_trajs), dim=code_dim)
+    else:
+        fake_code = None
     # fake_code = torch.zeros(num_trajs, code_dim)
     # fake_code[:,0] = 1
     traj_len = 1000
-    # model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name="info_fake")
+    model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name=f"{inference_name}.png")
 
     ############### use env for inference ###############
-    flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20], noise=False, render=True)
-    visualize_trajs_new(flat_state_arr, action_arr, "./imgs/circle/env_inference.png")
+    flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20], codes=fake_code, noise=False, render=True)
+    visualize_trajs_new(flat_state_arr, action_arr, f"./imgs/circle/env_{inference_name}.png")

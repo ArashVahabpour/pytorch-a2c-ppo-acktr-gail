@@ -326,5 +326,6 @@ def nested_to_flat(states):
 
 
 if __name__ == "__main__":
+    dataset_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
     generate_traj_env_dataset(
-        500, 1000, 5, [-10, 10, 20], save_path="/tmp/trajs_circles.pt", noise=True, render=False)
+        500, 1000, 5, [-10, 10, 20], save_path=dataset_path, noise=True, render=False)
