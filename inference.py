@@ -78,20 +78,24 @@ def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=0,
 def visualize_trajs_new(flat_state_arr, action_arr, save_fig_path, save_fig_title="model"):
     from cycler import cycler
     NUM_COLORS = 20
-    cm = plt.get_cmap('gist_rainbow')
-    colorlist = [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)]
+    cm = plt.get_cmap('tab20')
+    # colorlist = [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)]
+    colorlist = list(cm.colors)
     custom_cycler = cycler(color=colorlist)
 
     # state visualization
     fig, axs = plt.subplots(ncols=2, figsize=(20, 10))
-    axs[0].set_aspect('equal', 'box'); axs[1].set_aspect('equal', 'box')
-    axs[0].set_prop_cycle(custom_cycler); axs[1].set_prop_cycle(custom_cycler)
+    axs[0].set_aspect('equal', 'box')
+    axs[1].set_aspect('equal', 'box')
+    axs[0].set_prop_cycle(custom_cycler)
+    axs[1].set_prop_cycle(custom_cycler)
     for i, traj in enumerate(flat_state_arr):
-        axs[0].plot(traj[:,-2], traj[:, -1], "*", label=str(i))
+        axs[0].plot(traj[:, -2], traj[:, -1], "-", alpha=0.5, label=str(i))
     # Action visualization
     for i, a_traj in enumerate(action_arr):
-        axs[1].plot(a_traj[:,-2], a_traj[:, -1], "*", label=str(i))
-    plt.legend()
+        axs[1].plot(a_traj[:, -2], a_traj[:, -1], "-", alpha=0.5, label=str(i))
+    axs[0].legend()
+    axs[1].legend()
     plt.tight_layout()
     plt.title(save_fig_title)
     save_dir = os.path.dirname(save_fig_path)
@@ -124,7 +128,8 @@ def get_start_state(n: int, state_dim: int = 2, history_len: int = 5,
     return start_state
 
 
-def model_inference_env(model, num_traj: int, traj_len: int, state_len: int, radii: List[Real]):
+def model_inference_env(model, num_traj: int, traj_len: int, state_len: int,
+                        radii: List[Real], noise: bool = True, render: bool = False):
     device = get_module_device(model)
 
     if model.code_dim is None:
@@ -144,9 +149,9 @@ def model_inference_env(model, num_traj: int, traj_len: int, state_len: int, rad
         radius = np.random.choice(radii)
         print(f"Generating trajectory #{i}: radius = {radius}")
 
-
         states, actions, length = generate_one_traj_env(
-            traj_len, state_len, radius, actor, noise=True)
+            traj_len, state_len, radius, actor, noise=noise, render=render
+        )
         states_arr.append(states)
         action_arr.append(actions)
 
