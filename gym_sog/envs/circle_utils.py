@@ -175,7 +175,7 @@ num_traj = 500  # number of trajectories
 
 
 def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
-                          actor, noise: bool, render: bool = False):
+                          actor, noise_level: float, render: bool = False):
     """Create a new environment and generate a trajectory
     If the trajectory is prematurely ended before the length `traj_len`,
     start over again to make sure the trajectory has length `traj_len`
@@ -186,8 +186,8 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
     """
     assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
     length = traj_len
-    env = gym.make("Circles-v0", radii=[radius],
-                   state_len=state_len, no_render=False)
+    env = gym.make("Circles-v0", radii=[radius], state_len=state_len,
+                   no_render=False, noise_level=noise_level)
     max_ac_mag = env.max_ac_mag  # max action magnitude
     states, actions = [], []
     done = False
@@ -199,7 +199,7 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions.append(action)
         if render:
             env.render()
-        observation, reward, done, info = env.step(action, noise)
+        observation, reward, done, info = env.step(action, noise=True)
         step += 1
         if step >= traj_len:
             break
