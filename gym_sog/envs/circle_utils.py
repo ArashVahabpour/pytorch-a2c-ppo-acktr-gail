@@ -179,7 +179,7 @@ def generate_circle_env(state_len: int, radius: Real, no_render: bool):
     return env, max_ac_mag
 
 def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
-                          actor, noise: bool, render: bool = False):
+                          actor, noise_level: float, render: bool = False):
     """Create a new environment and generate a trajectory
     If the trajectory is prematurely ended before the length `traj_len`,
     start over again to make sure the trajectory has length `traj_len`
@@ -190,8 +190,8 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
     """
     #assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
     length = traj_len
-    env = gym.make("Circles-v0", radii=[radius],
-                   state_len=state_len, no_render=False)
+    env = gym.make("Circles-v0", radii=[radius], state_len=state_len,
+                   no_render=False, noise_level=noise_level)
     max_ac_mag = env.max_ac_mag  # max action magnitude
     print("max_ac_mag", max_ac_mag, "for env ", radius)
     states, actions = [], []
@@ -206,7 +206,7 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions.append(action)
         if render:
             env.render()
-        observation, reward, done, info = env.step(action, noise)
+        observation, reward, done, info = env.step(action, noise=True)
         step += 1
         if step >= traj_len:
             break
@@ -336,5 +336,6 @@ def nested_to_flat(states):
 
 
 if __name__ == "__main__":
+    dataset_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
     generate_traj_env_dataset(
-        500, 1000, 5, [-10, 10, 20], save_path="/tmp/trajs_circles.pt", noise=True, render=False)
+        500, 1000, 5, [-10, 10, 20], save_path=dataset_path, noise=True, render=False)

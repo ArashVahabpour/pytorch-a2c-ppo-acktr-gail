@@ -61,7 +61,7 @@ class CirclesEnv(gym.Env):
         'video.frames_per_second': 50
     }
 
-    def __init__(self, radii, no_render=False, state_len=5):
+    def __init__(self, radii, no_render=False, state_len=5, noise_level=0.1):
         """
         Args:
             radii: a list of all radii to be uniformly at random sampled. Put a negative sign if the circle is to be
@@ -96,6 +96,8 @@ class CirclesEnv(gym.Env):
         self.radius = None
 
         self.no_render = no_render
+
+        self.noise_level = noise_level
 
         self._init_circle()
         self.loc_history = None  # 2D array of (x, y) locations visited so far in the episode.
@@ -183,7 +185,7 @@ class CirclesEnv(gym.Env):
         new_loc = loc + vel
         if noise:
             # TODO: allow control of noise parameters
-            new_loc += np.random.randn(2) * self.max_ac_mag * 0.1
+            new_loc += np.random.randn(2) * self.max_ac_mag * self.noise_level
         self.loc_history = np.vstack([self.loc_history, new_loc])
 
         x, y = new_loc

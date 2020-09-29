@@ -172,8 +172,10 @@ def step(state, action, mode="flat"):
 
 def to_tensor(target, device):
     # pylint: disable=not-callable
+    if target is None:
+        return None
     try:
-        target = target.clone().detach().float().to(device)
+        target = torch.as_tensor(target, device=device).float()
     except:
         target = torch.tensor(target).float().to(device)
     return target

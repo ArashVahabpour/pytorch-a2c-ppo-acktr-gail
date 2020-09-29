@@ -5,7 +5,7 @@ import time
 from collections import deque
 
 import gym
-from gym_envs import gym_sog
+import gym_sog
 import numpy as np
 import torch
 import torch.nn as nn
