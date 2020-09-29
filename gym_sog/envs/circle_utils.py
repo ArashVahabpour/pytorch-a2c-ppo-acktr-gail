@@ -188,14 +188,17 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions (List[np.array]): The list of actions in the trajectory
         length (int): The length of the trajectory
     """
-    assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
+    #assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
     length = traj_len
     env = gym.make("Circles-v0", radii=[radius],
                    state_len=state_len, no_render=False)
     max_ac_mag = env.max_ac_mag  # max action magnitude
+    print("max_ac_mag", max_ac_mag, "for env ", radius)
     states, actions = [], []
     done = False
     step = 0
+    ###
+    print("TEST initial location:")
     observation = env.reset()
     while True:
         states.append(observation)
@@ -209,11 +212,14 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
             break
         elif done:
             # start over a new trajectory hoping that this time it completes
+            print('warning: an incomplete trajectory occured.')
+            print("step:", step, states[-1], actions[-1])
+            print(env.loc_history, env.x_threshold)
             observation = env.reset()
             step = 0
             states[:] = []
             actions[:] = []
-            print('warning: an incomplete trajectory occured.')
+            
     env.close()
     return states, actions, length
 

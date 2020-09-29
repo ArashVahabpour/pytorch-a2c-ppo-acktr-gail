@@ -73,6 +73,7 @@ def main():
 
     torch.set_num_threads(1)
     device = torch.device("cuda:0" if args.cuda else "cpu")
+    print("------------**********************-----------------------------")
 
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
                          args.gamma, args.log_dir, device, False, radii=[-10, 10, 20], no_render=True)
@@ -82,27 +83,36 @@ def main():
     #     env.action_space,
     #     base_kwargs={'recurrent': args.recurrent_policy})
     # actor_critic.to(device)
-
+    print("------------**********************---initialize model--------------------------")
+    code_dim = None
     actor_critic = CirclePolicy(
-        env.observation_space.shape,
+        env.observation_space.shape,code_dim,
         env.action_space,
         base_kwargs={})
+    print("------------**********************---load model--------------------------")
         #base_kwargs={'recurrent': args.recurrent_policy})
+    print("----load pretrained model from BC-----")
+    bc_model_path = "./checkpoints/bestbc_model_new_everywhere.pth"
+    actor_critic.mlp_policy_net.load_state_dict(torch.load(bc_model_path)['state_dict'])
+    print("loaded mlp policy net----", actor_critic.mlp_policy_net )
     actor_critic.to(device)
-
+    print("------------**********************----prepare_agent-------------------------")
     agent = prepare_agent(actor_critic, args, device)
+    print(args,args.lr)
 
     if args.gail:
         assert len(env.observation_space.shape) == 1
         discr = gail.Discriminator(
             env.observation_space.shape[0] + env.action_space.shape[0], 100,
             device)
-        file_name = os.path.join(
-            args.gail_experts_dir, "trajs_{}.pt".format(
-                args.env_name.split('-')[0].lower()))
+        # file_name = os.path.join(
+        #     args.gail_experts_dir, "trajs_{}.pt".format(
+        #         args.env_name.split('-')[0].lower()))
+        #### change to the new trainig data 9-28
+        file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
 
         expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=500, subsample_frequency=20)
+            file_name, num_trajectories=args.num_traj, subsample_frequency=args.subsample_traj)
         drop_last = len(expert_dataset) > args.gail_batch_size
         gail_train_loader = torch.utils.data.DataLoader(
             dataset=expert_dataset,
@@ -135,6 +145,7 @@ def main():
         latent_code = np.zeros((args.num_steps, 3))
         latent_code[np.arange(args.num_steps), fake_z0] = 1
         latent_code = torch.FloatTensor(latent_code.copy()).to(device)
+        ###change to fixed latent code:
     
         for step in range(args.num_steps):
             # Sample actions
@@ -148,6 +159,8 @@ def main():
 
             # Obser reward and next obs
             obs, reward, done, infos = env.step(action)
+            if step % 100==0:
+                print("step action", step, rollouts.obs[step], action)
 
             for info in infos:
                 if 'episode' in info.keys():
@@ -194,7 +207,7 @@ def main():
         # save for every interval-th episode or for the last epoch
         ## hard set 
         #if (j % args.save_interval == 0
-        if (j % 50 == 0
+        if (j % 20 == 0
                 or j == num_updates - 1) and args.save_dir != "":
             save_path = os.path.join(args.save_dir, args.algo)
             try:
@@ -205,7 +218,7 @@ def main():
             torch.save([
                 actor_critic,
                 getattr(utils.get_vec_normalize(env), 'ob_rms', None)
-            ], os.path.join(save_path, args.env_name + f"mlp_{j}.pt"))
+            ], os.path.join(save_path, args.env_name + f"{args.num_traj}_{args.subsample_traj}_bc_mlp_{j}.pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             total_num_steps = (j + 1) * args.num_processes * args.num_steps
