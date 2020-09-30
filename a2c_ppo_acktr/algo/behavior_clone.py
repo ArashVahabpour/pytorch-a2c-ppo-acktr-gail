@@ -364,13 +364,14 @@ def parse_args(*args):
     parser = argparse.ArgumentParser("Behavior Cloning for Circle env")
     parser.add_argument('--seed', help='RNG seed', type=int, default=3)
     parser.add_argument('--code_dim', help='Latent code dimension, None for disabling', type=int, default=None)
-    parser.add_argument('--fake', help='Train with fake codes. Otherwise true codes will be provided.', type=bool, default=True)
     parser.add_argument('--consistent', help='During inference use consistent code for each trajectory. Otherwise the code is random for each state-action.', type=bool, default=True)
     parser.add_argument('--noise_level', help='The noise level in env.', type=float, default=0.1)
     parser.add_argument('--name', help='The name of the inference run.', type=str, default="inference_codeless_0.1")
     parser.add_argument('--device', help='The device to use.', default="cuda:1")
+    boolean_flag(parser, 'fake', help='Train with fake codes. Otherwise true codes will be provided.', default=True)
     boolean_flag(parser, 'train', default=True, help='Train the model')
     boolean_flag(parser, 'inference', default=True, help='Inference the model')
+    boolean_flag(parser, 'render', default=False, help='Render during the inference')
     return parser.parse_args(*args)
 
 
@@ -384,6 +385,7 @@ if __name__ == '__main__':
     train = args.train
     inference = args.inference
     consistent_inference_code = args.consistent
+    render = args.render
     set_random_seed(args.seed, using_cuda=True)
 
     ############### Train ###############
@@ -393,7 +395,7 @@ if __name__ == '__main__':
         bc = BC(epochs=30, lr=1e-4, eps=1e-5, device=device, code_dim=code_dim)
         # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=None)
         # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-        train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+        train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
         train_dataset, val_dataset = create_dataset(train_data_path, fake=train_with_fake_code, one_hot=True, one_hot_dim=3)
         train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
         bc.train(train_loader, val_loader)
@@ -427,5 +429,5 @@ if __name__ == '__main__':
         # model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name=f"{inference_name}")
 
         ############### use env for inference ###############
-        flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20], codes=fake_code, noise_level=inference_noise, render=False)
+        flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20], codes=fake_code, noise_level=inference_noise, render=render)
         visualize_trajs_new(flat_state_arr, action_arr, f"./imgs/circle/env_{inference_name}.png")
