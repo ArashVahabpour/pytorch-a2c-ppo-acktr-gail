@@ -87,21 +87,23 @@ def model_inference(model, start_state, latent_code, traj_len):
     return state_arr, action_arr
 
 
-def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=0,
+def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=[0],
                     color="c", save_fig_name="info", save_fig_title="model"):
     # one trajectory visualization
     plt.figure(figsize=(20, 10))
     plt.subplot(1, 2, 1)
     for j, traj_ind in enumerate(sel_indx):
-        for i in range(traj_len):
-            plt.plot(state_arr[j, i, -1, 0],
-                     state_arr[j, i, -1, 1], "*", color=color[j])
+        plt.plot(state_arr[j, :traj_len, -1, 0],
+                 state_arr[j, :traj_len, -1, 1], "*", color=color[j])
     # Action visualization
     plt.subplot(1, 2, 2)
     for j, traj_ind in enumerate(sel_indx):
-        for i in range(traj_len):
-            plt.plot(action_arr[j, i, 0],
-                     action_arr[j, i, 1], "*", color=color[j])
+        plt.plot(action_arr[j, :traj_len, 0],
+                 action_arr[j, :traj_len, 1], "*", color=color[j])
+
+        # for i in range(traj_len):
+        #     plt.plot(action_arr[j, i, 0],
+        #              action_arr[j, i, 1], "*", color=color[j])
     plt.title(save_fig_title)
     save_dir = "./imgs/circle/"
     create_dir(save_dir)

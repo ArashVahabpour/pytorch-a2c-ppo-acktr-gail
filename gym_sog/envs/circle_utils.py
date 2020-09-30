@@ -173,6 +173,10 @@ radii = [20]
 state_len = 5
 num_traj = 500  # number of trajectories
 
+def generate_circle_env(state_len: int, radius: Real, no_render: bool):
+    env = gym.make("Circles-v0", radii=[radius], state_len=state_len, no_render=no_render)
+    max_ac_mag = env.max_ac_mag  # max a
+    return env, max_ac_mag
 
 def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
                           actor, noise_level: float, render: bool = False):
