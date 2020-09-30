@@ -102,7 +102,7 @@ def main():
                 args.env_name.split('-')[0].lower()))
 
         expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=5, subsample_frequency=20)
+            file_name, num_trajectories=500, subsample_frequency=20)
         drop_last = len(expert_dataset) > args.gail_batch_size
         gail_train_loader = torch.utils.data.DataLoader(
             dataset=expert_dataset,
@@ -194,7 +194,7 @@ def main():
         # save for every interval-th episode or for the last epoch
         ## hard set 
         #if (j % args.save_interval == 0
-        if (j % 20 == 0
+        if (j % 50 == 0
                 or j == num_updates - 1) and args.save_dir != "":
             save_path = os.path.join(args.save_dir, args.algo)
             try:
