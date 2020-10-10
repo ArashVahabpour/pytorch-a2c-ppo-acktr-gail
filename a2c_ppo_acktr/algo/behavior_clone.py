@@ -141,11 +141,14 @@ class BC():
         for epoch in tqdm(range(self.epochs)):
             print('\nEpoch: %d' % epoch)
             _train(epoch, self.policy, expert_loader, self.optimizer,
-                  self.criterion, self.device, self.writer)
+                   self.criterion, self.device, self.writer)
             if epoch % self.validate_freq == 0:
                 best_loss, checkpoint_path = _validate(epoch, self.policy, val_loader,
-                                                      self.criterion, self.device, best_loss,
-                                                      self.writer, self.checkpoint_dir)
+                                                       self.criterion, self.device, best_loss,
+                                                       self.writer, self.checkpoint_dir)
+        best_loss, checkpoint_path = _validate(epoch, self.policy, val_loader,
+                                               self.criterion, self.device, best_loss,
+                                               self.writer, self.checkpoint_dir)
         self.load_best_checkpoint(checkpoint_path)
 
     def load_best_checkpoint(self, checkpoint_path):
@@ -156,6 +159,7 @@ def _validate(epoch, net, val_loader, criterion, device, best_loss, writer, chec
     net.eval()
     valid_loss = 0
     number_batches = len(val_loader)
+    avg_valid_loss = None
     for batch_idx, (state, action, latent_code) in enumerate(val_loader):
         state, action, latent_code = to_tensor(state, device),\
             to_tensor(action, device),\
@@ -174,6 +178,7 @@ def _validate(epoch, net, val_loader, criterion, device, best_loss, writer, chec
                     (batch_idx+1))}, batch_idx + number_batches * (epoch-1))
     checkpoint_path = osp.join(
         checkpoint_dir, 'checkpoints/bestbc_model_new_everywhere.pth')
+    assert avg_valid_loss is not None, "Empty avg_valid_loss. Possibly empty dataloader?"
     if avg_valid_loss <= best_loss:
         best_loss = avg_valid_loss
         print('Best epoch: ' + str(epoch))
@@ -217,7 +222,8 @@ def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map
     if one_hot_dim is None:
         one_hot_dim = dim
     elif one_hot_dim < dim:
-        raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the number of unique values in c ({dim})")
+        raise ValueError(f"one_hot_dim ({one_hot_dim}) is smaller than the"
+                         f" number of unique values in c ({dim})")
 
     if code_map is None:
         codes = np.argsort(np.argsort(unique_c))
@@ -225,17 +231,21 @@ def load_data(data_file, one_hot: bool = True, one_hot_dim: int = None, code_map
         # c, fake_c = codes[inv], np.random.choice(codes, size=len(c))
         # c_all, fake_c_all = np.repeat(c, lengths), np.repeat(fake_c, lengths)
         c = codes[inv]
-        try:
-            # for torch.tensor lengths
-            c_all, fake_c_all = np.repeat(c, lengths), np.random.randint(dim, size=lengths.sum().item())
-        except:
-            # for np.array lengths
-            c_all, fake_c_all = np.repeat(c, lengths), np.random.randint(dim, size=lengths.sum())
     else:
         c = np.array([code_map[c_] for c_ in unique_c])[inv]
 
+    try:
+        # for torch.tensor lengths
+        c_all, fake_c_all = (np.repeat(c, lengths),
+                             np.random.randint(dim, size=lengths.sum().item()))
+    except:
+        # for np.array lengths
+        c_all, fake_c_all = (np.repeat(c, lengths),
+                             np.random.randint(dim, size=lengths.sum()))
+
     if one_hot:
-        c_all, fake_c_all = onehot(c_all, dim=one_hot_dim), onehot(fake_c_all, dim=one_hot_dim)
+        c_all, fake_c_all = (onehot(c_all, dim=one_hot_dim),
+                             onehot(fake_c_all, dim=one_hot_dim))
 
     # c_all = torch.zeros(num_traj, traj_len, dtype=torch.int64)
     # c_all[c == 10, :] = 1
@@ -254,7 +264,8 @@ def create_dataset(train_data_path, val_data_path=None, fake=True, one_hot=True,
     if fake:
         c = fake_c
     if val_data_path is None:
-        X_train, X_val, y_train, y_val, c_train, c_val = train_test_split(X, y, c, test_size=0.2)
+        X_train, X_val, y_train, y_val, c_train, c_val = train_test_split(
+            X, y, c, test_size=0.2)
     else:
         X_train, y_train, c_train = X, y, c
         X_val, y_val, c_val, fake_c_val, code_map = load_data(
@@ -363,15 +374,36 @@ class MlpPolicyNet(PolicyNet):
 def parse_args(*args):
     parser = argparse.ArgumentParser("Behavior Cloning for Circle env")
     parser.add_argument('--seed', help='RNG seed', type=int, default=3)
-    parser.add_argument('--code_dim', help='Latent code dimension, None for disabling', type=int, default=None)
-    parser.add_argument('--consistent', help='During inference use consistent code for each trajectory. Otherwise the code is random for each state-action.', type=bool, default=True)
-    parser.add_argument('--noise_level', help='The noise level in env.', type=float, default=0.1)
-    parser.add_argument('--name', help='The name of the inference run.', type=str, default="inference_codeless_0.1")
-    parser.add_argument('--device', help='The device to use.', default="cuda:1")
-    boolean_flag(parser, 'fake', help='Train with fake codes. Otherwise true codes will be provided.', default=True)
+    parser.add_argument(
+        '--train_data', help='Training dataset', type=str, default='trajs_circles_mix',
+        choices=['trajs_circles', 'trajs_circles_flip',
+                 'trajs_cicles_mix', 'trajs_circles_four']
+    )
+    parser.add_argument(
+        '--code_dim', type=int, default=None,
+        help='Latent code dimension, None for disabling'
+    )
+    parser.add_argument(
+        '--consistent', type=bool, default=True,
+        help='During inference use consistent code for each trajectory.'
+             ' Otherwise the code is random for each state-action.'
+    )
+    parser.add_argument(
+        '--noise_level', help='The noise level in env.', type=float, default=0.1
+    )
+    parser.add_argument('--name', help='The name of the inference run.',
+                        type=str, default="inference_codeless_0.1")
+    parser.add_argument(
+        '--device', default="cuda:1", help='The device to use.'
+    )
+    boolean_flag(
+        parser, 'fake', default=True,
+        help='Train with fake codes. Otherwise true codes will be provided.'
+    )
     boolean_flag(parser, 'train', default=True, help='Train the model')
     boolean_flag(parser, 'inference', default=True, help='Inference the model')
-    boolean_flag(parser, 'render', default=False, help='Render during the inference')
+    boolean_flag(parser, 'render', default=False,
+                 help='Render during the inference')
     return parser.parse_args(*args)
 
 
@@ -386,6 +418,7 @@ if __name__ == '__main__':
     inference = args.inference
     consistent_inference_code = args.consistent
     render = args.render
+    train_data_path = f"/home/shared/datasets/gail_experts/{args.train_data}.pt"
     set_random_seed(args.seed, using_cuda=True)
 
     ############### Train ###############
@@ -395,15 +428,17 @@ if __name__ == '__main__':
         bc = BC(epochs=30, lr=1e-4, eps=1e-5, device=device, code_dim=code_dim)
         # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=None)
         # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-        train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
-        train_dataset, val_dataset = create_dataset(train_data_path, fake=train_with_fake_code, one_hot=True, one_hot_dim=3)
-        train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
+        train_dataset, val_dataset = create_dataset(
+            train_data_path, fake=train_with_fake_code, one_hot=True, one_hot_dim=code_dim)
+        train_loader, val_loader = create_dataloader(
+            train_dataset, val_dataset, batch_size=400)
         bc.train(train_loader, val_loader)
         model = bc.policy
     ############### Load Checkpoint ###############
     else:
-        train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-        train_dataset, val_dataset = create_dataset(train_data_path, fake=False, one_hot=True, one_hot_dim=3)
+        # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
+        train_dataset, val_dataset = create_dataset(
+            train_data_path, fake=False, one_hot=True, one_hot_dim=code_dim)
         model = MlpPolicyNet(code_dim=code_dim)
         # model = MlpPolicyNet(code_dim=None)
         checkpoint = torch.load(
@@ -420,7 +455,8 @@ if __name__ == '__main__':
             num_trajs, mode="sample_data", dataset=val_dataset)
         # print(start_state.shape)
         if code_dim is not None and consistent_inference_code:
-            fake_code = onehot(np.random.randint(code_dim, size=num_trajs), dim=code_dim)
+            fake_code = onehot(np.random.randint(
+                code_dim, size=num_trajs), dim=code_dim)
         else:
             fake_code = None
         # fake_code = torch.zeros(num_trajs, code_dim)
@@ -429,5 +465,9 @@ if __name__ == '__main__':
         # model_infer_vis(model, start_state, fake_code, traj_len, save_fig_name=f"{inference_name}")
 
         ############### use env for inference ###############
-        flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20], codes=fake_code, noise_level=inference_noise, render=render)
-        visualize_trajs_new(flat_state_arr, action_arr, f"./imgs/circle/env_{inference_name}.png")
+        flat_state_arr, action_arr = model_inference_env(
+            model, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20],
+            codes=fake_code, noise_level=inference_noise, render=render
+        )
+        visualize_trajs_new(flat_state_arr, action_arr,
+                            f"./imgs/circle/env_{inference_name}.png")
