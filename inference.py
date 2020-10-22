@@ -5,6 +5,7 @@ from numpy import random
 import matplotlib.pylab as plt
 import copy
 from tqdm.auto import tqdm
+import os
 
 import gym
 from gym_sog.envs.circle_utils import generate_one_traj_env, clip_speed, flat_to_nested
@@ -88,7 +89,7 @@ def model_inference(model, start_state, latent_code, traj_len):
 
 
 def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=[0],
-                    color="c", save_fig_name="info", save_fig_title="model"):
+                    color="c", save_fig_path="info", save_fig_title="model"):
     # one trajectory visualization
     plt.figure(figsize=(20, 10))
     plt.subplot(1, 2, 1)
@@ -105,9 +106,9 @@ def visualize_trajs(state_arr, action_arr, traj_len, sel_indx=[0],
         #     plt.plot(action_arr[j, i, 0],
         #              action_arr[j, i, 1], "*", color=color[j])
     plt.title(save_fig_title)
-    save_dir = "./imgs/circle/"
-    create_dir(save_dir)
-    plt.savefig(os.path.join(save_dir, f'{save_fig_name}.png'))
+    create_dir(os.path.dirname(save_fig_path))
+    plt.savefig(save_fig_path)
+
 
 
 def visualize_trajs_new(flat_state_arr, action_arr, save_fig_path, save_fig_title="model"):
@@ -139,7 +140,7 @@ def visualize_trajs_new(flat_state_arr, action_arr, save_fig_path, save_fig_titl
 
 
 def model_infer_vis(model, start_state, latent_code, traj_len,
-                    sel_indx=range(20), save_fig_name="info", save_fig_title="model"):
+                    sel_indx=range(20), save_fig_path="info", save_fig_title="model"):
     state_arr, action_arr = model_inference(
         model, start_state, latent_code, traj_len)
     state_arr = state_arr.cpu().detach().numpy()
@@ -148,7 +149,7 @@ def model_infer_vis(model, start_state, latent_code, traj_len,
     cm = plt.get_cmap('gist_rainbow')
     colorlist = [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)]
     visualize_trajs(state_arr, action_arr, traj_len, sel_indx=sel_indx,
-                    color=colorlist, save_fig_name=save_fig_name, save_fig_title=save_fig_title)
+                    color=colorlist, save_fig_path=save_fig_path, save_fig_title=save_fig_title)
 
 
 def get_start_state(n: int, state_dim: int = 2, history_len: int = 5,

@@ -60,6 +60,8 @@ def prepare_agent(actor_critic, args, device):
             eps=args.eps,
             device=device,
         )
+    else:
+        raise ValueError(f"Unrecognized args.algo ({args.algo})")
     return agent
 
 
@@ -133,27 +135,29 @@ def main(writer):
     agent = prepare_agent(actor_critic, args, device)
     print(args,args.lr)
 
-    if args.gail:
-        assert len(env.observation_space.shape) == 1
-        discr = gail.Discriminator(
-            env.observation_space.shape[0] + env.action_space.shape[0], 100,
-            device)
-        # file_name = os.path.join(
-        #     args.gail_experts_dir, "trajs_{}.pt".format(
-        #         args.env_name.split('-')[0].lower()))
-        #### change to the new trainig data 9-28
-        #file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
-        #file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
-        file_name = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt" # 800 traj, 1000 length
+    print("========================= create discriminator =========================")
+    assert len(env.observation_space.shape) == 1
+    discr = gail.Discriminator(
+        env.observation_space.shape[0] + env.action_space.shape[0], 100,
+        device)
+    # file_name = os.path.join(
+    #     args.gail_experts_dir, "trajs_{}.pt".format(
+    #         args.env_name.split('-')[0].lower()))
+    #### change to the new trainig data 9-28
 
-        expert_dataset = gail.ExpertDataset(
-            file_name, num_trajectories=args.num_traj, subsample_frequency=args.subsample_traj)
-        drop_last = len(expert_dataset) > args.gail_batch_size
-        gail_train_loader = torch.utils.data.DataLoader(
-            dataset=expert_dataset,
-            batch_size=args.gail_batch_size,
-            shuffle=True,
-            drop_last=drop_last)
+    print("============== create expert dataset for discriminator =================")
+    #file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+    #file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+    file_name = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt" # 800 traj, 1000 length
+
+    expert_dataset = gail.ExpertDataset(
+        file_name, num_trajectories=args.num_traj, subsample_frequency=args.subsample_traj)
+    drop_last = len(expert_dataset) > args.gail_batch_size
+    gail_train_loader = torch.utils.data.DataLoader(
+        dataset=expert_dataset,
+        batch_size=args.gail_batch_size,
+        shuffle=True,
+        drop_last=drop_last)
 
     rollouts = RolloutStorage(args.num_steps, args.num_processes,
                               env.observation_space.shape, env.action_space,
@@ -184,6 +188,7 @@ def main(writer):
         latent_code = torch.nn.functional.one_hot(fake_z0, num_classes=3)[0].float()
         ###change to fixed latent code:
 
+        # TODO: def roll_one_step(actor_critic, env, rollouts, step)
         for step in range(args.num_steps):
             # Sample actions
             with torch.no_grad():
@@ -212,65 +217,70 @@ def main(writer):
             rollouts.insert(obs, step_latent_code, action, reward_p,
                             action_log_prob, value, reward, masks, bad_masks)
         
-        print("step action", rollouts.obs[-1], action[-1])
+        print("step action", rollouts.obs[-1], rollouts.actions[-1])
         with torch.no_grad():
             next_value = actor_critic.get_value(
-                rollouts.obs[-1], step_latent_code,
-                rollouts.masks[-1]).detach()
+                rollouts.obs[-1], latent_code, rollouts.masks[-1]
+            ).detach()
 
-        if args.gail:
-            if j >= 10:
-                env.venv.eval()
+        print("====================== train the discriminator =========================")
+        if j >= 10:
+            env.venv.eval()
 
-            gail_epoch = args.gail_epoch
-            if j < 10:
-                gail_epoch = 100  # Warm up
-            for _ in range(gail_epoch):
-                discr.update(gail_train_loader, rollouts,
-                             utils.get_vec_normalize(env)._obfilt)
+        gail_epoch = args.gail_epoch
+        if j < 10:
+            gail_epoch = 100  # Warm up
+        for _ in range(gail_epoch):
+            discr.update(gail_train_loader, rollouts, utils.get_vec_normalize(env)._obfilt)
+        
+        print("======================== train the posterior ===========================")
+        #avg_loss_p = 0
+        #TODO: make small batch updates for posterior model
+        posterior.update(
+            rollouts.obs[:-1].reshape(-1, 10), # obs is longer than actions by one extra entry in the end
+            rollouts.actions.reshape(-1, 2),
+            rollouts.recurrent_hidden_states[1:].reshape(-1, rollouts.recurrent_hidden_states.shape[-1]),
+            actor_critic.optim_posterior, writer
+        ) 
+        
+        soft_update(posterior, posterior_target)
+        #avg_loss_p+=loss_p.detach().cpu().data.numpy()
+        # Note: in this implementation, discr output 1 means expert, 0 means fake. 
+        # ##inversed in the paper
+        print("========================= calculate the reward =========================")
+        for step in range(args.num_steps):
+            rollouts.rewards[step] = discr.predict_reward(
+                rollouts.obs[step], rollouts.actions[step], args.gamma,
+                rollouts.masks[step]) + p_lambda*rollouts.reward_p[step]
             
-            #avg_loss_p = 0
-            #TODO: make small batch updates for posterior model
-            posterior.update(rollouts.obs[:-1].reshape(-1, 10), rollouts.actions.reshape(-1, 2),\
-                 rollouts.recurrent_hidden_states[1:].reshape(-1, rollouts.recurrent_hidden_states.shape[-1]),\
-                      actor_critic.optim_posterior, writer) 
-            
-            soft_update(posterior, posterior_target)
-            #avg_loss_p+=loss_p.detach().cpu().data.numpy()
-            # Note: in this implementation, discr output 1 means expert, 0 means fake. 
-            # ##inversed in the paper
-            for step in range(args.num_steps):
-                rollouts.rewards[step] = discr.predict_reward(
-                    rollouts.obs[step], rollouts.actions[step], args.gamma,
-                    rollouts.masks[step]) + p_lambda*rollouts.reward_p[step]
-                
-                if step % 10 == 0:
-                    iter_number = j*args.num_steps + step
-                    writer.add_scalar("IG/d_reward", rollouts.rewards[step, 0, 0], iter_number)
-                    writer.add_scalar("IG/p_reward", rollouts.reward_p[step, 0, 0], iter_number)
-                if step % 100 == 1:
-                    iter_number = j*args.num_steps + step
-                    visualize_pts_tb(writer, rollouts.actions[:step, 0,:].detach().cpu().numpy(), 
-                         rollouts.recurrent_hidden_states[1:step+1, 0, :].detach().cpu().numpy(), "IG/action", iter=iter_number)
-                    visualize_pts_tb(writer, rollouts.obs[:step,0, -2:].detach().cpu().numpy(),
-                         rollouts.recurrent_hidden_states[1:step+1, 0, :].detach().cpu().numpy(), "IG/state", iter=iter_number)
-                    visualize_pts_tb(
-                        writer, rollouts.obs[:step,0, -2:].detach().cpu().numpy(),
-                        actor_critic.posterior_target(
-                            rollouts.obs[:step,0,:], rollouts.actions[:step, 0, :]
-                        ).detach().cpu().numpy(),
-                        "IG/state_posterior", iter=iter_number
-                    )
-                    visualize_pts_tb(
-                        writer, rollouts.obs[:step,0, -2:].detach().cpu().numpy(),
-                        torch.nn.functional.one_hot(
-                            discr(
-                                rollouts.obs[:step, 0, :], rollouts.actions[:step, 0, :]
-                            ),
-                            num_classes=2
-                        )[0].detach().cpu().numpy(),
-                        "IG/state_discr", iter=iter_number
-                    )
+            if step % 10 == 0:
+                # TODO: def write_reward(rollouts, step, iter_number, writer)
+                iter_number = j*args.num_steps + step
+                writer.add_scalar("IG/d_reward", rollouts.rewards[step, 0, 0], iter_number)
+                writer.add_scalar("IG/p_reward", rollouts.reward_p[step, 0, 0], iter_number)
+            if step % 100 == 1:
+                iter_number = j*args.num_steps + step
+                visualize_pts_tb(writer, rollouts.actions[:step, 0,:].detach().cpu().numpy(), 
+                        rollouts.recurrent_hidden_states[1:step+1, 0, :].detach().cpu().numpy(), "IG/action", iter=iter_number)
+                visualize_pts_tb(writer, rollouts.obs[:step,0, -2:].detach().cpu().numpy(),
+                        rollouts.recurrent_hidden_states[1:step+1, 0, :].detach().cpu().numpy(), "IG/state", iter=iter_number)
+                visualize_pts_tb(
+                    writer, rollouts.obs[:step,0, -2:].detach().cpu().numpy(),
+                    actor_critic.posterior_target(
+                        rollouts.obs[:step,0,:], rollouts.actions[:step, 0, :]
+                    ).detach().cpu().numpy(),
+                    "IG/state_posterior", iter=iter_number
+                )
+                visualize_pts_tb(
+                    writer, rollouts.obs[:step,0, -2:].detach().cpu().numpy(),
+                    torch.nn.functional.one_hot(
+                        discr(
+                            rollouts.obs[:step, 0, :], rollouts.actions[:step, 0, :]
+                        ),
+                        num_classes=2
+                    )[0].detach().cpu().numpy(),
+                    "IG/state_discr", iter=iter_number
+                )
 
         rollouts.compute_returns(next_value, args.use_gae, args.gamma,
                                  args.gae_lambda, args.use_proper_time_limits)
@@ -293,10 +303,11 @@ def main(writer):
             except OSError:
                 pass
 
-            torch.save([
-                actor_critic, discr,
-                getattr(utils.get_vec_normalize(env), 'ob_rms', None)
-            ], os.path.join(save_path, args.env_name + f"{args.num_traj}_{args.subsample_traj}_bc_mix_mlp_{j}.pt"))
+            torch.save({
+                'actor_critic': actor_critic,
+                'discr': discr,
+                'ob_rms': getattr(utils.get_vec_normalize(env), 'ob_rms', None)
+            }, os.path.join(save_path, args.env_name + f"{args.num_traj}_{args.subsample_traj}_bc_mix_mlp_{j}.pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             total_num_steps = (j + 1) * args.num_processes * args.num_steps

@@ -72,7 +72,7 @@ def main():
     utils.cleanup_log_dir(eval_log_dir)
 
     torch.set_num_threads(1)
-    device = torch.device("cuda:0" if args.cuda else "cpu")
+    device = torch.device("cuda:2" if args.cuda else "cpu")
     print("------------**********************-----------------------------")
 
     env = make_vec_envs(args.env_name, args.seed, args.num_processes,
@@ -92,7 +92,7 @@ def main():
     print("------------**********************---load model--------------------------")
         #base_kwargs={'recurrent': args.recurrent_policy})
     print("----load pretrained model from BC-----")
-    bc_model_path = "./checkpoints/bestbc_model_new_everywhere.pth"
+    bc_model_path = "./checkpoints/bestbc_model_new_everywhere2.pth"
     actor_critic.mlp_policy_net.load_state_dict(torch.load(bc_model_path)['state_dict'])
     print("loaded mlp policy net----", actor_critic.mlp_policy_net )
     actor_critic.to(device)
@@ -109,7 +109,9 @@ def main():
         #     args.gail_experts_dir, "trajs_{}.pt".format(
         #         args.env_name.split('-')[0].lower()))
         #### change to the new trainig data 9-28
-        file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+        #file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+        #file_name = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+        file_name = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
 
         expert_dataset = gail.ExpertDataset(
             file_name, num_trajectories=args.num_traj, subsample_frequency=args.subsample_traj)
@@ -159,8 +161,7 @@ def main():
 
             # Obser reward and next obs
             obs, reward, done, infos = env.step(action)
-            if step % 100==0:
-                print("step action", step, rollouts.obs[step], action)
+            
 
             for info in infos:
                 if 'episode' in info.keys():
@@ -176,6 +177,8 @@ def main():
             rollouts.insert(obs, step_latent_code, action,
                             action_log_prob, value, reward, masks, bad_masks)
 
+
+        print("step action", rollouts.obs[-1], rollouts.actions[-1])
         with torch.no_grad():
             next_value = actor_critic.get_value(
                 rollouts.obs[-1], step_latent_code,
@@ -218,7 +221,7 @@ def main():
             torch.save([
                 actor_critic,
                 getattr(utils.get_vec_normalize(env), 'ob_rms', None)
-            ], os.path.join(save_path, args.env_name + f"{args.num_traj}_{args.subsample_traj}_bc_mlp_{j}.pt"))
+            ], os.path.join(save_path, args.env_name + f"{args.num_traj}_{args.subsample_traj}_bc_mix_mlp_{j}.pt"))
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             total_num_steps = (j + 1) * args.num_processes * args.num_steps

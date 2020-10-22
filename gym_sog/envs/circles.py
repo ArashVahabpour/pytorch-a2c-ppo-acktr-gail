@@ -116,7 +116,7 @@ class CirclesEnv(gym.Env):
         """Initializes the first `state_len` locations when episode starts
         if no specific val is given, then start from all 0 
         """
-        if init_val is not None:
+        if init_val is None:
             init_val = np.zeros([self.state_len, 2])
         
         self.loc_history = init_val
@@ -216,10 +216,12 @@ class CirclesEnv(gym.Env):
 
     def reset(self, init_val=None):
         self._init_circle()
-        init_val = generate_pt_in_circle(self.radius, 0, self.radius,1)
-        init_val  = np.tile(init_val, 5)
-        print("init_location:", init_val)
-        self._init_loc(init_val)
+        # init_val = generate_pt_in_circle(self.radius, 0, self.radius,1)
+        # init_val  = np.tile(init_val, 5).reshape(5,2)
+        # print("init_location:", init_val)
+        # self._init_loc(init_val)
+
+        self._init_loc()
 
         self.steps_beyond_done = None
         self.step_num = 0
