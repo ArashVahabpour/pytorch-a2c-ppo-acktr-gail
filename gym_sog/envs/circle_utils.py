@@ -173,9 +173,13 @@ radii = [20]
 state_len = 5
 num_traj = 500  # number of trajectories
 
+def generate_circle_env(state_len: int, radius: Real, no_render: bool):
+    env = gym.make("Circles-v0", radii=[radius], state_len=state_len, no_render=no_render)
+    max_ac_mag = env.max_ac_mag  # max a
+    return env, max_ac_mag
 
 def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
-                          actor, noise: bool, render: bool = False):
+                          actor, noise_level: float, render: bool = False):
     """Create a new environment and generate a trajectory
     If the trajectory is prematurely ended before the length `traj_len`,
     start over again to make sure the trajectory has length `traj_len`
@@ -184,14 +188,17 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions (List[np.array]): The list of actions in the trajectory
         length (int): The length of the trajectory
     """
-    assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
+    #assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
     length = traj_len
-    env = gym.make("Circles-v0", radii=[radius],
-                   state_len=state_len, no_render=False)
+    env = gym.make("Circles-v0", radii=[radius], state_len=state_len,
+                   no_render=False, noise_level=noise_level)
     max_ac_mag = env.max_ac_mag  # max action magnitude
+    print("max_ac_mag", max_ac_mag, "for env ", radius)
     states, actions = [], []
     done = False
     step = 0
+    ###
+    print("TEST initial location:")
     observation = env.reset()
     while True:
         states.append(observation)
@@ -199,17 +206,20 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions.append(action)
         if render:
             env.render()
-        observation, reward, done, info = env.step(action, noise)
+        observation, reward, done, info = env.step(action, noise=True)
         step += 1
         if step >= traj_len:
             break
         elif done:
             # start over a new trajectory hoping that this time it completes
+            print('warning: an incomplete trajectory occured.')
+            print("step:", step, states[-1], actions[-1])
+            print(env.loc_history, env.x_threshold)
             observation = env.reset()
             step = 0
             states[:] = []
             actions[:] = []
-            print('warning: an incomplete trajectory occured.')
+            
     env.close()
     return states, actions, length
 
@@ -326,5 +336,6 @@ def nested_to_flat(states):
 
 
 if __name__ == "__main__":
+    dataset_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
     generate_traj_env_dataset(
-        500, 1000, 5, [-10, 10, 20], save_path="/tmp/trajs_circles.pt", noise=True, render=False)
+        500, 1000, 5, [-10, 10, 20], save_path=dataset_path, noise=True, render=False)
