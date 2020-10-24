@@ -126,6 +126,19 @@ def get_args():
         default='/tmp/gym/',
         help='directory to save agent logs (default: /tmp/gym)')
     parser.add_argument(
+        '--num-traj',
+        type=int,
+        default=500,
+        help = 'num of traj in the training dataset'
+    )
+    parser.add_argument(
+        '--subsample-traj',
+        type=int,
+        default=20,
+        help = 'num of traj in the training dataset'
+    )
+
+    parser.add_argument(
         '--save-dir',
         default='./trained_models/',
         help='directory to save agent logs (default: ./trained_models/)')

@@ -3,7 +3,12 @@ from gym import spaces
 import numpy as np
 
 # gym.logger.set_level(40)
-
+def generate_pt_in_circle(radius, cx, cy, num_traj):
+    pt_arr = np.zeros((num_traj, 2))
+    random_angle = np.random.uniform(-np.pi, np.pi, num_traj)
+    pt_arr[:, 0] = cx + radius * np.cos(random_angle)
+    pt_arr[:, 1] = cy + radius * np.sin(random_angle)
+    return pt_arr
 
 class CirclesEnv(gym.Env):
     """
@@ -56,7 +61,7 @@ class CirclesEnv(gym.Env):
         'video.frames_per_second': 50
     }
 
-    def __init__(self, radii, no_render=False, state_len=5):
+    def __init__(self, radii, no_render=False, state_len=5, noise_level=0.1):
         """
         Args:
             radii: a list of all radii to be uniformly at random sampled. Put a negative sign if the circle is to be
@@ -68,8 +73,8 @@ class CirclesEnv(gym.Env):
 
         # the agent can move in an area of x, y between boundaries (same as rendering boundaries)
         L = max(map(abs, radii)) * 1.5
-        self.x_threshold = L
-        self.y_threshold = L * 2
+        self.x_threshold = L * 2
+        self.y_threshold = L * 3
 
         self.max_steps = 2000
         self.step_num = None  # how many steps passed since environment reset
@@ -92,6 +97,8 @@ class CirclesEnv(gym.Env):
 
         self.no_render = no_render
 
+        self.noise_level = noise_level
+
         self._init_circle()
         self.loc_history = None  # 2D array of (x, y) locations visited so far in the episode.
         self._init_loc()
@@ -105,10 +112,14 @@ class CirclesEnv(gym.Env):
     def _init_circle(self):
         self.radius = np.random.choice(self.radii)
 
-    def _init_loc(self):
+    def _init_loc(self, init_val=None):
         """Initializes the first `state_len` locations when episode starts
+        if no specific val is given, then start from all 0 
         """
-        self.loc_history = np.zeros([self.state_len, 2])
+        if init_val is None:
+            init_val = np.zeros([self.state_len, 2])
+        
+        self.loc_history = init_val
 
     def render(self, mode='human'):
         if self.no_render:
@@ -174,7 +185,7 @@ class CirclesEnv(gym.Env):
         new_loc = loc + vel
         if noise:
             # TODO: allow control of noise parameters
-            new_loc += np.random.randn(2) * self.max_ac_mag * 0.1
+            new_loc += np.random.randn(2) * self.max_ac_mag * self.noise_level
         self.loc_history = np.vstack([self.loc_history, new_loc])
 
         x, y = new_loc
@@ -203,9 +214,15 @@ class CirclesEnv(gym.Env):
 
         return np.array(self.state), 0, done, {}
 
-    def reset(self):
+    def reset(self, init_val=None):
         self._init_circle()
+        # init_val = generate_pt_in_circle(self.radius, 0, self.radius,1)
+        # init_val  = np.tile(init_val, 5).reshape(5,2)
+        # print("init_location:", init_val)
+        # self._init_loc(init_val)
+
         self._init_loc()
+
         self.steps_beyond_done = None
         self.step_num = 0
 

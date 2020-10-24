@@ -1,6 +1,8 @@
 import pickle
 import os
+from typing import Set
 import torch
+import torch.nn
 import numpy as np
 # from numpy import random
 import random
@@ -131,6 +133,7 @@ def save_checkpoint(state, save_path='models/checkpoint.pth.tar'):
     torch.save(state, save_path)
 
 
+# TODO: use torch.nn.functional.one_hot
 def onehot(data, dim: int):
     # return torch.zeros(*data.shape[:-1], dim).scatter_(-1, data, 1)
     fake_z = np.zeros((data.shape[0], dim))
@@ -151,6 +154,7 @@ def visualize_pts_tb(writer, locations, latent_code, fig_key, iter=0):
     col_list = np.where(latent_code_num == 0, 'k',
                         np.where(latent_code_num == 1, 'b', 'r'))
     plt.scatter(locations[:, 0], locations[:, 1], c=col_list, s=5)
+    plt.plot(locations[:, 0], locations[:, 1], "-", alpha=0.5)
     plt.title(f"iter:{iter}")
     writer.add_figure(fig_key, fig)
 
@@ -172,8 +176,10 @@ def step(state, action, mode="flat"):
 
 def to_tensor(target, device):
     # pylint: disable=not-callable
+    if target is None:
+        return None
     try:
-        target = target.clone().detach().float().to(device)
+        target = torch.as_tensor(target, device=device).float()
     except:
         target = torch.tensor(target).float().to(device)
     return target
@@ -279,3 +285,8 @@ class ReplayBuffer(object):
 
 def get_module_device(module):
     return next(module.parameters()).device
+
+
+def get_unique_devices_(module: torch.nn.Module) -> Set[torch.device]:
+    return {p.device for p in module.parameters()} | \
+        {p.device for p in module.buffers()}

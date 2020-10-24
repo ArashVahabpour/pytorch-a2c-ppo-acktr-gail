@@ -179,7 +179,7 @@ def generate_circle_env(state_len: int, radius: Real, no_render: bool):
     return env, max_ac_mag
 
 def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
-                          actor, noise: bool, render: bool = False):
+                          actor, noise_level: float, render: bool = False):
     """Create a new environment and generate a trajectory
     If the trajectory is prematurely ended before the length `traj_len`,
     start over again to make sure the trajectory has length `traj_len`
@@ -188,14 +188,17 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions (List[np.array]): The list of actions in the trajectory
         length (int): The length of the trajectory
     """
-    assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
+    #assert traj_len >= 1000, "WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN"
     length = traj_len
-    env = gym.make("Circles-v0", radii=[radius],
-                   state_len=state_len, no_render=False)
+    env = gym.make("Circles-v0", radii=[radius], state_len=state_len,
+                   no_render=False, noise_level=noise_level)
     max_ac_mag = env.max_ac_mag  # max action magnitude
+    print("max_ac_mag", max_ac_mag, "for env ", radius)
     states, actions = [], []
     done = False
     step = 0
+    ###
+    print("TEST initial location:")
     observation = env.reset()
     while True:
         states.append(observation)
@@ -203,40 +206,50 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
         actions.append(action)
         if render:
             env.render()
-        observation, reward, done, info = env.step(action, noise)
+        observation, reward, done, info = env.step(action, noise=True)
         step += 1
         if step >= traj_len:
             break
         elif done:
             # start over a new trajectory hoping that this time it completes
+            print('warning: an incomplete trajectory occured.')
+            print("step:", step, states[-1], actions[-1])
+            print(env.loc_history, env.x_threshold)
             observation = env.reset()
             step = 0
             states[:] = []
             actions[:] = []
-            print('warning: an incomplete trajectory occured.')
+            
     env.close()
     return states, actions, length
 
 
 def generate_traj_env_dataset(num_traj: int, traj_len: int, state_len: int, radii: List[Real],
                               save_path="gail_experts/circle/trajs_circles.pt",
-                              noise=True, render=False):
+                              noise_level: float = 0.1, render=False, mix_direction=True):
     # traj_len = 1000  # length of each trajectory --- WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN
     expert_data = {'states': [],
                    'actions': [],
                    'radii': [],
                    'lengths': []}
 
-    def circular_actor(states, radius, max_ac_mag):
-        x, y = states[-2:]
-        action = compute_speed_vector_new(
-            x, y, abs(radius), max_ac_mag, 0, radius)
-        return action
-
     for traj_id in tqdm(range(num_traj)):
+        if mix_direction:
+            counterclockwise = np.random.choice([True, False])
+        else:
+            counterclockwise = True
         radius = np.random.choice(radii)
+
+        def circular_actor(states, radius, max_ac_mag):
+            x, y = states[-2:]
+            action = compute_speed_vector_new(
+                x, y, abs(radius), max_ac_mag, 0, radius,
+                delta_theta=2*np.pi/100 if counterclockwise else -2*np.pi/100
+            )
+            return action
         states, actions, length = generate_one_traj_env(
-            traj_len, state_len, radius, circular_actor, noise, render
+            traj_len, state_len, radius, circular_actor,
+            noise_level=noise_level, render=render
         )
         expert_data['states'].append(torch.FloatTensor(np.array(states)))
         expert_data['actions'].append(torch.FloatTensor(np.array(actions)))
@@ -252,59 +265,6 @@ def generate_traj_env_dataset(num_traj: int, traj_len: int, state_len: int, radi
         create_dir(os.path.dirname(save_path))
         torch.save(expert_data, save_path)
     return expert_data
-
-
-# specify filename by argument? multiple
-# def generate_traj_env(num_traj, state_len, radii, save_dir="gail_experts/circle"):
-#     traj_len = 1000  # length of each trajectory --- WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN
-#     env = gym.make("Circles-v0", radii=radii, state_len=5, no_render=False)
-
-#     expert_data = {'states': [],
-#                    'actions': [],
-#                    'radii': [],
-#                    'lengths': torch.tensor([traj_len] * num_traj, dtype=torch.int32)}
-
-#     max_ac_mag = env.max_ac_mag  # max action magnitude
-
-#     for traj_id in range(num_traj):
-#         print('traj #{}'.format(traj_id + 1))
-#         done = False
-
-#         observation = env.reset()
-#         step = 0
-#         states = []
-#         actions = []
-#         while step < traj_len:
-#             #         env.render()  # uncomment for visualisation purposes
-#             radius = env.radius
-#             x, y = env.state[-2:]
-#             action = compute_speed_vector(x, y, abs(radius), max_ac_mag, 0, radius) + np.random.randn(2) * max_ac_mag * 0.1
-
-#             states.append(observation)
-#             observation, reward, done, info = env.step(action)
-#             actions.append(action)
-
-#             step += 1
-
-#             if done:
-#                 # start over a new trajectory hoping that this time it completes
-#                 observation = env.reset()
-#                 step = 0
-#                 states = []
-#                 actions = []
-#                 print('warning: an incomplete trajectory occured.')
-
-#         expert_data['states'].append(torch.FloatTensor(np.array(states)))
-#         expert_data['actions'].append(torch.FloatTensor(np.array(actions)))
-#         expert_data['radii'].append(radius)
-#     env.close()
-
-#     expert_data['states'] = torch.stack(expert_data['states'])
-#     expert_data['actions'] = torch.stack(expert_data['actions'])
-#     expert_data['radii'] = torch.tensor(expert_data['radii'])
-#     create_dir(save_dir)
-#     torch.save(expert_data, 'trajs_circles.pt')
-#     print('expert data saved successfully.')
 
 
 def flat_to_nested(states, state_len=None, dim_state=None):
@@ -330,5 +290,8 @@ def nested_to_flat(states):
 
 
 if __name__ == "__main__":
+    dataset_path = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
     generate_traj_env_dataset(
-        500, 1000, 5, [-10, 10, 20], save_path="/tmp/trajs_circles.pt", noise=True, render=False)
+        800, 1000, 5, [-10, 10, 20], save_path=dataset_path, noise_level=0.1,
+        render=False, mix_direction=True
+    )
