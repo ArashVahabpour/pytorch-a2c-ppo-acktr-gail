@@ -14,9 +14,11 @@ import os.path as osp
 
 #sys.path.insert(0, "../../..")
 #print(sys.path)
-from behavior_clone import MlpPolicyNet
-from gail import ExpertDataset
-from utilities import to_tensor, save_checkpoint
+from .behavior_clone import MlpPolicyNet, create_dataset
+from .gail import ExpertDataset
+from inference import load_model, get_start_state, model_infer_vis, model_inference_env, visualize_trajs_new
+from utilities import to_tensor, save_checkpoint, onehot
+
 
 USE_CUDA = True
 
@@ -252,14 +254,14 @@ def validate(epoch, net, val_loader, criterion, device, best_loss, writer, check
                     (batch_idx+1))}, batch_idx + number_batches * (epoch-1))
 
     checkpoint_path = osp.join(
-        checkpoint_dir, 'checkpoints/bestvae_bc_model_new.pth')
+        checkpoint_dir, 'checkpoints/bestvae_bc_model_new_1.pth')
     if avg_valid_loss <= best_loss:
         best_loss = avg_valid_loss
         print('Best epoch: ' + str(epoch))
         save_checkpoint({'epoch': epoch,
                          'avg_loss': avg_valid_loss,
-                         'state_dict_encoder': net.encoder.state_dict(),
-                         'state_dict_decoder': net.decoder.state_dict(),
+                         'state_dict_encoder': net.encoder,
+                         'state_dict_decoder': net.decoder,
                          }, save_path=checkpoint_path)
     return best_loss, checkpoint_path
 
@@ -309,24 +311,17 @@ def train(epoch, net, dataloader, optimizer, criterion, device, writer):
 
 
 """
-
 m, l, z, decoded = vae(input, temperature)
 if temperature > temperature_min:
     temperature -= temperature_dec
-
-
-job.record(epoch, loss.data[0])
-
 KLD = (-0.5 * torch.sum(l - torch.pow(m, 2) - torch.exp(l) + 1, 1)).mean().squeeze()
 loss += KLD * kld_weight
 
 if epoch > kld_start_inc and kld_weight < kld_max:
     kld_weight += kld_inc
 
-
 """
         
-
 def test():
     seq_len, batch, input_size, num_directions = 3, 1, 5, 2
     in_data = torch.randint(10, (seq_len, batch, input_size)).float()
@@ -342,7 +337,8 @@ print(h_n, c_n)
 print(h_n.shape, c_n.shape)
 """
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+if False:
     writer = SummaryWriter()
     ############### Train ###############
     train_data_path = "three_modes_traj_train_everywhere.pkl"
@@ -350,7 +346,7 @@ if __name__ == '__main__':
     # bc = BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=3)
     bc = VAE_BC(epochs=30, lr=1e-4, eps=1e-5, device="cuda:0", code_dim=None)
     # train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
-    train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_new.pt"
+    train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
     #train_dataset, val_dataset = create_dataset(train_data_path, fake=True, one_hot=True, one_hot_dim=3)
     #train_loader, val_loader = create_dataloader(train_dataset, val_dataset, batch_size=400)
     #bc.train(train_loader, val_loader)
@@ -374,10 +370,56 @@ if __name__ == '__main__':
     writer.export_scalars_to_json(os.path.join(model_log_dir, "BC_VAE.json"))
     writer.close()
 
-# def load_test():
-#     model_dir = "/mnt/SSD3/Qiujing_exp/pytorch-a2c-ppo-acktr-gail/a2c_ppo_acktr/algo/"
-#     tmp = torch.load(os.path.join(model_dir, "checkpoints/bestvae_bc_model_new.pth"))['state_dict']
-#     print(tmp.encoder)
-#     print(tmp.decoder)
+def load_test():
+    #model_dir = "/mnt/SSD3/Qiujing_exp/pytorch-a2c-ppo-acktr-gail/a2c_ppo_acktr/algo/"
+    model_dir = "."
+    tmp = torch.load(os.path.join(model_dir, "checkpoints/bestvae_bc_model_new_1.pth"))
+    #print(tmp.keys())
+    tmp_encoder = tmp["state_dict_encoder"]
+    tmp_decoder = tmp["state_dict_decoder"]
+    #tmp_encoder = tmp["state_dict_encoder"]
+    print(tmp_encoder)
+    print(tmp_decoder)
 
-# load_test()
+
+#load_test()
+
+def test_policy_inference():
+    trained_model_dir = "."
+    IL_method = "VAE_BC"
+    checkpoint_path = os.path.join(
+         trained_model_dir, "checkpoints/bestvae_bc_model_new_1.pth")
+    policy_net = torch.load(checkpoint_path, map_location='cpu')["state_dict_decoder"]
+
+
+    train_data_path = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
+    data_dict = torch.load(train_data_path)
+    print("loaded training data info:",  data_dict["states"].shape)
+    _, val_dataset = create_dataset(train_data_path, fake=True, one_hot=True, one_hot_dim=3)
+
+    num_trajs = 20  # number of trajectories
+    start_state = get_start_state(
+        num_trajs, mode="sample_data", dataset=val_dataset)
+    #device="cuda:0"
+    #print("start state sampled:", start_state)
+    # *******************-----------------------------*******************
+    code_dim = 3
+    fake_code = onehot(np.random.randint(
+        code_dim, size=num_trajs), dim=code_dim)
+    traj_len = 1000
+
+    model = policy_net
+    model.eval()
+    print(model)
+
+    save_fig_dir = os.path.join("./imgs/circle", IL_method)
+    model_infer_vis(
+        model, start_state, fake_code, traj_len, save_fig_path=os.path.join(save_fig_dir, "val_state.png")
+    )
+     # *******************--------------Env infer ---------------*******************
+    #flat_state_arr, action_arr = model_inference_env(actor_critic.mlp_policy_net, num_trajs, traj_len, state_len=5, radii=[-10, 10, 20])
+    #visualize_trajs_new(flat_state_arr, action_arr, "./imgs/circle/gail_env_inference.png")
+    flat_state_arr, action_arr = model_inference_env(model, num_trajs, traj_len, state_len=5, radii=[-10,10, 20], render=False)
+    visualize_trajs_new(flat_state_arr, action_arr, os.path.join(save_fig_dir, "env_infer.png"))
+
+test_policy_inference()
