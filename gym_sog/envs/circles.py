@@ -73,8 +73,8 @@ class CirclesEnv(gym.Env):
 
         # the agent can move in an area of x, y between boundaries (same as rendering boundaries)
         L = max(map(abs, radii)) * 1.5
-        self.x_threshold = L
-        self.y_threshold = L * 2
+        self.x_threshold = L * 2
+        self.y_threshold = L * 3
 
         self.max_steps = 2000
         self.step_num = None  # how many steps passed since environment reset
