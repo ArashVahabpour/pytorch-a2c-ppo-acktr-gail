@@ -111,6 +111,14 @@ class Discriminator(nn.Module):
             return reward / np.sqrt(self.ret_rms.var[0] + 1e-8)
 
 
+    def forward(self, state, action):
+        with torch.no_grad():
+            self.eval()
+            d = self.trunk(torch.cat([state, action], dim=1))
+            s = (torch.sigmoid(d) > 0.5).type(torch.LongTensor)
+        return s
+
+
 class ExpertDataset(torch.utils.data.Dataset):
     def __init__(self, file_name, num_trajectories=4, subsample_frequency=20):
         all_trajectories = torch.load(file_name)

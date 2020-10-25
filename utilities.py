@@ -154,6 +154,7 @@ def visualize_pts_tb(writer, locations, latent_code, fig_key, iter=0):
     col_list = np.where(latent_code_num == 0, 'k',
                         np.where(latent_code_num == 1, 'b', 'r'))
     plt.scatter(locations[:, 0], locations[:, 1], c=col_list, s=5)
+    plt.plot(locations[:, 0], locations[:, 1], "-", alpha=0.5)
     plt.title(f"iter:{iter}")
     writer.add_figure(fig_key, fig)
 

@@ -3,7 +3,12 @@ from gym import spaces
 import numpy as np
 
 # gym.logger.set_level(40)
-
+def generate_pt_in_circle(radius, cx, cy, num_traj):
+    pt_arr = np.zeros((num_traj, 2))
+    random_angle = np.random.uniform(-np.pi, np.pi, num_traj)
+    pt_arr[:, 0] = cx + radius * np.cos(random_angle)
+    pt_arr[:, 1] = cy + radius * np.sin(random_angle)
+    return pt_arr
 
 class CirclesEnv(gym.Env):
     """
@@ -107,10 +112,14 @@ class CirclesEnv(gym.Env):
     def _init_circle(self):
         self.radius = np.random.choice(self.radii)
 
-    def _init_loc(self):
+    def _init_loc(self, init_val=None):
         """Initializes the first `state_len` locations when episode starts
+        if no specific val is given, then start from all 0 
         """
-        self.loc_history = np.zeros([self.state_len, 2])
+        if init_val is None:
+            init_val = np.zeros([self.state_len, 2])
+        
+        self.loc_history = init_val
 
     def render(self, mode='human'):
         if self.no_render:
@@ -205,9 +214,15 @@ class CirclesEnv(gym.Env):
 
         return np.array(self.state), 0, done, {}
 
-    def reset(self):
+    def reset(self, init_val=None):
         self._init_circle()
+        # init_val = generate_pt_in_circle(self.radius, 0, self.radius,1)
+        # init_val  = np.tile(init_val, 5).reshape(5,2)
+        # print("init_location:", init_val)
+        # self._init_loc(init_val)
+
         self._init_loc()
+
         self.steps_beyond_done = None
         self.step_num = 0
 
