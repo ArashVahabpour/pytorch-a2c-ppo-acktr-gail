@@ -115,3 +115,5 @@ baselines-repo
 checkpoints
 imgs
 log*
+environment.yml
+/.*

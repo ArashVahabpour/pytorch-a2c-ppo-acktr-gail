@@ -7,7 +7,6 @@ import pickle
 import random
 from matplotlib import pyplot as plt
 from typing import List
-from numbers import Real
 from tqdm.auto import tqdm
 
 # FIXME: all of these are to be tested
@@ -108,7 +107,7 @@ def compute_speed_vector(loc_x, loc_y, radius, max_ac_mag, cx, cy, delta_theta=2
     return speed
 
 
-def compute_speed_vector_new(loc_x, loc_y, radius, max_ac_mag, cx, cy, delta_theta=2*np.pi/100):
+def compute_speed_vector_new(loc_x, loc_y, radius, max_ac_mag, cx, cy, delta_theta: float = 2*np.pi/100):
     start = np.array([loc_x, loc_y])
     center = np.array([cx, cy])
     rot_mat_T = np.array([
@@ -173,12 +172,12 @@ radii = [20]
 state_len = 5
 num_traj = 500  # number of trajectories
 
-def generate_circle_env(state_len: int, radius: Real, no_render: bool):
+def generate_circle_env(state_len: int, radius: float, no_render: bool):
     env = gym.make("Circles-v0", radii=[radius], state_len=state_len, no_render=no_render)
     max_ac_mag = env.max_ac_mag  # max a
     return env, max_ac_mag
 
-def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
+def generate_one_traj_env(traj_len: int, state_len: int, radius: float,
                           actor, noise_level: float, render: bool = False):
     """Create a new environment and generate a trajectory
     If the trajectory is prematurely ended before the length `traj_len`,
@@ -218,7 +217,7 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: Real,
     return states, actions, length
 
 
-def generate_traj_env_dataset(num_traj: int, traj_len: int, state_len: int, radii: List[Real],
+def generate_traj_env_dataset(num_traj: int, traj_len: int, state_len: int, radii: List[float],
                               save_path="gail_experts/circle/trajs_circles.pt",
                               noise_level: float = 0.1, render=False, mix_direction=True):
     # traj_len = 1000  # length of each trajectory --- WARNING: DO NOT CHANGE THIS OR LOWER VALUES CAN CAUSE ISSUES IN GAIL RUN
@@ -284,8 +283,8 @@ def nested_to_flat(states):
 
 
 if __name__ == "__main__":
-    dataset_path = "/home/shared/datasets/gail_experts/trajs_circles_mix.pt"
+    dataset_path = "/home/shared/datasets/gail_experts/trajs_circles_four.pt"
     generate_traj_env_dataset(
-        800, 1000, 5, [-10, 10, 20], save_path=dataset_path, noise_level=0.1,
-        render=False, mix_direction=True
+        800, 1000, 5, [20, 10, -10, -20], save_path=dataset_path, noise_level=0.1,
+        render=False, mix_direction=False
     )
