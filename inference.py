@@ -11,7 +11,6 @@ import gym
 from gym_sog.envs.circle_utils import generate_one_traj_env, clip_speed, flat_to_nested
 
 from typing import Union, List
-from numbers import Real
 
 
 def load_model(model, filename):
@@ -165,7 +164,7 @@ def get_start_state(n: int, state_dim: int = 2, history_len: int = 5,
 
 
 def model_inference_env(model, num_traj: int, traj_len: int, state_len: int,
-                        radii: List[Real], codes = None, noise_level: float = 0.1,
+                        radii: List[float], codes = None, noise_level: float = 0.1,
                         render: bool = False):
     device = get_module_device(model)
 
