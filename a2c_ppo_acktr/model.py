@@ -7,6 +7,7 @@ from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 from a2c_ppo_acktr.distributions import Bernoulli, Categorical, DiagGaussian
 from a2c_ppo_acktr.utils import init
 
+
 class Flatten(nn.Module):
     def forward(self, x):
         return x.view(x.size(0), -1)
@@ -89,9 +90,9 @@ class NNBase(nn.Module):
         if recurrent:
             self.gru = nn.GRU(recurrent_input_size, hidden_size)
             for name, param in self.gru.named_parameters():
-                if 'bias' in name:
+                if "bias" in name:
                     nn.init.constant_(param, 0)
-                elif 'weight' in name:
+                elif "weight" in name:
                     nn.init.orthogonal_(param)
 
     @property
@@ -126,11 +127,7 @@ class NNBase(nn.Module):
 
             # Let's figure out which steps in the sequence have a zero for any agent
             # We will always assume t=0 has a zero in it as that makes the logic cleaner
-            has_zeros = ((masks[1:] == 0.0) \
-                            .any(dim=-1)
-                            .nonzero()
-                            .squeeze()
-                            .cpu())
+            has_zeros = (masks[1:] == 0.0).any(dim=-1).nonzero().squeeze().cpu()
 
             # +1 to correct the masks[1:]
             if has_zeros.dim() == 0:
@@ -151,8 +148,8 @@ class NNBase(nn.Module):
                 end_idx = has_zeros[i + 1]
 
                 rnn_scores, hxs = self.gru(
-                    x[start_idx:end_idx],
-                    hxs * masks[start_idx].view(1, -1, 1))
+                    x[start_idx:end_idx], hxs * masks[start_idx].view(1, -1, 1)
+                )
 
                 outputs.append(rnn_scores)
 
@@ -170,17 +167,28 @@ class CNNBase(NNBase):
     def __init__(self, num_inputs, recurrent=False, hidden_size=512):
         super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size)
 
-        init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
-                               constant_(x, 0), nn.init.calculate_gain('relu'))
+        init_ = lambda m: init(
+            m,
+            nn.init.orthogonal_,
+            lambda x: nn.init.constant_(x, 0),
+            nn.init.calculate_gain("relu"),
+        )
 
         self.main = nn.Sequential(
-            init_(nn.Conv2d(num_inputs, 32, 8, stride=4)), nn.ReLU(),
-            init_(nn.Conv2d(32, 64, 4, stride=2)), nn.ReLU(),
-            init_(nn.Conv2d(64, 32, 3, stride=1)), nn.ReLU(), Flatten(),
-            init_(nn.Linear(32 * 7 * 7, hidden_size)), nn.ReLU())
+            init_(nn.Conv2d(num_inputs, 32, 8, stride=4)),
+            nn.ReLU(),
+            init_(nn.Conv2d(32, 64, 4, stride=2)),
+            nn.ReLU(),
+            init_(nn.Conv2d(64, 32, 3, stride=1)),
+            nn.ReLU(),
+            Flatten(),
+            init_(nn.Linear(32 * 7 * 7, hidden_size)),
+            nn.ReLU(),
+        )
 
-        init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
-                               constant_(x, 0))
+        init_ = lambda m: init(
+            m, nn.init.orthogonal_, lambda x: nn.init.constant_(x, 0)
+        )
 
         self.critic_linear = init_(nn.Linear(hidden_size, 1))
 
@@ -202,16 +210,23 @@ class MLPBase(NNBase):
         if recurrent:
             num_inputs = hidden_size
 
-        init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
-                               constant_(x, 0), np.sqrt(2))
+        init_ = lambda m: init(
+            m, nn.init.orthogonal_, lambda x: nn.init.constant_(x, 0), np.sqrt(2)
+        )
 
         self.actor = nn.Sequential(
-            init_(nn.Linear(num_inputs, hidden_size)), nn.Tanh(),
-            init_(nn.Linear(hidden_size, hidden_size)), nn.Tanh())
+            init_(nn.Linear(num_inputs, hidden_size)),
+            nn.Tanh(),
+            init_(nn.Linear(hidden_size, hidden_size)),
+            nn.Tanh(),
+        )
 
         self.critic = nn.Sequential(
-            init_(nn.Linear(num_inputs, hidden_size)), nn.Tanh(),
-            init_(nn.Linear(hidden_size, hidden_size)), nn.Tanh())
+            init_(nn.Linear(num_inputs, hidden_size)),
+            nn.Tanh(),
+            init_(nn.Linear(hidden_size, hidden_size)),
+            nn.Tanh(),
+        )
 
         self.critic_linear = init_(nn.Linear(hidden_size, 1))
 
@@ -228,8 +243,9 @@ class MLPBase(NNBase):
 
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
 
+
 class ValueNet(nn.Module):
-    def __init__(self, inputs_dim=10, code_dim=3, ft_dim=128,  activation=F.relu):
+    def __init__(self, inputs_dim=10, code_dim=3, ft_dim=128, activation=F.relu):
         super(ValueNet, self).__init__()
         self.activation = activation
         self.fc_s1 = nn.Linear(inputs_dim, ft_dim)
@@ -237,9 +253,9 @@ class ValueNet(nn.Module):
         self.code_dim = code_dim
         if code_dim is not None:
             self.fc_c1 = nn.Linear(code_dim, ft_dim)
-        #self.fc_c1 = nn.Linear(inputc_dim, ft_dim)
+        # self.fc_c1 = nn.Linear(inputc_dim, ft_dim)
         self.fc_sum = nn.Linear(ft_dim, 1)
-       
+
     def forward(self, state, latent_code):
         output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
         if self.code_dim is not None:
@@ -248,9 +264,8 @@ class ValueNet(nn.Module):
         return final_out
 
 
-
 class CirclePolicy(nn.Module):
-    def __init__(self, obs_shape,code_dim, action_space, base=None, base_kwargs=None):
+    def __init__(self, obs_shape, code_dim, action_space, base=None, base_kwargs=None):
         super(CirclePolicy, self).__init__()
         if base_kwargs is None:
             base_kwargs = {}
@@ -262,10 +277,10 @@ class CirclePolicy(nn.Module):
         #     else:
         #         raise NotImplementedError
 
-        self.mlp_policy_net = MlpPolicyNet(obs_shape[0],code_dim, **base_kwargs)
-        self.mlp_value_net = ValueNet(obs_shape[0],code_dim, **base_kwargs)
+        self.mlp_policy_net = MlpPolicyNet(obs_shape[0], code_dim, **base_kwargs)
+        self.mlp_value_net = ValueNet(obs_shape[0], code_dim, **base_kwargs)
         num_outputs = action_space.shape[0]
-        
+
         # if action_space.__class__.__name__ == "Discrete":
         #     num_outputs = action_space.n
         #     self.dist = Categorical(self.base.output_size, num_outputs)
@@ -295,8 +310,8 @@ class CirclePolicy(nn.Module):
         """
         Use rnn_hxs as latent code input
         """
-        #value, actor_features = None, None
-        #latent_code = rnn_hxs
+        # value, actor_features = None, None
+        # latent_code = rnn_hxs
         value = self.mlp_value_net(inputs, rnn_hxs)
         action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=True)
 
@@ -318,18 +333,22 @@ class CirclePolicy(nn.Module):
 
     def evaluate_actions(self, inputs, rnn_hxs, masks, action):
         # pylint: disable=not-callable
-        #value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
+        # value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
         value = self.mlp_value_net(inputs, rnn_hxs)
         action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=False)
         action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
         device = inputs.device
-        dist_entropy = torch.tensor([1]).to(device) ## for current fixed action std, entropy will be constant.  
+        dist_entropy = torch.tensor([1]).to(
+            device
+        )  ## for current fixed action std, entropy will be constant.
 
         return value, action_log_probs, dist_entropy, rnn_hxs
 
 
 class Posterior(nn.Module):
-    def __init__(self, inputs_dim=10, inputa_dim=2, ft_dim=128, outputc_dim = 3, activation=F.relu):
+    def __init__(
+        self, inputs_dim=10, inputa_dim=2, ft_dim=128, outputc_dim=3, activation=F.relu
+    ):
         super(Posterior, self).__init__()
         self.fc_s1 = nn.Linear(inputs_dim + inputa_dim, ft_dim)
         self.fc_s2 = nn.Linear(ft_dim, ft_dim)
@@ -338,7 +357,7 @@ class Posterior(nn.Module):
         self.activation = activation
         self.criterion_p = nn.CrossEntropyLoss()
         self.iter_num = 0
-    
+
     def forward(self, state, action):
         input_data = torch.cat((state, action), dim=1)
         output = self.activation(self.fc_s1(input_data), inplace=True)
@@ -346,8 +365,9 @@ class Posterior(nn.Module):
         final_out = self.softmax(self.fc_out(output))
         ### p(c|s,a) where c is the latent code
         return final_out
+
     def update(self, state, action, encodes, optim_posterior, writer=None):
-        self.iter_num +=1
+        self.iter_num += 1
         optim_posterior.zero_grad()
         output_c = self.forward(state, action)
         encodes = torch.argmax(encodes, dim=1)
@@ -357,17 +377,27 @@ class Posterior(nn.Module):
         if writer is not None:
             ### .item for scalar from tensor to float
             writer.add_scalar("IG/p_loss", loss_p.item(), self.iter_num)
-        #print()
+        # print()
 
 
 class InfoCirclePolicy(nn.Module):
-    def __init__(self, obs_shape,code_dim, action_space, base=None, base_kwargs=None):
+    """Agent for InfoGAIL
+    Attributes:
+        mlp_policy_net (:obj:`nn.Module`): The policy network in actor-critic
+            architecture
+        mlp_value_net (:obj:`nn.Module`): The value network in actor-critic
+            architecture
+        posterior (:obj:`nn.Module`): The posterior network that encodes any
+            given (s,a) tuple
+    """
+
+    def __init__(self, obs_shape, code_dim, action_space, base=None, base_kwargs=None):
         super(InfoCirclePolicy, self).__init__()
         if base_kwargs is None:
             base_kwargs = {}
 
-        self.mlp_policy_net = MlpPolicyNet(obs_shape[0],code_dim, **base_kwargs)
-        self.mlp_value_net = ValueNet(obs_shape[0],code_dim, **base_kwargs)
+        self.mlp_policy_net = MlpPolicyNet(obs_shape[0], code_dim, **base_kwargs)
+        self.mlp_value_net = ValueNet(obs_shape[0], code_dim, **base_kwargs)
         num_outputs = action_space.shape[0]
         self.posterior = Posterior(inputs_dim=10, inputa_dim=2, ft_dim=128)
         self.optim_posterior = torch.optim.Adam(self.posterior.parameters())
@@ -403,12 +433,14 @@ class InfoCirclePolicy(nn.Module):
         """
         Use rnn_hxs as latent code input
         """
-        #value, actor_features = None, None
-        #latent_code = rnn_hxs
+        # value, actor_features = None, None
+        # latent_code = rnn_hxs
         value = self.mlp_value_net(inputs, latent_code)
         action = self.mlp_policy_net.select_action(inputs, latent_code, stochastic=True)
         output_p = self.posterior_target(inputs, action)
-        reward_p = torch.sum(torch.log(output_p + 1e-45) * latent_code, dim=1, keepdim=True)
+        reward_p = torch.sum(
+            torch.log(output_p + 1e-45) * latent_code, dim=1, keepdim=True
+        )
 
         action_log_probs = self.mlp_policy_net.get_log_prob(inputs, latent_code, action)
         # dist_entropy = dist.entropy().mean()
@@ -421,11 +453,13 @@ class InfoCirclePolicy(nn.Module):
 
     def evaluate_actions(self, inputs, rnn_hxs, masks, action):
         # pylint: disable=not-callable
-        #value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
+        # value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
         value = self.mlp_value_net(inputs, rnn_hxs)
         action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=False)
         action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
         device = inputs.device
-        dist_entropy = torch.tensor([1]).to(device) ## for current fixed action std, entropy will be constant.  
+        dist_entropy = torch.tensor([1]).to(
+            device
+        )  ## for current fixed action std, entropy will be constant.
 
         return value, action_log_probs, dist_entropy, rnn_hxs

@@ -232,7 +232,7 @@ def main(writer):
             gail_epoch = 100  # Warm up
         for _ in range(gail_epoch):
             discr.update(gail_train_loader, rollouts, utils.get_vec_normalize(env)._obfilt)
-        
+
         print("======================== train the posterior ===========================")
         #avg_loss_p = 0
         #TODO: make small batch updates for posterior model
@@ -304,6 +304,7 @@ def main(writer):
                 pass
 
             torch.save({
+                'args': vars(args),
                 'actor_critic': actor_critic,
                 'discr': discr,
                 'ob_rms': getattr(utils.get_vec_normalize(env), 'ob_rms', None)

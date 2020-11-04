@@ -118,3 +118,4 @@ log*
 environment.yml
 /.*
 runs
+*.ipynb
