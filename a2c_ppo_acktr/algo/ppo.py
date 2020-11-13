@@ -12,6 +12,7 @@ class PPO():
                  num_mini_batch,
                  value_loss_coef,
                  entropy_coef,
+                 least_squares_coef,
                  lr=None,
                  eps=None,
                  max_grad_norm=None,
@@ -25,13 +26,15 @@ class PPO():
 
         self.value_loss_coef = value_loss_coef
         self.entropy_coef = entropy_coef
+        self.least_squares_coef = least_squares_coef
 
         self.max_grad_norm = max_grad_norm
         self.use_clipped_value_loss = use_clipped_value_loss
 
         self.optimizer = optim.Adam(actor_critic.parameters(), lr=lr, eps=eps)
 
-    def update(self, rollouts):
+    def update(self, rollouts):  # TODO Arash (DONE): expert to augment with the least squares
+
         advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]
         advantages = (advantages - advantages.mean()) / (
             advantages.std() + 1e-5)
@@ -39,6 +42,8 @@ class PPO():
         value_loss_epoch = 0
         action_loss_epoch = 0
         dist_entropy_epoch = 0
+
+        mse = torch.nn.MSELoss()
 
         for e in range(self.ppo_epoch):
             if self.actor_critic.is_recurrent:
@@ -76,8 +81,12 @@ class PPO():
                 else:
                     value_loss = 0.5 * (return_batch - values).pow(2).mean()
 
+                actions_optimal = self.actor_critic.mlp_policy_net.get_action_mu(obs_batch, recurrent_hidden_states_batch)
+                least_squares_loss = mse(actions_optimal, actions_batch)
+
                 self.optimizer.zero_grad()
-                (value_loss * self.value_loss_coef + action_loss -
+                (value_loss * self.value_loss_coef + action_loss +
+                 least_squares_loss * self.least_squares_coef -
                  dist_entropy * self.entropy_coef).backward()
                 nn.utils.clip_grad_norm_(self.actor_critic.parameters(),
                                          self.max_grad_norm)

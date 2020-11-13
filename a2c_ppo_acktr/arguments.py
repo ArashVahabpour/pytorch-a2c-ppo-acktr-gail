@@ -61,6 +61,11 @@ def get_args():
         default=0.5,
         help='value loss coefficient (default: 0.5)')
     parser.add_argument(
+        '--least-squares-coef',
+        type=float,
+        default=1.,
+        help='least squares coefficient (default: 1.)')
+    parser.add_argument(
         '--max-grad-norm',
         type=float,
         default=0.5,
@@ -149,6 +154,11 @@ def get_args():
         action='store_true',
         default=False,
         help='use a linear schedule on the learning rate')
+    parser.add_argument(
+        '--latent_size',
+        type=int,
+        default=3,
+        help='size of the one-hot latent code.')
     args = parser.parse_args()
 
     args.cuda = not args.no_cuda and torch.cuda.is_available()

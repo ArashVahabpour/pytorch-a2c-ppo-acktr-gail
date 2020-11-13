@@ -336,6 +336,11 @@ class MlpPolicyNet(PolicyNet):
             action = action_mu.to(device)
         return action
 
+    def get_action_mu(self, state, latent_code):
+        action_mu = self.forward(state, latent_code)
+        return action_mu
+
+
 
 def argsparser():
     parser = argparse.ArgumentParser(

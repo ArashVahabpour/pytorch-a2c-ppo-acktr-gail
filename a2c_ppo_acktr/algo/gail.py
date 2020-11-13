@@ -27,15 +27,22 @@ class Discriminator(nn.Module):
         self.returns = None
         self.ret_rms = RunningMeanStd(shape=())
 
+        self.actor_critic = None
+
+    def set_actor_critic(self, actor_critic):
+        self.actor_critic = actor_critic
+
     def compute_grad_pen(self,
                          expert_state,
+                         expert_latent_code,
                          expert_action,
                          policy_state,
+                         policy_latent_code,
                          policy_action,
                          lambda_=10):
         alpha = torch.rand(expert_state.size(0), 1)
-        expert_data = torch.cat([expert_state, expert_action], dim=1)
-        policy_data = torch.cat([policy_state, policy_action], dim=1)
+        expert_data = torch.cat([expert_state, expert_latent_code, expert_action], dim=1)
+        policy_data = torch.cat([policy_state, policy_latent_code, policy_action], dim=1)
 
         alpha = alpha.expand_as(expert_data).to(expert_data.device)
 
@@ -57,6 +64,7 @@ class Discriminator(nn.Module):
 
     def update(self, expert_loader, rollouts, obsfilt=None):
         self.train()
+        actor_critic = self.actor_critic
 
         policy_data_generator = rollouts.feed_forward_generator(
             None, mini_batch_size=expert_loader.batch_size)
@@ -65,16 +73,19 @@ class Discriminator(nn.Module):
         n = 0
         for expert_batch, policy_batch in zip(expert_loader,
                                               policy_data_generator):
-            policy_state, policy_action = policy_batch[0], policy_batch[2]
+            policy_state, policy_latent_code, policy_action = policy_batch[:3]
             policy_d = self.trunk(
-                torch.cat([policy_state, policy_action], dim=1))
+                torch.cat([policy_state, policy_latent_code, policy_action], dim=1))
 
             expert_state, expert_action = expert_batch
+            expert_latent_code = actor_critic.get_best_latent_code(expert_state, expert_action)
+
             expert_state = obsfilt(expert_state.numpy(), update=False)
             expert_state = torch.FloatTensor(expert_state).to(self.device)
+            expert_latent_code = torch.FloatTensor(expert_latent_code).to(self.device)
             expert_action = expert_action.to(self.device)
             expert_d = self.trunk(
-                torch.cat([expert_state, expert_action], dim=1))
+                torch.cat([expert_state, expert_latent_code, expert_action], dim=1))
 
             expert_loss = F.binary_cross_entropy_with_logits(
                 expert_d,
@@ -84,8 +95,8 @@ class Discriminator(nn.Module):
                 torch.zeros(policy_d.size()).to(self.device))
 
             gail_loss = expert_loss + policy_loss
-            grad_pen = self.compute_grad_pen(expert_state, expert_action,
-                                             policy_state, policy_action)
+            grad_pen = self.compute_grad_pen(expert_state, expert_latent_code, expert_action,
+                                             policy_state, policy_latent_code, policy_action)
 
             loss += (gail_loss + grad_pen).item()
             n += 1
@@ -95,10 +106,10 @@ class Discriminator(nn.Module):
             self.optimizer.step()
         return loss / n
 
-    def predict_reward(self, state, action, gamma, masks, update_rms=True):
+    def predict_reward(self, state, action, latent_code, gamma, masks, update_rms=True):
         with torch.no_grad():
             self.eval()
-            d = self.trunk(torch.cat([state, action], dim=1))
+            d = self.trunk(torch.cat([state, latent_code, action], dim=1))
             s = torch.sigmoid(d)
             reward = s.log() - (1 - s).log()
             if self.returns is None:

@@ -25,9 +25,9 @@ from a2c_ppo_acktr.model import CirclePolicy
 
 if __name__ == '__main__':
     # inference_model()
-    trained_model_dir = "/Users/qiujing/Dropbox/Arash_generative/pytorch-a2c-ppo-acktr-gail"
+    trained_model_dir = "/home/arash/Desktop/gail"
     checkpoint_path = os.path.join(
-        trained_model_dir, "trained_models/ppo/Circles-v0_500_10_mlp_2250.pt")
+        trained_model_dir, "trained_models/ppo/Circles-v0mlp_4881.pt")
     #train_data_path = "/home/shared/datasets/gail_experts/trajs_circles.pt"
     train_data_path = "./gail_experts/trajs_circles.pt"
     

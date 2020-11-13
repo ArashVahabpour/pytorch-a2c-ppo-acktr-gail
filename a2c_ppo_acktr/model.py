@@ -9,6 +9,7 @@ from a2c_ppo_acktr.utils import init
 
 from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 
+
 class Flatten(nn.Module):
     def forward(self, x):
         return x.view(x.size(0), -1)
@@ -230,6 +231,7 @@ class MLPBase(NNBase):
 
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
 
+
 class ValueNet(nn.Module):
     def __init__(self, inputs_dim=10, inputc_dim=3, ft_dim=128,  activation=F.relu):
         super(ValueNet, self).__init__()
@@ -248,7 +250,7 @@ class ValueNet(nn.Module):
 
 
 class CirclePolicy(nn.Module):
-    def __init__(self, obs_shape, action_space, base=None, base_kwargs=None):
+    def __init__(self, obs_shape, action_space, latent_size, base=None, base_kwargs=None):
         super(CirclePolicy, self).__init__()
         if base_kwargs is None:
             base_kwargs = {}
@@ -260,9 +262,11 @@ class CirclePolicy(nn.Module):
         #     else:
         #         raise NotImplementedError
 
-        self.mlp_policy_net = MlpPolicyNet(obs_shape[0], **base_kwargs)
-        self.mlp_value_net = ValueNet(obs_shape[0], **base_kwargs)
+        self.mlp_policy_net = MlpPolicyNet(obs_shape[0], code_dim=latent_size, **base_kwargs)
+        self.mlp_value_net = ValueNet(obs_shape[0], inputc_dim=latent_size, **base_kwargs)
         num_outputs = action_space.shape[0]
+        self.latent_size = latent_size
+        self.mse = torch.nn.MSELoss(reduction='none')
         
         # if action_space.__class__.__name__ == "Discrete":
         #     num_outputs = action_space.n
@@ -284,7 +288,7 @@ class CirclePolicy(nn.Module):
     def recurrent_hidden_state_size(self):
         """Size of rnn_hx."""
         ## now is set to latent code size: 3
-        return 3
+        return self.latent_size
 
     def forward(self, inputs, rnn_hxs, masks):
         raise NotImplementedError
@@ -313,6 +317,32 @@ class CirclePolicy(nn.Module):
     def get_value(self, inputs, rnn_hxs, masks):
         value = self.mlp_value_net(inputs, rnn_hxs)
         return value
+
+    def get_best_latent_code(self, states, actions):
+        batch_size, latent_size = len(states), self.latent_size
+
+        # (batch_size * latent_batch_size) x obs_dim
+        all_states = states.unsqueeze(1).repeat(1, latent_size, 1).reshape(batch_size * latent_size, -1)
+
+        # (batch_size * latent_batch_size) x latent_dim
+        all_latent_code = torch.eye(latent_size).unsqueeze(0).repeat(batch_size, 1, 1).reshape(batch_size * latent_size, latent_size)
+
+        # (batch_size * latent_batch_size) x action_dim
+        all_actions = self.mlp_policy_net.select_action(all_states, all_latent_code, stochastic=False)
+
+        # (batch_size * latent_batch_size) x action_dim
+        all_expert_actions = actions.unsqueeze(1).repeat(1, latent_size, 1).reshape(batch_size * latent_size, -1)
+
+        # batch_size * latent_batch_size,
+        loss = self.mse(all_actions, all_expert_actions).mean(dim=1)
+
+        # batch_size,
+        best_latent_indices = loss.reshape(batch_size, latent_size).min(dim=1).indices
+
+        # batch_size x latent_size
+        best_latent_codes = torch.eye(latent_size)[best_latent_indices]
+
+        return best_latent_codes
 
     def evaluate_actions(self, inputs, rnn_hxs, masks, action):
         # pylint: disable=not-callable

@@ -20,6 +20,9 @@ from a2c_ppo_acktr.model import Policy, CirclePolicy
 from a2c_ppo_acktr.storage import RolloutStorage
 from evaluation import evaluate
 
+import getpass
+import tempfile
+
 from tqdm.auto import tqdm
 
 
@@ -41,6 +44,7 @@ def prepare_agent(actor_critic, args, device):
             args.num_mini_batch,
             args.value_loss_coef,
             args.entropy_coef,
+            args.least_squares_coef,
             lr=args.lr,
             eps=args.eps,
             max_grad_norm=args.max_grad_norm)
@@ -56,6 +60,10 @@ def prepare_agent(actor_critic, args, device):
         )
     return agent
 
+def generate_random_latent(count, latent_size):
+    return torch.eye(latent_size)[torch.randint(0, latent_size, (count,))]
+
+
 def main():
     args = get_args()
 
@@ -66,7 +74,8 @@ def main():
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
 
-    log_dir = os.path.expanduser(args.log_dir)
+    # log_dir = os.path.expanduser(args.log_dir)
+    log_dir = os.path.join(tempfile.gettempdir(), getpass.getuser(), 'gail' if args.gail else args.algo)
     eval_log_dir = log_dir + "_eval"
     utils.cleanup_log_dir(log_dir)
     utils.cleanup_log_dir(eval_log_dir)
@@ -86,6 +95,7 @@ def main():
     actor_critic = CirclePolicy(
         env.observation_space.shape,
         env.action_space,
+        args.latent_size,
         base_kwargs={})
         #base_kwargs={'recurrent': args.recurrent_policy})
     actor_critic.to(device)
@@ -95,8 +105,9 @@ def main():
     if args.gail:
         assert len(env.observation_space.shape) == 1
         discr = gail.Discriminator(
-            env.observation_space.shape[0] + env.action_space.shape[0], 100,
+            env.observation_space.shape[0] + args.latent_size + env.action_space.shape[0], 100,
             device)
+        discr.set_actor_critic(actor_critic)
         file_name = os.path.join(
             args.gail_experts_dir, "trajs_{}.pt".format(
                 args.env_name.split('-')[0].lower()))
@@ -110,12 +121,18 @@ def main():
             shuffle=True,
             drop_last=drop_last)
 
+
     rollouts = RolloutStorage(args.num_steps, args.num_processes,
                               env.observation_space.shape, env.action_space,
-                              actor_critic.recurrent_hidden_state_size)
+                              actor_critic.recurrent_hidden_state_size, args.latent_size)
+
 
     obs = env.reset()
     rollouts.obs[0].copy_(obs)
+
+    latent_code = generate_random_latent(1, args.latent_size)
+    rollouts.latent_code[0].copy_(latent_code)
+
     rollouts.to(device)
 
     episode_rewards = deque(maxlen=10)
@@ -130,12 +147,10 @@ def main():
                 agent.optimizer, j, num_updates,
                 agent.optimizer.lr if args.algo == "acktr" else args.lr)
 
-        ### generate one set of random latent codes
-        fake_z0 = np.random.randint(3, size=args.num_steps)
-        latent_code = np.zeros((args.num_steps, 3))
-        latent_code[np.arange(args.num_steps), fake_z0] = 1
-        latent_code = torch.FloatTensor(latent_code.copy()).to(device)
-    
+        # ### generate one set of random latent codes
+        # fake_z0 = np.random.randint(3, size=1).repeat(args.num_steps)
+        # latent_code = torch.eye(args.num_steps, device=device)[fake_z0]
+
         for step in range(args.num_steps):
             # Sample actions
             with torch.no_grad():
@@ -143,7 +158,7 @@ def main():
                 #     rollouts.obs[step], rollouts.recurrent_hidden_states[step],
                 #     rollouts.masks[step])
                 value, action, action_log_prob, step_latent_code = actor_critic.act(
-                    rollouts.obs[step], latent_code[step],
+                    rollouts.obs[step], latent_code,  # [step],
                     rollouts.masks[step])
 
             # Obser reward and next obs
@@ -161,7 +176,7 @@ def main():
                  for info in infos])
             ## Note this is next state, current latent code and current action
             rollouts.insert(obs, step_latent_code, action,
-                            action_log_prob, value, reward, masks, bad_masks)
+                            action_log_prob, value, reward, masks, bad_masks, latent_code)
 
         with torch.no_grad():
             next_value = actor_critic.get_value(
@@ -176,13 +191,18 @@ def main():
             if j < 10:
                 gail_epoch = 100  # Warm up
             for _ in range(gail_epoch):
+                # TODO Arash (DONE): search for the expert mode on the fly here
+                # and augment it into the train loader data
+                # wrap the iterator of of gail_train_loader to add 3 dims
                 discr.update(gail_train_loader, rollouts,
                              utils.get_vec_normalize(env)._obfilt)
 
             for step in range(args.num_steps):
                 rollouts.rewards[step] = discr.predict_reward(
-                    rollouts.obs[step], rollouts.actions[step], args.gamma,
-                    rollouts.masks[step])
+                    rollouts.obs[step], rollouts.actions[step], rollouts.latent_code[step],
+                    args.gamma,
+                    rollouts.masks[step],
+                )
 
         rollouts.compute_returns(next_value, args.use_gae, args.gamma,
                                  args.gae_lambda, args.use_proper_time_limits)
@@ -192,7 +212,7 @@ def main():
         rollouts.after_update()
 
         # save for every interval-th episode or for the last epoch
-        ## hard set 
+        ## hard set
         #if (j % args.save_interval == 0
         if (j % 20 == 0
                 or j == num_updates - 1) and args.save_dir != "":
@@ -220,7 +240,7 @@ dist_entropy: {dist_entropy:.3f}, value_loss: {value_loss:.3f}, action_loss: {ac
                 and j % args.eval_interval == 0):
             ob_rms = utils.get_vec_normalize(env).ob_rms
             evaluate(actor_critic, ob_rms, args.env_name, args.seed,
-                     args.num_processes, eval_log_dir, device)
+                     args.num_processes, eval_log_dir, device, args.latent_size)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,11 @@ from a2c_ppo_acktr import utils
 from a2c_ppo_acktr.envs import make_vec_envs
 
 
-def evaluate(actor_critic, ob_rms, env_name, seed, num_processes, eval_log_dir, device):
+def generate_random_latent(count, latent_size):
+    return torch.eye(latent_size)[torch.randint(0, latent_size, (count,))]
+
+
+def evaluate(actor_critic, ob_rms, env_name, seed, num_processes, eval_log_dir, device, latent_size):
     eval_envs = make_vec_envs(env_name, seed + num_processes, num_processes,
                               None, eval_log_dir, device, True)
 
@@ -17,8 +21,10 @@ def evaluate(actor_critic, ob_rms, env_name, seed, num_processes, eval_log_dir, 
     eval_episode_rewards = []
 
     obs = eval_envs.reset()
-    eval_recurrent_hidden_states = torch.zeros(
-        num_processes, actor_critic.recurrent_hidden_state_size, device=device)
+
+    eval_recurrent_hidden_states = generate_random_latent(1, latent_size)
+    # eval_recurrent_hidden_states = torch.zeros(
+    #     num_processes, actor_critic.recurrent_hidden_state_size, device=device)
     eval_masks = torch.zeros(num_processes, 1, device=device)
 
     while len(eval_episode_rewards) < 10:
