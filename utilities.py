@@ -142,6 +142,11 @@ def onehot(data, dim: int):
     return fake_z
 
 
+def generate_random_code(count: int, latent_size: int):
+    # return torch.nn.functional.one_hot(torch.randint(0, latent_size, (count,))).float()
+    return onehot(np.random.randint(latent_size, size=(count,)), latent_size)
+
+
 def visualize_pts_tb(writer, locations, latent_code, fig_key, iter=0):
     """
     Visualize pts in the tensorboard

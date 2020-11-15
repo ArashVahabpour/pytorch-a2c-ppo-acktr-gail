@@ -2,6 +2,8 @@ import gym
 from gym import spaces
 import numpy as np
 
+from utilities import generate_random_code
+
 # gym.logger.set_level(40)
 def generate_pt_in_circle(radius, cx, cy, num_traj):
     pt_arr = np.zeros((num_traj, 2))
@@ -61,7 +63,7 @@ class CirclesEnv(gym.Env):
         'video.frames_per_second': 50
     }
 
-    def __init__(self, radii, no_render=False, state_len=5, noise_level=0.1):
+    def __init__(self, radii, no_render=False, state_len=5, noise_level=0.1, latent_size: int = 3, max_steps: int = 2000):
         """
         Args:
             radii: a list of all radii to be uniformly at random sampled. Put a negative sign if the circle is to be
@@ -76,7 +78,7 @@ class CirclesEnv(gym.Env):
         self.x_threshold = L * 2
         self.y_threshold = L * 3
 
-        self.max_steps = 2000
+        self.max_steps = max_steps
         self.step_num = None  # how many steps passed since environment reset
 
         self.state_len = state_len  # number of consecutive locations to be concatenated as state
@@ -94,6 +96,7 @@ class CirclesEnv(gym.Env):
 
         self.radii = radii
         self.radius = None
+        self.latent_size = latent_size
 
         self.no_render = no_render
 
@@ -111,10 +114,11 @@ class CirclesEnv(gym.Env):
 
     def _init_circle(self):
         self.radius = np.random.choice(self.radii)
+        self.fake_code = generate_random_code(1, self.latent_size)[0]
 
     def _init_loc(self, init_val=None):
-        """Initializes the first `state_len` locations when episode starts
-        if no specific val is given, then start from all 0 
+        """Initializes the first `state_len` locations when episode starts.
+        If no specific val is given, then start from all 0
         """
         if init_val is None:
             init_val = np.zeros([self.state_len, 2])
@@ -199,6 +203,8 @@ class CirclesEnv(gym.Env):
         )
 
         if done:
+            self.fake_code = generate_random_code(1, self.latent_size)[0]
+
             if self.steps_beyond_done is None:
                 # Agent just out of boundary!
                 self.steps_beyond_done = 0
@@ -212,7 +218,7 @@ class CirclesEnv(gym.Env):
                     )
                 self.steps_beyond_done += 1
 
-        return np.array(self.state), 0, done, {}
+        return np.concatenate((np.array(self.state), self.fake_code)), 0, done, {}
 
     def reset(self, init_val=None):
         self._init_circle()
