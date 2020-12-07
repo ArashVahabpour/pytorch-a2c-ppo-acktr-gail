@@ -7,6 +7,8 @@ from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 from a2c_ppo_acktr.distributions import Bernoulli, Categorical, DiagGaussian
 from a2c_ppo_acktr.utils import init
 
+from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
+
 class Flatten(nn.Module):
     def forward(self, x):
         return x.view(x.size(0), -1)
@@ -229,28 +231,23 @@ class MLPBase(NNBase):
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
 
 class ValueNet(nn.Module):
-    def __init__(self, inputs_dim=10, code_dim=3, ft_dim=128,  activation=F.relu):
+    def __init__(self, inputs_dim=10, inputc_dim=3, ft_dim=128,  activation=F.relu):
         super(ValueNet, self).__init__()
         self.activation = activation
         self.fc_s1 = nn.Linear(inputs_dim, ft_dim)
         self.fc_s2 = nn.Linear(ft_dim, ft_dim)
-        self.code_dim = code_dim
-        if code_dim is not None:
-            self.fc_c1 = nn.Linear(code_dim, ft_dim)
-        #self.fc_c1 = nn.Linear(inputc_dim, ft_dim)
+        self.fc_c1 = nn.Linear(inputc_dim, ft_dim)
         self.fc_sum = nn.Linear(ft_dim, 1)
        
     def forward(self, state, latent_code):
-        output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
-        if self.code_dim is not None:
-            output += self.fc_c1(latent_code)
-        final_out = self.fc_sum(self.activation(output, inplace=True))
+        output_s = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
+        ouput_a = self.fc_c1(latent_code)
+        final_out = self.fc_sum(self.activation(ouput_a + output_s, inplace=True))
         return final_out
 
 
-
 class CirclePolicy(nn.Module):
-    def __init__(self, obs_shape,code_dim, action_space, base=None, base_kwargs=None):
+    def __init__(self, obs_shape, action_space, latent_size, base=None, base_kwargs=None):
         super(CirclePolicy, self).__init__()
         if base_kwargs is None:
             base_kwargs = {}
@@ -262,11 +259,12 @@ class CirclePolicy(nn.Module):
         #     else:
         #         raise NotImplementedError
 
-        self.mlp_policy_net = MlpPolicyNet(obs_shape[0],code_dim, **base_kwargs)
-        self.mlp_value_net = ValueNet(obs_shape[0],code_dim, **base_kwargs)
-        num_outputs = action_space.shape[0]
+        self.mlp_policy_net = MlpPolicyNet(obs_shape[0], latent_size, **base_kwargs)
+        self.mlp_value_net = ValueNet(obs_shape[0], latent_size, **base_kwargs)
+        # num_outputs = action_space.shape[0]
+        self.latent_size = latent_size
         
-        # if action_space.__class__.__name__ == "Discrete":
+         # if action_space.__class__.__name__ == "Discrete":
         #     num_outputs = action_space.n
         #     self.dist = Categorical(self.base.output_size, num_outputs)
         # elif action_space.__class__.__name__ == "Box":
@@ -282,119 +280,11 @@ class CirclePolicy(nn.Module):
     def is_recurrent(self):
         return False
 
-    @property
-    def recurrent_hidden_state_size(self):
-        """Size of rnn_hx."""
-        ## now is set to latent code size: 3
-        return 3
-
-    def forward(self, inputs, rnn_hxs, masks):
-        raise NotImplementedError
-
-    def act(self, inputs, rnn_hxs, masks, deterministic=False):
-        """
-        Use rnn_hxs as latent code input
-        """
-        #value, actor_features = None, None
-        #latent_code = rnn_hxs
-        value = self.mlp_value_net(inputs, rnn_hxs)
-        action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=True)
-
-        # dist = self.dist(actor_features)
-
-        # if deterministic:
-        #     action = dist.mode()
-        # else:
-        #     action = dist.sample()
-
-        action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
-        # dist_entropy = dist.entropy().mean()
-
-        return value, action, action_log_probs, rnn_hxs
-
-    def get_value(self, inputs, rnn_hxs, masks):
-        value = self.mlp_value_net(inputs, rnn_hxs)
-        return value
-
-    def evaluate_actions(self, inputs, rnn_hxs, masks, action):
-        # pylint: disable=not-callable
-        #value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
-        value = self.mlp_value_net(inputs, rnn_hxs)
-        action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=False)
-        action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
-        device = inputs.device
-        dist_entropy = torch.tensor([1]).to(device) ## for current fixed action std, entropy will be constant.  
-
-        return value, action_log_probs, dist_entropy, rnn_hxs
-
-
-class Posterior(nn.Module):
-    def __init__(self, inputs_dim=10, inputa_dim=2, ft_dim=128, outputc_dim = 3, activation=F.relu):
-        super(Posterior, self).__init__()
-        self.fc_s1 = nn.Linear(inputs_dim + inputa_dim, ft_dim)
-        self.fc_s2 = nn.Linear(ft_dim, ft_dim)
-        self.fc_out = nn.Linear(ft_dim, outputc_dim)
-        self.softmax = nn.Softmax(dim=1)
-        self.activation = activation
-        self.criterion_p = nn.CrossEntropyLoss()
-        self.iter_num = 0
-    
-    def forward(self, state, action):
-        input_data = torch.cat((state, action), dim=1)
-        output = self.activation(self.fc_s1(input_data), inplace=True)
-        output = self.activation(self.fc_s2(output), inplace=True)
-        final_out = self.softmax(self.fc_out(output))
-        ### p(c|s,a) where c is the latent code
-        return final_out
-    def update(self, state, action, encodes, optim_posterior, writer=None):
-        self.iter_num +=1
-        optim_posterior.zero_grad()
-        output_c = self.forward(state, action)
-        encodes = torch.argmax(encodes, dim=1)
-        loss_p = self.criterion_p(output_c, encodes.long())
-        loss_p.backward()
-        optim_posterior.step()
-        if writer is not None:
-            ### .item for scalar from tensor to float
-            writer.add_scalar("IG/p_loss", loss_p.item(), self.iter_num)
-        #print()
-
-
-class InfoCirclePolicy(nn.Module):
-    def __init__(self, obs_shape,code_dim, action_space, base=None, base_kwargs=None):
-        super(InfoCirclePolicy, self).__init__()
-        if base_kwargs is None:
-            base_kwargs = {}
-
-        self.mlp_policy_net = MlpPolicyNet(obs_shape[0],code_dim, **base_kwargs)
-        self.mlp_value_net = ValueNet(obs_shape[0],code_dim, **base_kwargs)
-        num_outputs = action_space.shape[0]
-        self.posterior = Posterior(inputs_dim=10, inputa_dim=2, ft_dim=128)
-        self.optim_posterior = torch.optim.Adam(self.posterior.parameters())
-        self.posterior_target = Posterior(inputs_dim=10, inputa_dim=2, ft_dim=128)
-        # if action_space.__class__.__name__ == "Discrete":
-        #     num_outputs = action_space.n
-        #     self.dist = Categorical(self.base.output_size, num_outputs)
-        # elif action_space.__class__.__name__ == "Box":
-        #     num_outputs = action_space.shape[0]
-        #     self.dist = DiagGaussian(self.base.output_size, num_outputs)
-        # elif action_space.__class__.__name__ == "MultiBinary":
-        #     num_outputs = action_space.shape[0]
-        #     self.dist = Bernoulli(self.base.output_size, num_outputs)
-        # else:
-        #     raise NotImplementedError
-        self.actor = self.mlp_policy_net
-        self.critic = self.mlp_value_net
-
-    @property
-    def is_recurrent(self):
-        return False
-
-    @property
-    def recurrent_hidden_state_size(self):
-        """Size of rnn_hx."""
-        ## now is set to latent code size: 3
-        return 3
+    # @property
+    # def recurrent_hidden_state_size(self):
+    #     """Size of rnn_hx."""
+    #     ## now is set to latent code size: 3
+    #     return self.latent_size
 
     def forward(self, inputs, rnn_hxs, masks):
         raise NotImplementedError
@@ -406,26 +296,31 @@ class InfoCirclePolicy(nn.Module):
         #value, actor_features = None, None
         #latent_code = rnn_hxs
         value = self.mlp_value_net(inputs, latent_code)
-        action = self.mlp_policy_net.select_action(inputs, latent_code, stochastic=True)
-        output_p = self.posterior_target(inputs, action)
-        reward_p = torch.sum(torch.log(output_p + 1e-45) * latent_code, dim=1, keepdim=True)
+        action = self.mlp_policy_net.select_action(inputs, latent_code, stochastic=(not deterministic))
+
+        # dist = self.dist(actor_features)
+
+        # if deterministic:
+        #     action = dist.mode()
+        # else:
+        #     action = dist.sample()
 
         action_log_probs = self.mlp_policy_net.get_log_prob(inputs, latent_code, action)
         # dist_entropy = dist.entropy().mean()
 
-        return value, action, action_log_probs, latent_code, reward_p
+        return value, action, action_log_probs, latent_code
 
-    def get_value(self, inputs, rnn_hxs, masks):
-        value = self.mlp_value_net(inputs, rnn_hxs)
+    def get_value(self, inputs, latent_code, masks):
+        value = self.mlp_value_net(inputs, latent_code)
         return value
 
-    def evaluate_actions(self, inputs, rnn_hxs, masks, action):
+    def evaluate_actions(self, inputs, latent_code, masks, action):
         # pylint: disable=not-callable
         #value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
-        value = self.mlp_value_net(inputs, rnn_hxs)
-        action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=False)
-        action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
+        value = self.mlp_value_net(inputs, latent_code)
+        action = self.mlp_policy_net.select_action(inputs, latent_code, stochastic=False)
+        action_log_probs = self.mlp_policy_net.get_log_prob(inputs, latent_code, action)
         device = inputs.device
-        dist_entropy = torch.tensor([1]).to(device) ## for current fixed action std, entropy will be constant.  
+        dist_entropy = torch.tensor([1]).to(device)  # for current fixed action std, entropy will be constant.
 
-        return value, action_log_probs, dist_entropy, rnn_hxs
+        return value, action_log_probs, dist_entropy, latent_code

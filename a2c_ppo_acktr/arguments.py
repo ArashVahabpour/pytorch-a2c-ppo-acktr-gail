@@ -61,6 +61,11 @@ def get_args():
         default=0.5,
         help='value loss coefficient (default: 0.5)')
     parser.add_argument(
+        '--bc-coeff',
+        type=float,
+        default=0.5,
+        help='sog-type behavioral cloning coefficient (default: 0.5)')
+    parser.add_argument(
         '--max-grad-norm',
         type=float,
         default=0.5,
@@ -126,19 +131,6 @@ def get_args():
         default='/tmp/gym/',
         help='directory to save agent logs (default: /tmp/gym)')
     parser.add_argument(
-        '--num-traj',
-        type=int,
-        default=500,
-        help = 'num of traj in the training dataset'
-    )
-    parser.add_argument(
-        '--subsample-traj',
-        type=int,
-        default=20,
-        help = 'num of traj in the training dataset'
-    )
-
-    parser.add_argument(
         '--save-dir',
         default='./trained_models/',
         help='directory to save agent logs (default: ./trained_models/)')
@@ -162,9 +154,26 @@ def get_args():
         action='store_true',
         default=False,
         help='use a linear schedule on the learning rate')
+    parser.add_argument(
+        '--latent-size',
+        type=int,
+        default=3,
+        help='number of one-hot latent codes (for the case of discrete codes)')
+    parser.add_argument(
+        '--num-traj',
+        type=int,
+        default=500,
+        help='num of traj in the training dataset')
+    parser.add_argument(
+        '--traj-subsample-freq',
+        type=int,
+        default=20,
+        help='frequency of trajectory subsampling in the training dataset')
+
     args = parser.parse_args()
 
     args.cuda = not args.no_cuda and torch.cuda.is_available()
+    args.device = torch.device("cuda:0" if args.cuda else "cpu")
 
     assert args.algo in ['a2c', 'ppo', 'acktr']
     if args.recurrent_policy:

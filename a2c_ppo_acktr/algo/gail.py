@@ -7,13 +7,17 @@ import torch.utils.data
 from torch import autograd
 
 from baselines.common.running_mean_std import RunningMeanStd
+from ..utils import resolve_latent_code
 
 
 class Discriminator(nn.Module):
-    def __init__(self, input_dim, hidden_dim, device):
+    def __init__(self, obs_dim, latent_dim, action_dim, hidden_dim, device):
         super(Discriminator, self).__init__()
 
         self.device = device
+        self.latent_size = latent_dim
+
+        input_dim = obs_dim + latent_dim + action_dim
 
         self.trunk = nn.Sequential(
             nn.Linear(input_dim, hidden_dim), nn.Tanh(),
@@ -29,13 +33,15 @@ class Discriminator(nn.Module):
 
     def compute_grad_pen(self,
                          expert_state,
+                         expert_latent_code,
                          expert_action,
                          policy_state,
+                         policy_latent_code,
                          policy_action,
                          lambda_=10):
         alpha = torch.rand(expert_state.size(0), 1)
-        expert_data = torch.cat([expert_state, expert_action], dim=1)
-        policy_data = torch.cat([policy_state, policy_action], dim=1)
+        expert_data = torch.cat([expert_state, expert_latent_code, expert_action], dim=1)
+        policy_data = torch.cat([policy_state, policy_latent_code, policy_action], dim=1)
 
         alpha = alpha.expand_as(expert_data).to(expert_data.device)
 
@@ -55,7 +61,7 @@ class Discriminator(nn.Module):
         grad_pen = lambda_ * (grad.norm(2, dim=1) - 1).pow(2).mean()
         return grad_pen
 
-    def update(self, expert_loader, rollouts, obsfilt=None):
+    def update(self, expert_loader, rollouts, actor_critic, obsfilt=None):
         self.train()
 
         policy_data_generator = rollouts.feed_forward_generator(
@@ -65,16 +71,20 @@ class Discriminator(nn.Module):
         n = 0
         for expert_batch, policy_batch in zip(expert_loader,
                                               policy_data_generator):
-            policy_state, policy_action = policy_batch[0], policy_batch[2]
+            policy_state, policy_latent_code, policy_action = policy_batch[:3]
             policy_d = self.trunk(
-                torch.cat([policy_state, policy_action], dim=1))
+                torch.cat([policy_state, policy_latent_code, policy_action], dim=1))
 
             expert_state, expert_action = expert_batch
             expert_state = obsfilt(expert_state.numpy(), update=False)
             expert_state = torch.FloatTensor(expert_state).to(self.device)
             expert_action = expert_action.to(self.device)
+            expert_latent_code = resolve_latent_code(actor_critic,
+                                                     expert_state,
+                                                     expert_action,
+                                                     self.latent_size)
             expert_d = self.trunk(
-                torch.cat([expert_state, expert_action], dim=1))
+                torch.cat([expert_state, expert_latent_code, expert_action], dim=1))
 
             expert_loss = F.binary_cross_entropy_with_logits(
                 expert_d,
@@ -84,8 +94,8 @@ class Discriminator(nn.Module):
                 torch.zeros(policy_d.size()).to(self.device))
 
             gail_loss = expert_loss + policy_loss
-            grad_pen = self.compute_grad_pen(expert_state, expert_action,
-                                             policy_state, policy_action)
+            grad_pen = self.compute_grad_pen(expert_state, expert_latent_code, expert_action,
+                                             policy_state, policy_latent_code, policy_action)
 
             loss += (gail_loss + grad_pen).item()
             n += 1
@@ -95,10 +105,10 @@ class Discriminator(nn.Module):
             self.optimizer.step()
         return loss / n
 
-    def predict_reward(self, state, action, gamma, masks, update_rms=True):
+    def predict_reward(self, state, latent_code, action, gamma, masks, update_rms=True):
         with torch.no_grad():
             self.eval()
-            d = self.trunk(torch.cat([state, action], dim=1))
+            d = self.trunk(torch.cat([state, latent_code, action], dim=1))
             s = torch.sigmoid(d)
             reward = s.log() - (1 - s).log()
             if self.returns is None:
@@ -109,14 +119,6 @@ class Discriminator(nn.Module):
                 self.ret_rms.update(self.returns.cpu().numpy())
 
             return reward / np.sqrt(self.ret_rms.var[0] + 1e-8)
-
-
-    def forward(self, state, action):
-        with torch.no_grad():
-            self.eval()
-            d = self.trunk(torch.cat([state, action], dim=1))
-            s = (torch.sigmoid(d) > 0.5).type(torch.LongTensor)
-        return s
 
 
 class ExpertDataset(torch.utils.data.Dataset):
