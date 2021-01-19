@@ -263,7 +263,7 @@ def model_inference_env(
             radius = np.random.choice(radii)
         else:  # must be one-hot encoded codes
             radius = np.array(radii)[np.flatnonzero(code.cpu().detach().numpy())[0]]
-        print(f"Generating trajectory #{i}: radius = {radius}")
+        # print(f"Generating trajectory #{i}: radius = {radius}")
 
         states, actions, length = generate_one_traj_env(
             traj_len, state_len, radius, actor, noise_level=noise_level, render=render
@@ -280,11 +280,11 @@ def model_inference_env(
 def visualize_gail_trajs(
     flat_state_arr: np.ndarray,
     action_arr: np.ndarray,
-    save_path: str,
     discr_labels: np.ndarray,
     inds: Union[
         np.ndarray, None
     ] = None,  # select the trajectories to plot, by default select all
+    save_path: str = None,
     posterior_scalar_codes: np.ndarray = None,  # scalar codes
     fig_title: str = "GAIL Trajectories",
 ):
@@ -305,8 +305,14 @@ def visualize_gail_trajs(
 
     if posterior_scalar_codes is None:
         fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(20, 10))
+        axs[0].set_title("States colored w/ discriminator labels")
+        axs[1].set_title("Actions colored w/ discriminator labels")
     else:
         fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(20, 10))
+        axs[0][0].set_title("States colored w/ discriminator labels")
+        axs[0][1].set_title("Actions colored w/ discriminator labels")
+        axs[1][0].set_title("States colored w/ posterior codes")
+        axs[1][1].set_title("Actions colored w/ posterior codes")
     [ax.set_aspect("equal", "box") for ax in axs.flat]
     [ax.set_prop_cycle(custom_cycler) for ax in axs.flat]
     scatter_legend_lists = [[] for i in range(len(axs.flat))]
@@ -349,10 +355,6 @@ def visualize_gail_trajs(
             scatter_marker_lists[3].extend(marker)
             scatter_legend_lists[3].extend(legend)
     [ax.legend() for ax in axs.flat]
-    axs[0][0].set_title("States colored w/ discriminator labels")
-    axs[0][1].set_title("Actions colored w/ discriminator labels")
-    axs[1][0].set_title("States colored w/ posterior codes")
-    axs[1][1].set_title("Actions colored w/ posterior codes")
 
     # add scatter legends
     legend_dict_list = [
@@ -363,8 +365,10 @@ def visualize_gail_trajs(
 
     plt.suptitle(fig_title)
     plt.tight_layout()
-    save_dir = os.path.dirname(save_path)
-    create_dir(save_dir)
-    plt.savefig(save_path)
-    plt.show()
-    plt.close()
+    if save_path is not None:
+        save_dir = os.path.dirname(save_path)
+        create_dir(save_dir)
+        plt.savefig(save_path)
+    # plt.show()
+    # plt.close()
+    return(fig)

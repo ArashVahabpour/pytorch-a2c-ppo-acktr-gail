@@ -16,13 +16,14 @@ class Discriminator(nn.Module):
         self.device = device
 
         self.trunk = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim), nn.Tanh(),
-            nn.Linear(hidden_dim, hidden_dim), nn.Tanh(),
+            nn.Linear(input_dim, hidden_dim), nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim), nn.ReLU(),
             nn.Linear(hidden_dim, 1)).to(device)
 
         self.trunk.train()
 
-        self.optimizer = torch.optim.Adam(self.trunk.parameters())
+        # self.optimizer = torch.optim.Adam(self.trunk.parameters())
+        self.optimizer = torch.optim.SGD(self.trunk.parameters(), lr=1e-2)
 
         self.returns = None
         self.ret_rms = RunningMeanStd(shape=())
@@ -94,6 +95,57 @@ class Discriminator(nn.Module):
             (gail_loss + grad_pen).backward()
             self.optimizer.step()
         return loss / n
+
+    def update_visualize(self, expert_loader, rollouts, obsfilt=None):
+        self.train()
+
+        policy_data_generator = rollouts.feed_forward_generator(
+            None, mini_batch_size=expert_loader.batch_size)
+
+        loss = 0
+        n = 0
+        from matplotlib import pyplot as plt
+        fig, ax = plt.subplots(1,2)
+        # import pandas as pd
+        expert_loss_sum = 0
+        policy_loss_sum = 0
+        for expert_batch, policy_batch in zip(expert_loader,
+                                              policy_data_generator):
+            policy_state, policy_action = policy_batch[0], policy_batch[2]
+            policy_d = self.trunk(
+                torch.cat([policy_state, policy_action], dim=1))
+
+            expert_state, expert_action = expert_batch
+            expert_state = obsfilt(expert_state.numpy(), update=False)
+            expert_state = torch.FloatTensor(expert_state).to(self.device)
+            expert_action = expert_action.to(self.device)
+            expert_d = self.trunk(
+                torch.cat([expert_state, expert_action], dim=1))
+
+            expert_loss = F.binary_cross_entropy_with_logits(
+                expert_d,
+                torch.ones(expert_d.size()).to(self.device))
+            policy_loss = F.binary_cross_entropy_with_logits(
+                policy_d,
+                torch.zeros(policy_d.size()).to(self.device))
+
+            gail_loss = expert_loss + policy_loss
+            grad_pen = self.compute_grad_pen(expert_state, expert_action,
+                                             policy_state, policy_action)
+
+            loss += (gail_loss + grad_pen).item()
+            n += 1
+
+            self.optimizer.zero_grad()
+            (gail_loss + grad_pen).backward()
+            self.optimizer.step()
+            expert_decisions = (F.sigmoid(expert_d)>0.5).cpu().numpy()
+            policy_decisions = (F.sigmoid(policy_d)>0.5).cpu().numpy()
+            ax[0].scatter(expert_state[:,-2].cpu().numpy(), expert_state[:,-1].cpu().numpy(), c=expert_decisions)
+            ax[1].scatter(policy_state[:,-2].cpu().numpy(), policy_state[:,-1].cpu().numpy(), c=policy_decisions)
+            expert_loss_sum += expert_loss.sum()
+            policy_loss_sum += policy_loss.sum()
+        return loss / n, expert_loss_sum.item()/n, policy_loss_sum.item()/n, fig
 
     def predict_reward(self, state, action, gamma, masks, update_rms=True):
         with torch.no_grad():

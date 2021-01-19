@@ -2,7 +2,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from a2c_ppo_acktr.algo.behavior_clone import MlpPolicyNet
 
 from a2c_ppo_acktr.distributions import Bernoulli, Categorical, DiagGaussian
 from a2c_ppo_acktr.utils import init
@@ -264,6 +263,66 @@ class ValueNet(nn.Module):
         return final_out
 
 
+# class PolicyNet(ABC, nn.Module):
+#     def __init__(self):
+#         super(PolicyNet, self).__init__()
+
+#     @abstractmethod
+#     def get_log_prob(self, state, actions):
+#         pass
+
+#     @abstractmethod
+#     def select_action(self, state, stochastic):
+#         pass
+
+# class MlpPolicyNet(PolicyNet):
+class MlpPolicyNet(nn.Module):
+    def __init__(self, state_dim=10, code_dim=3, ft_dim=128, activation=F.relu):
+        super(MlpPolicyNet, self).__init__()
+        self.activation = activation
+        self.fc_s1 = nn.Linear(state_dim, ft_dim)
+        self.fc_s2 = nn.Linear(ft_dim, ft_dim)
+        self.code_dim = code_dim
+        if code_dim is not None:
+            self.fc_c1 = nn.Linear(code_dim, ft_dim)
+        self.fc_sum = nn.Linear(ft_dim, 2)
+        self.action_logstds = torch.log(
+            torch.from_numpy(np.array([2, 2])).clone().float()
+        )
+        self.output_size = 2
+        # self.action_std = torch.from_numpy(np.array([2, 2])).clone().float()
+
+    def forward(self, state, latent_code):
+        output = self.fc_s2(self.activation(self.fc_s1(state), inplace=True))
+        if self.code_dim is not None:
+            output += self.fc_c1(latent_code)
+        final_out = self.fc_sum(self.activation(output, inplace=True))
+        return final_out
+
+    # def get_log_prob(self, state, latent_code, actions):
+    #     """
+    #     For continuous action space. fixed action log std
+    #     """
+    #     action_mu = self.forward(state, latent_code)
+    #     device = state.device
+    #     return normal_log_density(
+    #         actions,
+    #         action_mu,
+    #         self.action_logstds.to(device),
+    #         self.action_std.to(device),
+    #     )
+
+    def select_action(self, state, latent_code, stochastic=True):
+        action_mu = self.forward(state, latent_code)
+        # normal_log_density_fixedstd(x, action_mu)
+        device = state.device
+        if stochastic:
+            action = torch.normal(action_mu, self.action_std.to(device))
+        else:
+            action = action_mu.to(device)
+        return action
+
+
 class CirclePolicy(nn.Module):
     def __init__(self, obs_shape, code_dim, action_space, base=None, base_kwargs=None):
         super(CirclePolicy, self).__init__()
@@ -281,17 +340,17 @@ class CirclePolicy(nn.Module):
         self.mlp_value_net = ValueNet(obs_shape[0], code_dim, **base_kwargs)
         num_outputs = action_space.shape[0]
 
-        # if action_space.__class__.__name__ == "Discrete":
-        #     num_outputs = action_space.n
-        #     self.dist = Categorical(self.base.output_size, num_outputs)
-        # elif action_space.__class__.__name__ == "Box":
-        #     num_outputs = action_space.shape[0]
-        #     self.dist = DiagGaussian(self.base.output_size, num_outputs)
-        # elif action_space.__class__.__name__ == "MultiBinary":
-        #     num_outputs = action_space.shape[0]
-        #     self.dist = Bernoulli(self.base.output_size, num_outputs)
-        # else:
-        #     raise NotImplementedError
+        if action_space.__class__.__name__ == "Discrete":
+            num_outputs = action_space.n
+            self.dist = Categorical(self.mlp_policy_net.output_size, num_outputs)
+        elif action_space.__class__.__name__ == "Box":
+            num_outputs = action_space.shape[0]
+            self.dist = DiagGaussian(self.mlp_policy_net.output_size, num_outputs)
+        elif action_space.__class__.__name__ == "MultiBinary":
+            num_outputs = action_space.shape[0]
+            self.dist = Bernoulli(self.mlp_policy_net.output_size, num_outputs)
+        else:
+            raise NotImplementedError
 
     @property
     def is_recurrent(self):
@@ -313,16 +372,19 @@ class CirclePolicy(nn.Module):
         # value, actor_features = None, None
         # latent_code = rnn_hxs
         value = self.mlp_value_net(inputs, rnn_hxs)
-        action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=True)
+        # action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=True)
+        action_mu = self.mlp_policy_net.forward(inputs, rnn_hxs)
 
-        # dist = self.dist(actor_features)
+        self.dist.to(inputs.device)
+        dist = self.dist(action_mu)
 
-        # if deterministic:
-        #     action = dist.mode()
-        # else:
-        #     action = dist.sample()
+        if deterministic:
+            action = dist.mode()
+        else:
+            action = dist.sample()
 
-        action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
+        action_log_probs = dist.log_probs(action)
+        # action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
         # dist_entropy = dist.entropy().mean()
 
         return value, action, action_log_probs, rnn_hxs
@@ -335,12 +397,18 @@ class CirclePolicy(nn.Module):
         # pylint: disable=not-callable
         # value, actor_features, rnn_hxs = self.base(inputs, rnn_hxs, masks)
         value = self.mlp_value_net(inputs, rnn_hxs)
-        action = self.mlp_policy_net.select_action(inputs, rnn_hxs, stochastic=False)
-        action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
+        action_mu = self.mlp_policy_net(inputs, rnn_hxs)
+
+        self.dist.to(inputs.device)
+        dist = self.dist(action_mu)
+
+        action_log_probs = dist.log_probs(action)
         device = inputs.device
-        dist_entropy = torch.tensor([1]).to(
-            device
-        )  ## for current fixed action std, entropy will be constant.
+        dist_entropy = dist.entropy().mean().to(device)
+        # action_log_probs = self.mlp_policy_net.get_log_prob(inputs, rnn_hxs, action)
+        # dist_entropy = torch.tensor([1]).to(
+        #     device
+        # )  ## for current fixed action std, entropy will be constant.
 
         return value, action_log_probs, dist_entropy, rnn_hxs
 
