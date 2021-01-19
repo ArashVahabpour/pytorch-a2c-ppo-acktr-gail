@@ -192,12 +192,12 @@ def generate_one_traj_env(traj_len: int, state_len: int, radius: float,
     env = gym.make("Circles-v0", radii=[radius], state_len=state_len,
                    no_render=False, noise_level=noise_level)
     max_ac_mag = env.max_ac_mag  # max action magnitude
-    print("max_ac_mag", max_ac_mag, "for env ", radius)
+    # print("max_ac_mag", max_ac_mag, "for env ", radius)
     states, actions = [], []
     done = False
     step = 0
     ###
-    print("TEST initial location:")
+    # print("TEST initial location:")
     observation = env.reset()
     while True:
         states.append(observation)

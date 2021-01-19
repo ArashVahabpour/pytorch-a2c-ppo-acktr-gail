@@ -1,5 +1,5 @@
 import argparse
-
+from baselines.common.misc_util import boolean_flag
 import torch
 
 
@@ -162,6 +162,10 @@ def get_args():
         action='store_true',
         default=False,
         help='use a linear schedule on the learning rate')
+    boolean_flag(
+        parser, "wandb", default=True,
+        help="--wandb will enable wandb logging, --no-wandb will disable it"
+    )
     args = parser.parse_args()
 
     args.cuda = not args.no_cuda and torch.cuda.is_available()

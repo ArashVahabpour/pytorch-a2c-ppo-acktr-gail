@@ -38,7 +38,7 @@ class FixedNormal(torch.distributions.Normal):
         return super().log_prob(actions).sum(-1, keepdim=True)
 
     def entropy(self):
-        return super.entropy().sum(-1)
+        return super().entropy().sum(-1)
 
     def mode(self):
         return self.mean
@@ -87,9 +87,9 @@ class DiagGaussian(nn.Module):
         action_mean = self.fc_mean(x)
 
         #  An ugly hack for my KFAC implementation.
-        zeros = torch.zeros(action_mean.size())
-        if x.is_cuda:
-            zeros = zeros.cuda()
+        zeros = torch.zeros_like(action_mean)
+        # if x.is_cuda:
+        #     zeros = zeros.cuda()
 
         action_logstd = self.logstd(zeros)
         return FixedNormal(action_mean, action_logstd.exp())

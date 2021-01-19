@@ -203,7 +203,7 @@ class CirclesEnv(gym.Env):
         )
 
         if done:
-            self.fake_code = generate_random_code(1, self.latent_size)[0]
+            # self.fake_code = generate_random_code(1, self.latent_size)[0]
 
             if self.steps_beyond_done is None:
                 # Agent just out of boundary!
@@ -218,7 +218,8 @@ class CirclesEnv(gym.Env):
                     )
                 self.steps_beyond_done += 1
 
-        return np.concatenate((np.array(self.state), self.fake_code)), 0, done, {}
+        # return np.concatenate((np.array(self.state), self.fake_code)), 0, done, {}
+        return np.array(self.state), 0, done, {}
 
     def reset(self, init_val=None):
         self._init_circle()
