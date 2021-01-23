@@ -80,7 +80,9 @@ class DiagGaussian(nn.Module):
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
                                constant_(x, 0))
 
-        self.fc_mean = init_(nn.Linear(num_inputs, num_outputs))
+        # self.fc_mean = init_(nn.Linear(num_inputs, num_outputs))
+        self.fc_mean = nn.Identity() # eliminate the fc layer to better
+                                     # accommodate BC pre-training
         self.logstd = AddBias(torch.zeros(num_outputs))
 
     def forward(self, x):

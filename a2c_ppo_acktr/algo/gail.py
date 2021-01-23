@@ -22,8 +22,8 @@ class Discriminator(nn.Module):
 
         self.trunk.train()
 
-        # self.optimizer = torch.optim.Adam(self.trunk.parameters())
-        self.optimizer = torch.optim.SGD(self.trunk.parameters(), lr=1e-2)
+        self.optimizer = torch.optim.Adam(self.trunk.parameters())
+        # self.optimizer = torch.optim.SGD(self.trunk.parameters(), lr=1e-2)
 
         self.returns = None
         self.ret_rms = RunningMeanStd(shape=())
@@ -105,8 +105,10 @@ class Discriminator(nn.Module):
         loss = 0
         n = 0
         from matplotlib import pyplot as plt
-        fig, ax = plt.subplots(1,2)
-        # import pandas as pd
+        # fig, ax = plt.subplots(1,2)
+        import pandas as pd
+        expert_df_list = []
+        policy_df_list = []
         expert_loss_sum = 0
         policy_loss_sum = 0
         for expert_batch, policy_batch in zip(expert_loader,
@@ -116,7 +118,7 @@ class Discriminator(nn.Module):
                 torch.cat([policy_state, policy_action], dim=1))
 
             expert_state, expert_action = expert_batch
-            expert_state = obsfilt(expert_state.numpy(), update=False)
+            # expert_state = obsfilt(expert_state.numpy(), update=False)
             expert_state = torch.FloatTensor(expert_state).to(self.device)
             expert_action = expert_action.to(self.device)
             expert_d = self.trunk(
@@ -139,13 +141,44 @@ class Discriminator(nn.Module):
             self.optimizer.zero_grad()
             (gail_loss + grad_pen).backward()
             self.optimizer.step()
-            expert_decisions = (F.sigmoid(expert_d)>0.5).cpu().numpy()
-            policy_decisions = (F.sigmoid(policy_d)>0.5).cpu().numpy()
-            ax[0].scatter(expert_state[:,-2].cpu().numpy(), expert_state[:,-1].cpu().numpy(), c=expert_decisions)
-            ax[1].scatter(policy_state[:,-2].cpu().numpy(), policy_state[:,-1].cpu().numpy(), c=policy_decisions)
+
+            expert_decisions = (torch.sigmoid(expert_d) > 0.5).cpu().numpy().squeeze().astype(int)
+            policy_decisions = (torch.sigmoid(policy_d) > 0.5).cpu().numpy().squeeze().astype(int)
+
+            expert_df_list.append(
+                pd.DataFrame(
+                    {
+                        "x": expert_state[:, -2].cpu().numpy(),
+                        "y": expert_state[:, -1].cpu().numpy(),
+                        "groupKeys": expert_decisions,
+                    }
+                )
+            )
+            policy_df_list.append(
+                pd.DataFrame(
+                    {
+                        "x": policy_state[:, -2].cpu().numpy(),
+                        "y": policy_state[:, -1].cpu().numpy(),
+                        "groupKeys": policy_decisions,
+                    }
+                )
+            )
+
+            # ax[0].scatter(expert_state[:,-2].cpu().numpy(), expert_state[:,-1].cpu().numpy(), c=expert_decisions)
+            # ax[1].scatter(policy_state[:,-2].cpu().numpy(), policy_state[:,-1].cpu().numpy(), c=policy_decisions)
+            # ax[1].plot(policy_state[:,-2].cpu().numpy(), policy_state[:,-1].cpu().numpy())
             expert_loss_sum += expert_loss.sum()
             policy_loss_sum += policy_loss.sum()
-        return loss / n, expert_loss_sum.item()/n, policy_loss_sum.item()/n, fig
+        # print(policy_state[:,-2:])
+        # ax[0].set_xlim(-25,25)
+        # ax[0].set_ylim(-25,45)
+        # ax[1].set_xlim(-25,25)
+        # ax[1].set_ylim(-25,45)
+        # plt.legend()
+        # plt.savefig("/tmp/gail.png")
+        expert_df = pd.concat(expert_df_list)
+        policy_df = pd.concat(policy_df_list)
+        return loss / n, expert_loss_sum.item()/n, policy_loss_sum.item()/n, expert_df, policy_df
 
     def predict_reward(self, state, action, gamma, masks, update_rms=True):
         with torch.no_grad():

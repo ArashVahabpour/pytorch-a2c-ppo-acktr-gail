@@ -22,10 +22,17 @@ from evaluation import evaluate
 
 from tqdm.auto import tqdm
 
-from inference import model_inference_env, visualize_gail_trajs
-from utilities import to_tensor, get_module_device, onehot
+from inference import (
+    model_inference_env,
+    visualize_gail_trajs,
+    generate_one_traj_env,
+    clip_speed,
+)
+
+from utilities import to_tensor, get_module_device, onehot, set_random_seed
 import wandb
 from matplotlib import pyplot as plt
+import pandas as pd
 
 
 def prepare_agent(actor_critic, args, device):
@@ -61,6 +68,7 @@ def prepare_agent(actor_critic, args, device):
 
 
 def main():
+    set_random_seed(42, True)
     args = get_args()
     if args.wandb:
         wandb.init(config=args)
@@ -94,6 +102,7 @@ def main():
         radii=[-10, 10, 20],
         no_render=True,
     )
+    env.venv.ob_rms = None  # disable normalization. see also
 
     # actor_critic = Policy(
     #     env.observation_space.shape,
@@ -110,9 +119,9 @@ def main():
     print("------------**********************---load model--------------------------")
     # base_kwargs={'recurrent': args.recurrent_policy})
     # print("----load pretrained model from BC-----")
-    # bc_model_path = "./checkpoints/bestbc_model_new_everywhere2.pth"
-    # actor_critic.mlp_policy_net.load_state_dict(torch.load(bc_model_path)['state_dict'])
+    bc_model_path = "./checkpoints/bestbc_model_new_everywhere.pth"
     print("loaded mlp policy net----", actor_critic.mlp_policy_net)
+    actor_critic.mlp_policy_net.load_state_dict(torch.load(bc_model_path)["state_dict"])
     actor_critic.to(device)
     print(
         "------------**********************----prepare_agent-------------------------"
@@ -188,7 +197,7 @@ def main():
                 #     rollouts.obs[step], rollouts.recurrent_hidden_states[step],
                 #     rollouts.masks[step])
                 value, action, action_log_prob, step_latent_code = actor_critic.act(
-                    rollouts.obs[step], latent_code[step], rollouts.masks[step]
+                    rollouts.obs[step], latent_code[step], rollouts.masks[step], deterministic=True
                 )
 
             # Obser reward and next obs
@@ -220,6 +229,10 @@ def main():
             next_value = actor_critic.get_value(
                 rollouts.obs[-1], step_latent_code, rollouts.masks[-1]
             ).detach()
+        # table = wandb.Table(
+        #     dataframe=pd.DataFrame(rollouts.obs[:, 0, -2:], columns=["x", "y"])
+        # )
+        # wandb.log({"rollouts_obs": wandb.plot.scatter(table, "x", "y")})
 
         if args.gail:
             if j >= 10:
@@ -228,22 +241,43 @@ def main():
             gail_epoch = args.gail_epoch
             if j < 10:
                 gail_epoch = 100  # Warm up
-            # for _ in range(gail_epoch):
-            i = 0
-            while True:
+            for i in range(gail_epoch):
+                # i = 0
+                # while i < 10000:
                 # discr_loss = discr.update(
                 #     gail_train_loader, rollouts, utils.get_vec_normalize(env)._obfilt
                 # )
-                discr_loss, expert_loss, policy_loss, discr_fig = discr.update_visualize(
+                (
+                    discr_loss,
+                    expert_loss,
+                    policy_loss,
+                    expert_df,
+                    policy_df,
+                ) = discr.update_visualize(
                     gail_train_loader, rollouts, utils.get_vec_normalize(env)._obfilt
                 )
-                wandb.log({
-                    "discr_loss_only": discr_loss,
-                    "discr_expert_loss": expert_loss,
-                    "discr_policy_loss": policy_loss,
-                    "discr_fig": discr_fig
-                }, step=global_step + i)
-                i += 1
+                if i % 10 == 0:
+                    wandb.log(
+                        {
+                            "discr_loss_only": discr_loss,
+                            "discr_expert_loss": expert_loss,
+                            "discr_policy_loss": policy_loss,
+                            "expert_fig": wandb.plot_table(
+                                "wandb/scatter/v0",
+                                wandb.Table(dataframe=expert_df),
+                                {"x": "x", "y": "y", "groupKeys": "groupKeys"},
+                                {"title": "Discr Training Data (Expert)"},
+                            ),
+                            "policy_fig": wandb.plot_table(
+                                "wandb/scatter/v0",
+                                wandb.Table(dataframe=policy_df),
+                                {"x": "x", "y": "y", "groupKeys": "groupKeys"},
+                                {"title": "Discr Training Data (Policy)"},
+                            ),
+                        },
+                        step=global_step,
+                    )
+                global_step += 1
                 # if i % 100 == 0:
                 #     radii_list = [20.0, 10.0, -10.0]
                 #     codes = onehot(np.repeat(np.arange(len(radii_list)), 5), len(radii_list))

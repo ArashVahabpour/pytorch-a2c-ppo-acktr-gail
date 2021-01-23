@@ -63,7 +63,15 @@ class CirclesEnv(gym.Env):
         'video.frames_per_second': 50
     }
 
-    def __init__(self, radii, no_render=False, state_len=5, noise_level=0.1, latent_size: int = 3, max_steps: int = 2000):
+    def __init__(
+        self,
+        radii,
+        no_render=False,
+        state_len=5,
+        noise_level=0.1,
+        latent_size: int = 3,
+        max_steps: int = 4000,
+    ):
         """
         Args:
             radii: a list of all radii to be uniformly at random sampled. Put a negative sign if the circle is to be
@@ -83,7 +91,7 @@ class CirclesEnv(gym.Env):
 
         self.state_len = state_len  # number of consecutive locations to be concatenated as state
 
-        self.max_ac_mag = 0.05 * L  # max action magnitude
+        self.max_ac_mag = 0.01 * L  # max action magnitude
         self.action_space = spaces.Box(low=np.array([-self.max_ac_mag, -self.max_ac_mag]),
                                        high=np.array([self.max_ac_mag, self.max_ac_mag]),
                                        dtype=np.float32)
@@ -181,7 +189,7 @@ class CirclesEnv(gym.Env):
 
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
-    def step(self, action, noise=False):
+    def step(self, action, noise=True):
         self.step_num += 1
 
         loc = self.loc_history[-1]

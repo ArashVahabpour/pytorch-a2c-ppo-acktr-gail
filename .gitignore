@@ -119,3 +119,4 @@ environment.yml
 /.*
 runs
 *.ipynb
+/wandb/
